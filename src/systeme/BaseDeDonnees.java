@@ -106,7 +106,7 @@ public class BaseDeDonnees {
 	 * @throws SQLException
 	 */
 	public void sauvegarderUtilisateur(String login, String motDePasse) throws SQLException{
-		String sql = "INSERT INTO VALUES (nom_utilisateur,mot_de_passe) VALUES (?,?)";
+		String sql = "INSERT INTO Utilisateur (nom_utilisateur,mot_de_passe) VALUES (?,?)";
 		PreparedStatement st = connection.prepareStatement(sql);
 		st.setString(0, login);
 		st.setString(1, motDePasse);
@@ -124,6 +124,31 @@ public class BaseDeDonnees {
 		st.setString(0, login);
 		st.execute();
 	}
+	
+	/**
+	 * Créer un groupe de nom 'nomGroupe' dans la base de données
+	 * @param nomGroupe : nom du groupe à créer
+	 * @throws SQLException
+	 */
+	public void ajouterGroupe(String nomGroupe) throws SQLException{
+		String sql = "INSERT INTO Groupe (nom_groupe) VALUES (?)";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, nomGroupe);
+		st.execute();
+	}
+	
+	/**
+	 * Supprime un groupe à partir de son nom de groupe
+	 * @param nomGroupe : nom du groupe à supprimer
+	 * @throws SQLException 
+	 */
+	public void supprimerGroupe(String nomGroupe) throws SQLException{
+		String sql = "DELETE FROM Groupe WHERE nom_groupe = ?";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, nomGroupe);
+		st.execute();
+	}
+	
 	
 	/**
 	public void creerTable(String nomTable , ArrayList<Attribut> attributs ){
