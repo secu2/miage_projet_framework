@@ -1,5 +1,6 @@
 package systeme.rmi;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -9,5 +10,6 @@ import java.rmi.RemoteException;
 public interface InterfaceRmi extends Remote {
 	 
 	public String getTest() throws RemoteException;
-	 
 }
+
+
