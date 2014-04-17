@@ -3,6 +3,7 @@ package systeme;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class BaseDeDonnees {
 	
@@ -25,6 +26,10 @@ public class BaseDeDonnees {
 		}
 
 		return connection;
+	}
+	
+	public void creerTable(String nomTable , ArrayList<Attribut> attributs ){
+		
 	}
 	
 	
