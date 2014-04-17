@@ -112,8 +112,7 @@ public class BaseDeDonnees {
 	 * @throws SQLException
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
-		BaseDeDonnees bd = new BaseDeDonnees("database");
-		bd.chargerFichierSQL("data_framework_structure.sqlite");
+		BaseDeDonnees bd = new BaseDeDonnees();
 	}
 	
 	
