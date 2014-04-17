@@ -16,7 +16,7 @@ public class ClientRMI {
 			
 			// obtention de l'objet distant à partir de son nom (lookup)
 			Remote r = Naming.lookup("rmi://152.77.116.114/fram");
-			System.out.println(r);
+			//System.out.println(r);
 			
 			if (r instanceof InterfaceRmi) {
 				

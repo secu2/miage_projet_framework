@@ -10,6 +10,7 @@ import java.rmi.registry.LocateRegistry;
 
 
 public class ServeurRMI {
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
