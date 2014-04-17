@@ -11,16 +11,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 import modules.gestionUtilisateur.Utilisateur;
 
+/**
+ * BaseDeDonnees.java
+ * @author Never
+ *
+ */
 public class BaseDeDonnees {
 	
 	// Objet connection permettant l'accÃ¨s Ã  la base de donnÃ©es
@@ -149,14 +153,54 @@ public class BaseDeDonnees {
 		st.execute();
 	}
 	
-	
 	/**
-	public void creerTable(String nomTable , ArrayList<Attribut> attributs ){
+	 * Méthode de sauvegarde générique 
+	 * Permet d'insérer dans une table un n-uplet contenant les attributs donnés
+	 * @param nomTable : nom de la table cible
+	 * @param attributs : Ensemble des attributs de la table 
+	 * @throws SQLException 
+	 */
+	public void sauvegarder(String nomTable, ArrayList<Attribut> attributs) throws SQLException{
+		int nombreAttributs = attributs.size();
+		String sql = "INSERT INTO " + nomTable + " (";
+		// liste des attributs de la table
+		for(int nb = 0 ; nb < nombreAttributs ; nb++){
+			sql += attributs.get(nb).getNomAttributBD() +",";
+		}
+		sql += ") VALUES (";
+		// ensemble des futures valeurs du n-uplet
+		for(int nb = 0 ; nb < nombreAttributs ; nb++){
+			sql+="?,";
+		}
+		sql += ")";
 		
+		PreparedStatement st = connection.prepareStatement(sql);
+		
+		// correspond au premier '?'
+		st.setString(0, nomTable);
+		// On précise la valeur des attributs de la table dans l'ordre  
+		// de dénifition dans la requete
+		for(int nb = 0 ; nb < nombreAttributs ; nb++){
+			st.setString(nb, attributs.get(nb).getValeur());
+		}
+		st.execute();
 	}
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws SQLException */
+	
+	
+
+	/**
+	 * Supprime un n-uplet d'une table en fonction d'un attribut
+	 * @param attribut : attribut à considérer
+	 * @param nomTable : nom de la table cible
+	 * @throws SQLException
+	 */
+	public void supprimer(String nomTable, Attribut attribut) throws SQLException{
+		String sql = "DELETE FROM " + nomTable + " WHERE " + attribut.getNomAttributBD() +" = ?";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, attribut.getValeur());
+		st.execute();
+	}
+	
 	
 	/**
 	 * MÃ©thode de test de la BD
