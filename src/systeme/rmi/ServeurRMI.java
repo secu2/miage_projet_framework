@@ -10,6 +10,8 @@ import java.rmi.registry.LocateRegistry;
 
 
 public class ServeurRMI {
+	
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
@@ -19,7 +21,7 @@ public class ServeurRMI {
 			if (System.getSecurityManager() == null) {
 				System.setSecurityManager(new RMISecurityManager());
 			}*/
-			 
+			
 			RmiImpl informationImpl = new RmiImpl();
 			String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram";
 			System.out.println("Enregistrement de l'objet avec l'url : " + url);

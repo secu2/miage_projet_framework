@@ -1,21 +1,22 @@
 package systeme.rmi;
 
 import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import java.rmi.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 
 public class ClientRMI {
 	
 	public static void main(String[] args)
 	{
-		System.out.println("Start client");
+		System.out.println("Start00 client");
 		
 		try {
 			
 			// obtention de l'objet distant à partir de son nom (lookup)
-			Remote r = Naming.lookup("rmi://152.77.116.114/fram");
+			Registry registry = LocateRegistry.getRegistry(1099);
+    		Remote r = registry.lookup("fram");
 			System.out.println(r);
 			
 			if (r instanceof InterfaceRmi) {
@@ -27,9 +28,6 @@ public class ClientRMI {
 			System.out.println("End client");
 			
 			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
