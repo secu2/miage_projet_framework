@@ -38,6 +38,18 @@ public class Utilisateur {
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
 	}
+	
+	/**
+	 * Génére un nouveau mot de passe aléatoirement et le renvoie
+	 * @return newMotDePasse
+	 */
+	public String genererMotDePasse(){
+		String motDePasse = null;
+		
+		return motDePasse;
+	}
+	
+	
     
     
 
