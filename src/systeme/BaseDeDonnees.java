@@ -34,7 +34,7 @@ public class BaseDeDonnees {
 				
 		
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:" + nomFichBD + ".db");
+			connection = DriverManager.getConnection("jdbc:sqlite:" + nomFichBD + ".sqlite");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,7 +66,7 @@ public class BaseDeDonnees {
 	 * @throws SQLException */
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
-		BaseDeDonnees bd = new BaseDeDonnees("datebase");
+		BaseDeDonnees bd = new BaseDeDonnees("database");
 		bd.chargerFichierSQL("data_framework_structure.sqlite");
 		
 		
