@@ -1,5 +1,12 @@
 package modules.gestionUtilisateur;
 
+import java.util.Random;
+
+/**
+ * Utilisateur.java
+ * @author never
+ *
+ */
 public class Utilisateur {
     
     private String login;
@@ -41,12 +48,29 @@ public class Utilisateur {
 	
 	/**
 	 * Génére un nouveau mot de passe aléatoirement et le renvoie
-	 * @return newMotDePasse
+	 * @param n : taille du mot de passe à générer
+	 * @return motDePasse : le mot de passe généré aléatoirement
 	 */
-	public String genererMotDePasse(){
-		String motDePasse = null;
+	public String genererMotDePasse(int n){
+		String motDePasse = new String();
+		String alphabet = new String("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"); //9
+		int tailleAlphabet = alphabet.length(); 
+
+		Random r = new Random();
+
+		// Génère un mot de passe de taille n
+		for (int i=0; i<n; i++){
+			motDePasse = motDePasse + alphabet.charAt(r.nextInt(tailleAlphabet)); 
+		}
 		
 		return motDePasse;
+	}
+	
+	/**
+	 * 
+	 */
+	public void ajouterUtilisateurBD(){
+		
 	}
 	
 	
