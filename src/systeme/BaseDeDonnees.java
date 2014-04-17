@@ -1,4 +1,9 @@
 package systeme;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,8 +15,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class BaseDeDonnees {
+	
 	Connection connection;
 	
 
@@ -20,11 +27,12 @@ public class BaseDeDonnees {
 	 * @param nomFichBD
 	 * @return connection : objet de type Connection permettant la manipulation de la base de données
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
 	 */
-	public Connection creerAccesBD(String nomFichBD) throws ClassNotFoundException {
+	public BaseDeDonnees(String nomFichBD) throws ClassNotFoundException, IOException {
 		Class.forName("org.sqlite.JDBC");
-		Connection connection = null;
-
+				
+		
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:" + nomFichBD + ".db");
 		} catch (SQLException e) {
@@ -32,10 +40,35 @@ public class BaseDeDonnees {
 			e.printStackTrace();
 		}
 		
-		return connection;
 	}
 	
+	public void chargerFichierSQL(String path) throws FileNotFoundException, SQLException{
+		File fichierSQL = new File(path);
+		Scanner scanner = new Scanner(fichierSQL);
+		String sql = new String();
+		while(scanner.hasNext()){
+			sql += " "+scanner.next();
+		}
+		Statement statement = connection.createStatement();
+		System.out.println(sql);
+		statement.executeUpdate(sql);
+		statement.close();
+		connection.close();
+		
+	}
+	
+	/**
 	public void creerTable(String nomTable , ArrayList<Attribut> attributs ){
+		
+	}
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 * @throws SQLException */
+	
+	public static void main(String[] args) throws ClassNotFoundException, IOException, SQLException {
+		BaseDeDonnees bd = new BaseDeDonnees("datebase");
+		bd.chargerFichierSQL("data_framework_structure.sqlite");
+		
 		
 	}
 	
