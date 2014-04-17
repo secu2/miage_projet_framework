@@ -1,6 +1,9 @@
 package modules.gestionUtilisateur;
 
+import java.sql.SQLException;
 import java.util.Random;
+
+import systeme.BaseDeDonnees;
 
 /**
  * Utilisateur.java
@@ -8,8 +11,7 @@ import java.util.Random;
  *
  */
 public class Utilisateur {
-    
-    private String login;
+	private String login;
     private String motDePasse;
     
     /**
@@ -17,9 +19,22 @@ public class Utilisateur {
      * @param login
      * @param motDePasse
      */
-    public Utilisateur(String login,String motDePasse){
+    public Utilisateur(String login, String motDePasse){
     	this.login = login;
     	this.motDePasse = motDePasse;
+    }
+    /**
+     * Construit un utilisateur et l'enregistre dans la base de données
+     * @param bdd : La base ou enregistrer l'utilisateur
+     * @param login : Le login de l'utilisateur
+     * @param motDePasse : Le mot de passe de l'utilisateur
+     * @throws SQLException 
+     */
+    public Utilisateur(BaseDeDonnees bdd, String login, String motDePasse) throws SQLException{
+    	this.login = login;
+    	this.motDePasse = motDePasse;
+    	
+    	sauvegarderPersistant(bdd);
     }
     
     /**
@@ -67,10 +82,14 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * 
+	 * Permet de sauvegarder l'utilisateur dans la BDD
+	 * Important pour la persistance des données
+	 * @param bdd
+	 * @throws SQLException 
 	 */
-	public void ajouterUtilisateurBD(){
-		
+	public void sauvegarderPersistant(BaseDeDonnees bdd) throws SQLException{
+		bdd.sauvegarderUtilisateur(login, motDePasse);
+		//bdd.sauvegarderDroits(flags); //Sauvegarde les droits de l'utilisateur
 	}
 	
 	
