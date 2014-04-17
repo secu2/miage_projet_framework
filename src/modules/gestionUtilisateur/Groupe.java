@@ -1,5 +1,6 @@
 package modules.gestionUtilisateur;
 
+import java.sql.SQLException;
 import java.util.Hashtable;
 
 import systeme.BaseDeDonnees;
@@ -30,8 +31,9 @@ public class Groupe {
 	 * @param idGroupe
 	 * @param nomGroupe
 	 * @param flags
+	 * @throws SQLException 
 	 */
-	public Groupe(BaseDeDonnees bdd, int idGroupe, String nomGroupe){
+	public Groupe(BaseDeDonnees bdd, int idGroupe, String nomGroupe) throws SQLException{
 		//Création du groupe
 		if(disponibiliteIdGroupe(idGroupe)){
 			creerGroupe(nomGroupe);
@@ -42,7 +44,7 @@ public class Groupe {
 		}
 	}
 
-	public void sauvegarderPersistant(BaseDeDonnees bdd) {
+	public void sauvegarderPersistant(BaseDeDonnees bdd) throws SQLException {
 		bdd.sauvegarderGroupe(nomGroupe);
 	}
 
