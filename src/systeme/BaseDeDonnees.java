@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import modules.gestionUtilisateur.Utilisateur;
+
 public class BaseDeDonnees {
 	
 	// Objet connection permettant l'accès à la base de données
@@ -94,6 +96,12 @@ public class BaseDeDonnees {
 		statement.executeUpdate(sql);
 		statement.close();
 		connection.close();	
+	}
+	
+	public void sauvegarderUtilisateur(String login, String motDePasse) throws SQLException{
+		String sql = "INSERT INTO VALUES ('" + login + "','"+ motDePasse+"')";
+		Statement st = connection.createStatement();
+		st.executeUpdate(sql);
 	}
 	
 	/**
