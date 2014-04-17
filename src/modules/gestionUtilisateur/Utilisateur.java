@@ -89,7 +89,6 @@ public class Utilisateur {
 	 */
 	public void sauvegarderPersistant(BaseDeDonnees bdd) throws SQLException{
 		bdd.sauvegarderUtilisateur(login, motDePasse);
-		//bdd.sauvegarderDroits(flags); //Sauvegarde les droits de l'utilisateur
 	}
 	
 	

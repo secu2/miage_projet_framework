@@ -2,28 +2,48 @@ package modules.gestionUtilisateur;
 
 import java.util.Hashtable;
 
+import systeme.BaseDeDonnees;
+
 
 public class Groupe {
-	private int idGroupe;
 	private String nomGroupe;
-	private Hashtable flags;
 
 
 	/**
-	 * Constructeur de groupe
+	 * Constructeur de groupe sans sauvegarde en base de données
 	 * @param idGroupe l'id du groupe, est unique
 	 * @param nomGroupe le nom du groupe
-	 * @param flags les configurations du groupe
 	 */
-	public Groupe(int idGroupe, String nomGroupe, Hashtable flags){
-		flags = new Hashtable();
+	public Groupe(int idGroupe, String nomGroupe){
 		//Création du groupe
 		if(disponibiliteIdGroupe(idGroupe)){
-			creerGroupe(idGroupe, nomGroupe, flags);
+			creerGroupe(nomGroupe);
 		}else{
 			//TODO: gestion d'erreur en cas de groupe déja existant
 			System.err.println("Erreur: Le groupe "+idGroupe+"existe déja...");
 		}
+	}
+	
+	/**
+	 * Constructeur de groupe avec sauvegarde en base de données
+	 * @param bdd : la base de données ou enregistrer
+	 * @param idGroupe
+	 * @param nomGroupe
+	 * @param flags
+	 */
+	public Groupe(BaseDeDonnees bdd, int idGroupe, String nomGroupe){
+		//Création du groupe
+		if(disponibiliteIdGroupe(idGroupe)){
+			creerGroupe(nomGroupe);
+			sauvegarderPersistant(bdd);
+		}else{
+			//TODO: gestion d'erreur en cas de groupe déja existant
+			System.err.println("Erreur: Le groupe "+idGroupe+"existe déja...");
+		}
+	}
+
+	public void sauvegarderPersistant(BaseDeDonnees bdd) {
+		bdd.sauvegarderGroupe(nomGroupe);
 	}
 
 	/**
@@ -32,10 +52,8 @@ public class Groupe {
 	 * @param nomGroupe
 	 * @param flags
 	 */
-	private void creerGroupe(int idGroupe, String nomGroupe, Hashtable flags) {
-		this.idGroupe = idGroupe;
+	private void creerGroupe(String nomGroupe) {
 		this.nomGroupe = nomGroupe;
-		this.flags = flags;
 	}
 
 	/**
@@ -47,31 +65,5 @@ public class Groupe {
 	public boolean disponibiliteIdGroupe(int idGroupe){
 		//TODO: Vérifier que le groupe n'est pas déja présent dans la base de données
 		return true;
-	}
-	
-	/**
-	 * Permet d'ajouter un flag booleen au groupe
-	 * @param id
-	 * @param valeur
-	 */
-	public void newFlag(String id, boolean valeur){
-		
-	}
-	/**
-	 * Permet d'ajouter un flag String au groupe
-	 * @param id
-	 * @param valeur
-	 */
-	public void newFlag(String id, String valeur){
-
-	}
-	
-	/**
-	 * Permet d'ajouter un flag int au groupe
-	 * @param id
-	 * @param valeur
-	 */
-	public void newFlag(String id, int valeur){
-
 	}
 }
