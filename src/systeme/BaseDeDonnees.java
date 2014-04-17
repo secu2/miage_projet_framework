@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -99,9 +100,11 @@ public class BaseDeDonnees {
 	}
 	
 	public void sauvegarderUtilisateur(String login, String motDePasse) throws SQLException{
-		String sql = "INSERT INTO VALUES ('" + login + "','"+ motDePasse+"')";
-		Statement st = connection.createStatement();
-		st.executeUpdate(sql);
+		String sql = "INSERT INTO VALUES (nom_utilisateur,mot_de_passe) VALUES (?,?)";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, login);
+		st.setString(1, motDePasse);
+		st.execute();
 	}
 	
 	/**
