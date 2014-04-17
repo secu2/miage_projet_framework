@@ -130,7 +130,7 @@ public class BaseDeDonnees {
 	 * @param nomGroupe : nom du groupe à créer
 	 * @throws SQLException
 	 */
-	public void ajouterGroupe(String nomGroupe) throws SQLException{
+	public void sauvegarderGroupe(String nomGroupe) throws SQLException{
 		String sql = "INSERT INTO Groupe (nom_groupe) VALUES (?)";
 		PreparedStatement st = connection.prepareStatement(sql);
 		st.setString(0, nomGroupe);
