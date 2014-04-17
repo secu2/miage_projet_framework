@@ -99,11 +99,29 @@ public class BaseDeDonnees {
 		connection.close();	
 	}
 	
+	/**
+	 * Créer un utilisateur dans la BD avec son login et son mot de passe
+	 * @param login
+	 * @param motDePasse
+	 * @throws SQLException
+	 */
 	public void sauvegarderUtilisateur(String login, String motDePasse) throws SQLException{
 		String sql = "INSERT INTO VALUES (nom_utilisateur,mot_de_passe) VALUES (?,?)";
 		PreparedStatement st = connection.prepareStatement(sql);
 		st.setString(0, login);
 		st.setString(1, motDePasse);
+		st.execute();
+	}
+	
+	/**
+	 * Supprime un utilisateur à partir de son login
+	 * @param login
+	 * @throws SQLException 
+	 */
+	public void supprimerUtilisateur(String login) throws SQLException{
+		String sql = "DELETE FROM Utilisateur WHERE nom_utilisateur = ?";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, login);
 		st.execute();
 	}
 	
