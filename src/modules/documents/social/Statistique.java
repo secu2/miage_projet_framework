@@ -1,3 +1,4 @@
+package modules.documents.social;
 
 
 public class Statistique {

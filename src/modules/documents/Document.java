@@ -1,3 +1,4 @@
+package modules.documents;
 
 public class Document {
     
