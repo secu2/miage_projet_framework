@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
 
 public class Encryptage {
+	
 	/**
 	 * Permet d'encrypter un mot de passe à 
 	 * l'aide de l'algorythme sha1
@@ -22,9 +23,9 @@ public class Encryptage {
 	}
 	
 	/**
-	 * 
+	 * Méthode permettant transformer un tableau de bits en une chaine hexadecimale
 	 * @param hash
-	 * @return
+	 * @return result : chaine hexadecimale
 	 */
 	private static String byteToHex(final byte[] hash){
 		Formatter formatter = new Formatter();
