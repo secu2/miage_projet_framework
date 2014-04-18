@@ -41,8 +41,8 @@ public class Utilisateur {
      */
     public Utilisateur(BaseDeDonnees bdd, String login, String motDePasse) throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException{
     	this.login = login;
+    	// Affecte le mot de passe encrypté
     	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
-    	
     	sauvegarderPersistant(bdd);
     }
     
