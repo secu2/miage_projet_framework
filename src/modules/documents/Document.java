@@ -1,12 +1,15 @@
 package modules.documents;
 
+import modules.documents.social.Statistique;
+
 public class Document {
-	// Définition et Gestion des documents présents sur le drive. Son nom, son
-	// propriétaire, son type, sa définition, sa description sa date
-	// d’expiration, et sa visibilité (par défaut visible seulement par lui)
+	// Dï¿½finition et Gestion des documents prï¿½sents sur le drive. Son nom, son
+	// propriï¿½taire, son type, sa dï¿½finition, sa description sa date
+	// dï¿½expiration, et sa visibilitï¿½ (par dï¿½faut visible seulement par lui)
 
 	private String nom;
 	private float taille;
 	private String format;
+	private Statistique statistique; //Les statistiques du fichier
 
 }
