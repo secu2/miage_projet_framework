@@ -2,6 +2,11 @@ package modules.documents.social;
 
 import modules.gestionUtilisateur.Utilisateur;
 
+/**
+ * Commentaire.java
+ * @author never
+ *
+ */
 public class Commentaire {
    
 	private Utilisateur auteur;
