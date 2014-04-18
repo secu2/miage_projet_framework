@@ -1,5 +1,7 @@
 package modules.documents;
 
+import java.io.File;
+
 import modules.documents.social.Statistique;
 
 public class Document {
@@ -11,5 +13,6 @@ public class Document {
 	private float taille;
 	private String format;
 	private Statistique statistique; //Les statistiques du fichier
+	private File emplacement;
 
 }
