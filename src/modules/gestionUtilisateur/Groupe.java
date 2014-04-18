@@ -1,14 +1,23 @@
 package modules.gestionUtilisateur;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import systeme.BaseDeDonnees;
 
-
+/**
+ * Groupe.java
+ * @author never
+ *
+ */
 public class Groupe {
+	// nom du groupe
 	private String nomGroupe;
-
+	// Liste des utilisateurs appartenants à ce groupe
+	private ArrayList<Utilisateur> utilisateurs;
+	// proprietaire du groupe
+	private Utilisateur proprietaire;
 
 	/**
 	 * Constructeur de groupe sans sauvegarde en base de données
@@ -45,7 +54,7 @@ public class Groupe {
 	}
 
 	public void sauvegarderPersistant(BaseDeDonnees bdd) throws SQLException {
-		bdd.sauvegarderGroupe(nomGroupe);
+		bdd.sauvegarderGroupe(nomGroupe,proprietaire.getLogin());
 	}
 
 	/**

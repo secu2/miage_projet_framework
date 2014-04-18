@@ -1,6 +1,7 @@
 package modules.gestionUtilisateur;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import systeme.BaseDeDonnees;
@@ -13,6 +14,7 @@ import systeme.BaseDeDonnees;
 public class Utilisateur {
 	private String login;
     private String motDePasse;
+    private ArrayList<Groupe> groupes;
     
     /**
      * Construit un objet Utilisateur en fournissant le login et le mot de passe
