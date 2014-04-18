@@ -7,19 +7,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 import modules.gestionUtilisateur.Utilisateur;
 
+/**
+ * BaseDeDonnees.java
+ * @author Never
+ *
+ */
 public class BaseDeDonnees {
 	
 	// Objet connection permettant l'acc√®s √† la base de donn√©es
@@ -98,19 +103,104 @@ public class BaseDeDonnees {
 		connection.close();	
 	}
 	
+	/**
+	 * Cr√©er un utilisateur dans la BD avec son login et son mot de passe
+	 * @param login
+	 * @param motDePasse
+	 * @throws SQLException
+	 */
 	public void sauvegarderUtilisateur(String login, String motDePasse) throws SQLException{
-		String sql = "INSERT INTO VALUES ('" + login + "','"+ motDePasse+"')";
-		Statement st = connection.createStatement();
-		st.executeUpdate(sql);
+		String sql = "INSERT INTO Utilisateur (nom_utilisateur,mot_de_passe) VALUES (?,?)";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, login);
+		st.setString(1, motDePasse);
+		st.execute();
 	}
 	
 	/**
-	public void creerTable(String nomTable , ArrayList<Attribut> attributs ){
-		
+	 * Supprime un utilisateur √† partir de son login
+	 * @param login
+	 * @throws SQLException 
+	 */
+	public void supprimerUtilisateur(String login) throws SQLException{
+		String sql = "DELETE FROM Utilisateur WHERE nom_utilisateur = ?";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, login);
+		st.execute();
 	}
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
-	 * @throws SQLException */
+	
+	/**
+	 * Cr√©er un groupe de nom 'nomGroupe' dans la base de donn√©es
+	 * @param nomGroupe : nom du groupe √† cr√©er
+	 * @throws SQLException
+	 */
+	public void sauvegarderGroupe(String nomGroupe) throws SQLException{
+		String sql = "INSERT INTO Groupe (nom_groupe) VALUES (?)";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, nomGroupe);
+		st.execute();
+	}
+	
+	/**
+	 * Supprime un groupe √† partir de son nom de groupe
+	 * @param nomGroupe : nom du groupe √† supprimer
+	 * @throws SQLException 
+	 */
+	public void supprimerGroupe(String nomGroupe) throws SQLException{
+		String sql = "DELETE FROM Groupe WHERE nom_groupe = ?";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, nomGroupe);
+		st.execute();
+	}
+	
+	/**
+	 * MÈthode de sauvegarde gÈnÈrique 
+	 * Permet d'insÈrer dans une table un n-uplet contenant les attributs donnÈs
+	 * @param nomTable : nom de la table cible
+	 * @param attributs : Ensemble des attributs de la table 
+	 * @throws SQLException 
+	 */
+	public void sauvegarder(String nomTable, ArrayList<Attribut> attributs) throws SQLException{
+		int nombreAttributs = attributs.size();
+		String sql = "INSERT INTO " + nomTable + " (";
+		// liste des attributs de la table
+		for(int nb = 0 ; nb < nombreAttributs ; nb++){
+			sql += attributs.get(nb).getNomAttributBD() +",";
+		}
+		sql += ") VALUES (";
+		// ensemble des futures valeurs du n-uplet
+		for(int nb = 0 ; nb < nombreAttributs ; nb++){
+			sql+="?,";
+		}
+		sql += ")";
+		
+		PreparedStatement st = connection.prepareStatement(sql);
+		
+		// correspond au premier '?'
+		st.setString(0, nomTable);
+		// On prÈcise la valeur des attributs de la table dans l'ordre  
+		// de dÈnifition dans la requete
+		for(int nb = 0 ; nb < nombreAttributs ; nb++){
+			st.setString(nb, attributs.get(nb).getValeur());
+		}
+		st.execute();
+	}
+	
+	
+
+	/**
+	 * Supprime un n-uplet d'une table en fonction d'un attribut
+	 * @param attribut : attribut ‡ considÈrer
+	 * @param nomTable : nom de la table cible
+	 * @throws SQLException
+	 */
+	public void supprimer(String nomTable, Attribut attribut) throws SQLException{
+		String sql = "DELETE FROM " + nomTable + " WHERE " + attribut.getNomAttributBD() +" = ?";
+		PreparedStatement st = connection.prepareStatement(sql);
+		st.setString(0, attribut.getValeur());
+		st.execute();
+	}
+	
 	
 	/**
 	 * M√©thode de test de la BD
