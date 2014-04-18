@@ -27,7 +27,7 @@ public class Groupe {
 	public Groupe(int idGroupe, String nomGroupe){
 		//Création du groupe
 		if(disponibiliteIdGroupe(idGroupe)){
-			creerGroupe(nomGroupe);
+			setNomGroupe(nomGroupe);
 		}else{
 			//TODO: gestion d'erreur en cas de groupe déja existant
 			System.err.println("Erreur: Le groupe "+idGroupe+"existe déja...");
@@ -39,13 +39,12 @@ public class Groupe {
 	 * @param bdd : la base de données ou enregistrer
 	 * @param idGroupe
 	 * @param nomGroupe
-	 * @param flags
 	 * @throws SQLException 
 	 */
 	public Groupe(BaseDeDonnees bdd, int idGroupe, String nomGroupe) throws SQLException{
 		//Création du groupe
 		if(disponibiliteIdGroupe(idGroupe)){
-			creerGroupe(nomGroupe);
+			setNomGroupe(nomGroupe);
 			sauvegarderPersistant(bdd);
 		}else{
 			//TODO: gestion d'erreur en cas de groupe déja existant
@@ -58,12 +57,9 @@ public class Groupe {
 	}
 
 	/**
-	 * 
-	 * @param idGroupe
 	 * @param nomGroupe
-	 * @param flags
 	 */
-	private void creerGroupe(String nomGroupe) {
+	private void setNomGroupe(String nomGroupe) {
 		this.nomGroupe = nomGroupe;
 	}
 
