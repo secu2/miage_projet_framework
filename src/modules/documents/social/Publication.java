@@ -91,6 +91,25 @@ public class Publication {
 			ArrayList<Utilisateur> visibiliteUtilisateur) {
 		this.visibiliteUtilisateur = visibiliteUtilisateur;
 	}
+	
+	/**
+	 * Permet de contrôler la visibilité du document pas un utilisateur
+	 * @param utilisateur : l'utilisateur à contrôler
+	 * @return : True si l'utilisateur est autorisé à consulter le document
+	 */
+	public boolean estVisible(Utilisateur utilisateur){
+		
+		return visibiliteUtilisateur.contains(utilisateur);
+	}
+	
+	/**
+	 * Permet de contrôler la visibilité du document pas un groupe d'utilisateurs
+	 * @param groupe : le groupe à contôler
+	 * @return : True si le groupe d'utilisateurs est autorisé à consulter le document
+	 */
+	public boolean estVisible(Groupe groupe){
+		return visibiliteGroupe.contains(groupe);
+	}
 
 	
 	/**
