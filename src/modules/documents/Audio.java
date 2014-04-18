@@ -28,7 +28,7 @@ public class Audio extends Document {
 	 * @param debit
 	 */
 	public Audio(String nom, float taille, String format,
-			Statistique statistique, File emplacement,
+			Statistique statistique, String emplacement,
 			String frequenceEchantillonnage, String debit) {
 		super(nom, taille, format, statistique, emplacement);
 		this.frequenceEchantillonnage = frequenceEchantillonnage;

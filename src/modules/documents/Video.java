@@ -17,6 +17,26 @@ public class Video extends Document {
 	private String formatAffichage;
 	
 	/**
+	 * Constructeur de la classe Vidéo : construit un objet Video sans statistique
+	 * @param nom
+	 * @param taille
+	 * @param format
+	 * @param statistique
+	 * @param emplacement
+	 * @param encodage
+	 * @param tailleAffichage
+	 * @param formatAffichage
+	 */
+	public Video(String nom, float taille, String format,
+			String emplacement, String encodage,
+			String tailleAffichage, String formatAffichage) {
+		super(nom, taille, format, emplacement);
+		this.encodage = encodage;
+		this.tailleAffichage = tailleAffichage;
+		this.formatAffichage = formatAffichage;
+	}
+	
+	/**
 	 * Constructeur de la classe Vidéo : construit un objet Video
 	 * @param nom
 	 * @param taille
@@ -28,7 +48,7 @@ public class Video extends Document {
 	 * @param formatAffichage
 	 */
 	public Video(String nom, float taille, String format,
-			Statistique statistique, File emplacement, String encodage,
+			Statistique statistique, String emplacement, String encodage,
 			String tailleAffichage, String formatAffichage) {
 		super(nom, taille, format, statistique, emplacement);
 		this.encodage = encodage;

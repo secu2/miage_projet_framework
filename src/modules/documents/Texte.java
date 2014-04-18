@@ -20,8 +20,21 @@ public class Texte extends Document {
 	 * @param emplacement
 	 */
 	public Texte(String nom, float taille, String format,
-			Statistique statistique, File emplacement) {
+			Statistique statistique, String emplacement) {
 		super(nom, taille, format, statistique, emplacement);
+	}
+	
+	/**
+	 * Constructeur de la classe Texte : construit un objet Texte sans Statistique
+	 * @param nom
+	 * @param taille
+	 * @param format
+	 * @param statistique
+	 * @param emplacement
+	 */
+	public Texte(String nom, float taille, String format,
+			String emplacement) {
+		super(nom, taille, format, emplacement);
 	}
 	
 	
