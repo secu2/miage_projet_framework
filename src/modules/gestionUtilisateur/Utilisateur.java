@@ -1,9 +1,13 @@
 package modules.gestionUtilisateur;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import systeme.BaseDeDonnees;
+import systeme.tools.Encryptage;
 
 /**
  * Utilisateur.java
@@ -13,15 +17,18 @@ import systeme.BaseDeDonnees;
 public class Utilisateur {
 	private String login;
     private String motDePasse;
+    private ArrayList<Groupe> groupes;
     
     /**
      * Construit un objet Utilisateur en fournissant le login et le mot de passe
      * @param login
      * @param motDePasse
+     * @throws UnsupportedEncodingException 
+     * @throws NoSuchAlgorithmException 
      */
-    public Utilisateur(String login, String motDePasse){
+    public Utilisateur(String login, String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException{
     	this.login = login;
-    	this.motDePasse = motDePasse;
+    	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
     }
     /**
      * Construit un utilisateur et l'enregistre dans la base de données
@@ -29,10 +36,12 @@ public class Utilisateur {
      * @param login : Le login de l'utilisateur
      * @param motDePasse : Le mot de passe de l'utilisateur
      * @throws SQLException 
+     * @throws UnsupportedEncodingException 
+     * @throws NoSuchAlgorithmException 
      */
-    public Utilisateur(BaseDeDonnees bdd, String login, String motDePasse) throws SQLException{
+    public Utilisateur(BaseDeDonnees bdd, String login, String motDePasse) throws SQLException, NoSuchAlgorithmException, UnsupportedEncodingException{
     	this.login = login;
-    	this.motDePasse = motDePasse;
+    	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
     	
     	sauvegarderPersistant(bdd);
     }
@@ -54,11 +63,13 @@ public class Utilisateur {
 	}
 	
 	/**
-	 * Affecte un mot de passe pour cet utilisateur
+	 * Crypte et Affecte un mot de passe pour cet utilisateur
 	 * @param motDePasse
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public void setMotDePasse(String motDePasse) {
-		this.motDePasse = motDePasse;
+	public void setMotDePasse(String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
 	}
 	
 	/**
@@ -91,8 +102,25 @@ public class Utilisateur {
 		bdd.sauvegarderUtilisateur(login, motDePasse);
 	}
 	
+	/**
+	 * Permet de vérifier la correspondance du mot de passe en clair de l'utilisateur avec celui fourni en parametre
+	 * @param motDePasse en clair
+	 * @return true si on autorise la connexion, false sinon.
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
+	 */
+	public boolean autoriserConnexion(String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+		return Encryptage.comparerMotsDePasse(this.motDePasse, Encryptage.encrypterMotDePasse(motDePasse));
+	}
 	
-    
-    
+	/**
+	 * Permet de vérifier la correspondance du mot de passe encrypté de l'utilisateur avec celui fourni en parametre
+	 * @param motDePasse crypté en sha1
+	 * @return true si on autorise la connexion, false sinon.
+	 */
+	public boolean autoriserConnexionSecurisee(String motDePasse){
+		return Encryptage.comparerMotsDePasse(this.motDePasse, motDePasse);
+	}
+	
 
 }

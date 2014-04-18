@@ -1,14 +1,23 @@
 package modules.gestionUtilisateur;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 import systeme.BaseDeDonnees;
 
-
+/**
+ * Groupe.java
+ * @author never
+ *
+ */
 public class Groupe {
+	// nom du groupe
 	private String nomGroupe;
-
+	// Liste des utilisateurs appartenants à ce groupe
+	private ArrayList<Utilisateur> utilisateurs;
+	// proprietaire du groupe
+	private Utilisateur proprietaire;
 
 	/**
 	 * Constructeur de groupe sans sauvegarde en base de données
@@ -18,7 +27,7 @@ public class Groupe {
 	public Groupe(int idGroupe, String nomGroupe){
 		//Création du groupe
 		if(disponibiliteIdGroupe(idGroupe)){
-			creerGroupe(nomGroupe);
+			setNomGroupe(nomGroupe);
 		}else{
 			//TODO: gestion d'erreur en cas de groupe déja existant
 			System.err.println("Erreur: Le groupe "+idGroupe+"existe déja...");
@@ -30,13 +39,12 @@ public class Groupe {
 	 * @param bdd : la base de données ou enregistrer
 	 * @param idGroupe
 	 * @param nomGroupe
-	 * @param flags
 	 * @throws SQLException 
 	 */
 	public Groupe(BaseDeDonnees bdd, int idGroupe, String nomGroupe) throws SQLException{
 		//Création du groupe
 		if(disponibiliteIdGroupe(idGroupe)){
-			creerGroupe(nomGroupe);
+			setNomGroupe(nomGroupe);
 			sauvegarderPersistant(bdd);
 		}else{
 			//TODO: gestion d'erreur en cas de groupe déja existant
@@ -45,16 +53,13 @@ public class Groupe {
 	}
 
 	public void sauvegarderPersistant(BaseDeDonnees bdd) throws SQLException {
-		bdd.sauvegarderGroupe(nomGroupe);
+		bdd.sauvegarderGroupe(nomGroupe,proprietaire.getLogin());
 	}
 
 	/**
-	 * 
-	 * @param idGroupe
 	 * @param nomGroupe
-	 * @param flags
 	 */
-	private void creerGroupe(String nomGroupe) {
+	private void setNomGroupe(String nomGroupe) {
 		this.nomGroupe = nomGroupe;
 	}
 
