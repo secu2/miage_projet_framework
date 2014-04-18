@@ -5,6 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
 
+/**
+ * Encryptage.java
+ * @author never
+ *
+ */
 public class Encryptage {
 	
 	/**
