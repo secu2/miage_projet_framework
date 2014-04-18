@@ -28,8 +28,8 @@ public class Encryptage {
 	}
 	
 	/**
-	 * Méthode permettant transformer un tableau de bits en une chaine hexadecimale
-	 * @param hash
+	 * Méthode permettant transformer un tableau d'octets en une chaine hexadecimale
+	 * @param hash : tableau d'octets
 	 * @return result : chaine hexadecimale
 	 */
 	private static String byteToHex(final byte[] hash){
