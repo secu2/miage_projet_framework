@@ -12,11 +12,11 @@ public class RMIInputStream extends InputStream implements Serializable {
 	}
 
 	public int read() throws IOException {
-		return in.read();
+		return in.lecture();
 	}
 
 	public int read(byte[] b, int off, int len) throws IOException {
-		byte[] b2 = in.readBytes(len);
+		byte[] b2 = in.lectureBytes(len);
 		if (b2 == null)
 			return -1;
 		int i = b2.length;

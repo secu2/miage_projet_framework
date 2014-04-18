@@ -15,7 +15,7 @@ public class MainRmi {
         long t;
         t = System.currentTimeMillis();
         try {
-			clt.download(srv, testFile, new File("download.jpg"));
+			clt.telecharger(srv, testFile, new File("download.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -23,7 +23,7 @@ public class MainRmi {
         
         
         try {
-			clt.upload(srv, new File("download.jpg"), new File("docServeur/tutu.jpg"));
+			clt.charger(srv, new File("C:/Users/chaiebm/Desktop/Bd.zip"), new File("docServeur/Bd.zip"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

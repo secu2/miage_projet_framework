@@ -13,27 +13,47 @@ public class RMIInputStreamImpl implements Remote {
         this.in = in;
         UnicastRemoteObject.exportObject(this, 1099);
     }
-    public void close() throws IOException, RemoteException {
+    /**
+     * methode de fermeture du flux d'entree
+     * @throws IOException
+     * @throws RemoteException
+     */
+    public void fermeture() throws IOException, RemoteException {
         in.close();
     }
-    public int read() throws IOException, RemoteException {
+    /**
+     * lecture d'un octet
+     * @return la valeur du bit
+     * @throws IOException
+     * @throws RemoteException
+     */
+    public int lecture() throws IOException, RemoteException {
         return in.read();
     }
-    public byte[] readBytes(int len) throws IOException, 
-            RemoteException {
-        if (b == null || b.length != len)
-            b = new byte[len];
+    /**
+	 * lecture par taille 
+	 * @param taille : taille de bytes à lire
+	 * @return : tableau 
+	 * @throws IOException
+	 * @throws RemoteException
+	 */
+    public byte[] lectureBytes(int taille) throws IOException, RemoteException {
+       
+    	//initialisation du tableau à la taille du buffer si il n'est pas initialisé
+    	if (b == null || b.length != taille)
+            b = new byte[taille];
             
         int len2 = in.read(b);
+        // si la taille est égale à 0 -> fin de fichier
         if (len2 < 0)
-            return null; // EOF reached
-  
-        if (len2 != len) {
-            // copy bytes to byte[] of correct length and return it
+            return null; // Fin de fichier
+        // si la taille du tableau definie est plus petite que le flux d'entree alors on copie le flux d'entree dans un tableau plus grand
+        if (len2 != taille) {
+           
             byte[] b2 = new byte[len2];
             System.arraycopy(b, 0, b2, 0, len2);
             return b2;
-        }
+        }// return les tableau de bit lus
         else
             return b;
     }
