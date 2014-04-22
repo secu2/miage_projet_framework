@@ -89,4 +89,20 @@ public class Groupe {
 		return true;
 	}
 	
+	/**
+	 * Retourne l'ensemble des utilisateurs du groupe
+	 * @return utilisateurs
+	 */
+	public ArrayList<Utilisateur> getUtilisateurs(){
+		return utilisateurs;
+	}
+	
+	/**
+	 * Ajout d'un utilisateur dans les listes de utilisateurs
+	 * @param u
+	 */
+	public void ajouterUtilisateur(Utilisateur u){
+		getUtilisateurs().add(u);
+	}
+	
 }

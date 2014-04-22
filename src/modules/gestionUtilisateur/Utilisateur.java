@@ -85,7 +85,7 @@ public class Utilisateur {
 	 */
 	public String genererMotDePasse(int n){
 		String motDePasse = new String();
-		String alphabet = new String("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"); //9
+		String alphabet = new String("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"); 
 		int tailleAlphabet = alphabet.length(); 
 
 		Random r = new Random();
@@ -127,7 +127,7 @@ public class Utilisateur {
 	public boolean autoriserConnexionSecurisee(String motDePasse){
 		return Encryptage.comparerMotsDePasse(this.motDePasse, motDePasse);
 	}
-	
+		
 	/**
 	 * Renvoie la liste des groupes de l'utilisateur
 	 * @return groupes
@@ -149,7 +149,10 @@ public class Utilisateur {
 	 * @param nomGroupe : nom du groupe
 	 */
 	public void creerUnGroupe(int idGroupe , String nomGroupe){
-		getGroupes().add(new Groupe(nomGroupe));
+		Groupe gr = new Groupe(nomGroupe);
+		gr.ajouterUtilisateur(this);
+		getGroupes().add(gr);
+		
 	}
 	
 	/**
@@ -218,12 +221,21 @@ public class Utilisateur {
 	}
 	
 	/**
+	 * Supprime la publication p
+	 * @param p : publication
+	 */
+	public void supprimerUnePublication(Publication p){
+		getPublications().remove(p);
+	}
+
+	/**
 	 * Créer un repertoire pour l'utilisateur 
 	 */
 	public void creerUnRepertoire(){
 		File repertoire = new File("/data/" + login); // chemin : à modifier
 		repertoire.mkdirs();
 	}
+	
 	
 	
 
