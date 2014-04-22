@@ -33,7 +33,7 @@ public class ClientRMI {
 				
 				// obtention de l'objet distant à partir de son nom (lookup)
 				registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-	    		Remote r = registry.lookup("fram");
+				Remote r = registry.lookup("fram");  
 				//System.out.println(r);
 	    		System.out.println("Start00 client");
 			}
