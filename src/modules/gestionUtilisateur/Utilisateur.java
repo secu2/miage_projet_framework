@@ -179,7 +179,6 @@ public class Utilisateur {
 	 * @param nomGroupe
 	 */
 	public void supprimerUnGroupe(int id){
-		// TODO : Voir pour la gestion des id
 		getGroupes().remove(getGroupe(id));
 	}
 	
@@ -188,7 +187,6 @@ public class Utilisateur {
 	 * @param nomGroupe
 	 */
 	public void supprimerUnGroupe(String nomGroupe){
-		// TODO : Voir pour la gestion des id
 		getGroupes().remove(getGroupe(nomGroupe));
 	}
 	
