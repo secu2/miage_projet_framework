@@ -4,7 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
+
+import modules.documents.Document;
+import modules.documents.social.Publication;
 
 import systeme.BaseDeDonnees;
 import systeme.tools.Encryptage;
@@ -18,7 +22,8 @@ public class Utilisateur {
 	private String login;
     private String motDePasse;
     private ArrayList<Groupe> groupes;
-    
+    private ArrayList<Publication> publications;
+     
     /**
      * Construit un objet Utilisateur en fournissant le login et le mot de passe
      * @param login
@@ -121,6 +126,60 @@ public class Utilisateur {
 	public boolean autoriserConnexionSecurisee(String motDePasse){
 		return Encryptage.comparerMotsDePasse(this.motDePasse, motDePasse);
 	}
+	
+	/**
+	 * Renvoie la liste des groupes de l'utilisateur
+	 * @return groupes
+	 */
+	public ArrayList<Groupe> getGroupes() {
+		return groupes;
+	}
+	
+	/**
+	 * Affecte une liste de groupes à l'utilisateur
+	 * @param groupes
+	 */
+	public void setGroupes(ArrayList<Groupe> groupes) {
+		this.groupes = groupes;
+	}
+	
+	/**
+	 * Permet de créer un groupe
+	 * @param nomGroupe : nom du groupe
+	 */
+	public void creerUnGroupe(String nomGroupe){
+		// TODO : Voir pour la gestion des id
+		getGroupes().add(new Groupe(idGroupe, nomGroupe));
+	}
+	
+	/**
+	 * Supprime le groupe de la liste des groupes de l'utilisateur
+	 * @param nomGroupe
+	 */
+	public void supprimerUnGroupe(String nomGroupe){
+		// TODO : Voir pour la gestion des id
+		getGroupes().remove();
+	}
+	
+	/**
+	 * Renvoie la liste des publications de l'utilisateur
+	 * @return publications
+	 */
+	public ArrayList<Publication> getPublications(){
+		return publications;
+	}
+	
+	/**
+	 * Créer une publication pour cet utilisateur et l'ajoute à l'ensemble des publications de l'utilisateur
+	 * @param utilisateursAutorises
+	 * @param groupesAutorises
+	 * @param doc
+	 */
+	public void publierUnDocument(ArrayList<Utilisateur> utilisateursAutorises, ArrayList<Groupe> groupesAutorises, Document doc, Date dateFin){
+		getPublications().add(new Publication(new Date(), dateFin, utilisateursAutorises, groupesAutorises, this, doc));
+	}
+	
+	
 	
 
 }

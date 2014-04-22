@@ -14,7 +14,7 @@ import modules.gestionUtilisateur.Utilisateur;
 public class Publication {
     
     private Date dateDePublication;
-    private int dureeDeDisponibilite;
+    private Date dateFinPublication;
     // Liste des utilisateurs ayant accès à la publication
     private ArrayList<Utilisateur> visibiliteUtilisateur; 
     // Liste des groupes ayant accès à la publication
@@ -31,12 +31,12 @@ public class Publication {
      * @param proprietaire
      * @param document
      */
-	public Publication(Date dateDePublication, int dureeDeDisponibilite,
+	public Publication(Date dateDePublication, Date dateFinPublication,
 			ArrayList<Utilisateur> visibiliteUtilisateur,
 			ArrayList<Groupe> visibiliteGroupe, Utilisateur proprietaire,
 			Document document) {
 		this.dateDePublication = dateDePublication;
-		this.dureeDeDisponibilite = dureeDeDisponibilite;
+		this.dateFinPublication = dateFinPublication;
 		this.visibiliteUtilisateur = visibiliteUtilisateur;
 		this.visibiliteGroupe = visibiliteGroupe;
 		this.proprietaire = proprietaire;
@@ -60,19 +60,28 @@ public class Publication {
 	}
 
 	/**
+	 * Renvoie la date de fin de publication 
+	 * @return dateFinPublication
+	 */
+	public Date getDateFinDisponibilite() {
+		return dateFinPublication;
+	}
+	
+	/**
 	 * Renvoie la durée de disponibilité de la publication
 	 * @return dureeDeDisponibilite
 	 */
-	public int getDureeDeDisponibilite() {
-		return dureeDeDisponibilite;
+	public long getDureeDeDisponibilite() {
+		return dateFinPublication.getTime() - dateDePublication.getTime();
 	}
+
 
 	/**
 	 * Affecte la durée de disponibilité de la publication
 	 * @param dureeDeDisponibilite
 	 */
-	public void setDureeDeDisponibilite(int dureeDeDisponibilite) {
-		this.dureeDeDisponibilite = dureeDeDisponibilite;
+	public void setDateFinDisponibilite(Date dateFinDispo) {
+		this.dateFinPublication = dateFinDispo;
 	}
 
 	/**
@@ -160,8 +169,37 @@ public class Publication {
 		this.document = document;
 	}
 	
+	/**
+	 * Ajoute un utilisateur à la liste des personnes ayant accès à la publication
+	 * @param u
+	 */
+	public void autoriserAccesUtilisateur(Utilisateur u){
+		getVisibiliteUtilisateur().add(u);
+	}
 	
+	/**
+	 * Ajoute un groupe à la liste des groupes ayant accès à la publication
+	 * @param u
+	 */
+	public void autoriserAccesGroupe(Groupe g){
+		getVisibiliteGroupe().add(g);
+	}
 	
+	/**
+	 * Retire un utilisateur à la liste des personnes ayant accès à la publication
+	 * @param u
+	 */
+	public void retirerAccesUtilisateur(Utilisateur u){
+		getVisibiliteUtilisateur().remove(u);
+	}
+	
+	/**
+	 * Retire un groupe à la liste des groupes ayant accès à la publication
+	 * @param u
+	 */
+	public void retirerAccesGroupe(Groupe g){
+		getVisibiliteGroupe().remove(g);
+	}
     
     
     
