@@ -135,23 +135,23 @@ public class Serveur {
 	 * @param utilisateur : l'utilisateur à connecter
 	 * @return true (Si connection établit)
 	 */
-	public boolean connexion(String login,  String motDepass) {
+	public boolean connexion(String login,  String motDepasse) {
 
 		boolean result = false;
 		
 		
 			Utilisateur util;
 			try {
-				util = new Utilisateur("momo", "jojo");
-				if (login.equals(util.getLogin())) {
-					
-					
-					if(util.autoriserConnexionSecurisee(Encryptage.encrypterMotDePasse(motDepass)))
-					{
+				if(utilisateurExistant(login)){
+					// on récupère l'objet utilisateur
+					util = getUtilisateurInscrit(login);
+					// Test si le mdp est correct
+					if(util.autoriserConnexion(motDepasse)){
+						ajouterClient(new Client(util,motDepasse));
 						result = true;
-					}
-
+					}	
 				}
+				
 			} catch (NoSuchAlgorithmException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

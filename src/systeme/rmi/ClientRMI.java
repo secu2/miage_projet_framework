@@ -11,6 +11,7 @@ import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import systeme.Client;
 import systeme.Serveur;
 
 
@@ -22,24 +23,20 @@ public class ClientRMI {
 	static int REGISTRY_PORT = 1099;
 	
 	private Registry registry;
-	public ClientRMI()
+	
+	public ClientRMI(String login, String motDePasse)
 	{
 		
-		
-		try {
-			
-			if(new Serveur().connexion("momo", "joj2o"))
+		try {	
+			if(new Serveur().connexion(login, motDePasse))
 			{
-				
 				// obtention de l'objet distant à partir de son nom (lookup)
 				registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 				Remote r = registry.lookup("fram");  
 				//System.out.println(r);
 	    		System.out.println("Start00 client");
-			}
-			
+			}	
 			else
-				
 			{
 				throw new ErreurConnexion("Login mot de passe invalide");
 				
@@ -98,7 +95,7 @@ public class ClientRMI {
      * Methode qui permet de charger un fichier sur le serveur
      * @param server : le serveurRMI
      * @param source : le fichier a charger
-     * @param destination : le fichier de sortie
+2     * @param destination : le fichier de sortie
      * @throws IOException
      */
     
