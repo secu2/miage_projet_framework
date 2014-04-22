@@ -1,5 +1,6 @@
-package systeme.rmi;
+package systeme;
 
+import systeme.rmi.ClientRMI;
 import modules.gestionUtilisateur.Utilisateur;
 
 public class Client {

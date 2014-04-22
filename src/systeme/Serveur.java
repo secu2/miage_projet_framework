@@ -1,6 +1,8 @@
-package systeme.rmi;
+package systeme;
 
 import java.util.ArrayList;
+
+import systeme.rmi.ServeurRMI;
 
 import modules.gestionUtilisateur.Utilisateur;
 
