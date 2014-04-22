@@ -12,6 +12,9 @@ import systeme.BaseDeDonnees;
  *
  */
 public class Groupe {
+	
+	// identifiant du groupe
+	private int idGroupe;
 	// nom du groupe
 	private String nomGroupe;
 	// Liste des utilisateurs appartenants à ce groupe
@@ -24,14 +27,9 @@ public class Groupe {
 	 * @param idGroupe l'id du groupe, est unique
 	 * @param nomGroupe le nom du groupe
 	 */
-	public Groupe(int idGroupe, String nomGroupe){
-		//Création du groupe
-		if(disponibiliteIdGroupe(idGroupe)){
-			setNomGroupe(nomGroupe);
-		}else{
-			//TODO: gestion d'erreur en cas de groupe déja existant
-			System.err.println("Erreur: Le groupe "+idGroupe+"existe déja...");
-		}
+	public Groupe(String nomGroupe){
+		idGroupe = proprietaire.getGroupes().size();
+		this.nomGroupe = nomGroupe;
 	}
 	
 	/**
@@ -41,28 +39,45 @@ public class Groupe {
 	 * @param nomGroupe
 	 * @throws SQLException 
 	 */
-	public Groupe(BaseDeDonnees bdd, int idGroupe, String nomGroupe) throws SQLException{
-		//Création du groupe
-		if(disponibiliteIdGroupe(idGroupe)){
-			setNomGroupe(nomGroupe);
-			sauvegarderPersistant(bdd);
-		}else{
-			//TODO: gestion d'erreur en cas de groupe déja existant
-			System.err.println("Erreur: Le groupe "+idGroupe+"existe déja...");
-		}
-	}
-
-	public void sauvegarderPersistant(BaseDeDonnees bdd) throws SQLException {
-		bdd.sauvegarderGroupe(nomGroupe,proprietaire.getLogin());
+	public Groupe(BaseDeDonnees bdd,String nomGroupe) throws SQLException{
+		idGroupe = proprietaire.getGroupes().size();
+		this.nomGroupe = nomGroupe;
+		sauvegarderPersistant(bdd);
 	}
 
 	/**
+	 * Sauvegarde sur le groupe dans la bd
+	 * @param bdd
+	 * @throws SQLException
+	 */
+	public void sauvegarderPersistant(BaseDeDonnees bdd) throws SQLException {
+		bdd.sauvegarderGroupe(nomGroupe,proprietaire.getLogin(),idGroupe);
+	}
+
+	/**
+	 * Affecte un nom de groupe au groupe
 	 * @param nomGroupe
 	 */
 	private void setNomGroupe(String nomGroupe) {
 		this.nomGroupe = nomGroupe;
 	}
 
+	/**
+	 * Renvoie le nom du groupe
+	 * @return nomGroupe
+	 */
+	public String getNomGroupe(){
+		return nomGroupe;
+	}
+	
+	/**
+	 * Renvoie l'id du groupe
+	 * @return idGroupe
+	 */
+	public int getIdGroupe(){
+		return idGroupe;
+	}
+	
 	/**
 	 * Permet de vérifier si le groupe possédant l'idGroupe 
 	 * communiqué éxiste déja dans la base de donnée des groupes
@@ -73,4 +88,5 @@ public class Groupe {
 		//TODO: Vérifier que le groupe n'est pas déja présent dans la base de données
 		return true;
 	}
+	
 }

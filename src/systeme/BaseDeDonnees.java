@@ -161,14 +161,13 @@ public class BaseDeDonnees {
 	 *            : nom du groupe à créer
 	 * @throws SQLException
 	 */
-	public void sauvegarderGroupe(String nomGroupe, String login)
+	public void sauvegarderGroupe(String nomGroupe, String login , int idGroupe)
 			throws SQLException {
 		
-		int idUtilisateur = getIdUtilisateur(login);
 		String sql = "INSERT INTO Groupe (nom_groupe,id_utilisateur_proprietaire) VALUES (?,?)";
 		PreparedStatement st = connection.prepareStatement(sql);
 		st.setString(0, nomGroupe);
-		st.setInt(1, idUtilisateur);
+		st.setInt(1, idGroupe );
 		st.execute();
 	}
 	

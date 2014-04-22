@@ -1,5 +1,6 @@
 package modules.gestionUtilisateur;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -147,18 +148,55 @@ public class Utilisateur {
 	 * Permet de créer un groupe
 	 * @param nomGroupe : nom du groupe
 	 */
-	public void creerUnGroupe(String nomGroupe){
-		// TODO : Voir pour la gestion des id
-		getGroupes().add(new Groupe(idGroupe, nomGroupe));
+	public void creerUnGroupe(int idGroupe , String nomGroupe){
+		getGroupes().add(new Groupe(nomGroupe));
 	}
 	
 	/**
-	 * Supprime le groupe de la liste des groupes de l'utilisateur
+	 * Supprime le groupe de la liste des groupes de l'utilisateur à partir de son id
+	 * @param nomGroupe
+	 */
+	public void supprimerUnGroupe(int id){
+		// TODO : Voir pour la gestion des id
+		getGroupes().remove(getGroupe(id));
+	}
+	
+	/**
+	 * Supprime le groupe de la liste des groupes de l'utilisateur à partir de son nom
 	 * @param nomGroupe
 	 */
 	public void supprimerUnGroupe(String nomGroupe){
 		// TODO : Voir pour la gestion des id
-		getGroupes().remove();
+		getGroupes().remove(getGroupe(nomGroupe));
+	}
+	
+
+	/**
+	 * Renvoi le groupe ayant l'id de groupe numéro 'idGroupe'
+	 * @param numGroupe
+	 */
+	public Groupe getGroupe(int idGroupe){
+		Groupe gr = null;
+		for(int i = 0; i < getGroupes().size() ; i++){
+			if(gr.getIdGroupe() == idGroupe){
+				gr = getGroupes().get(i);
+			}
+		}
+		return gr;
+	}
+	
+	/**
+	 * Renvoi le groupe ayant le nom de groupe 'nom'
+	 * @param nom : nom du groupe
+	 */
+	public Groupe getGroupe(String nom){
+		Groupe gr = null;
+		for(int i = 0; i < getGroupes().size() ; i++){
+			if(gr.getNomGroupe().equals(nom)){
+				gr = getGroupes().get(i);
+			}
+		}
+		return gr;
 	}
 	
 	/**
@@ -179,6 +217,13 @@ public class Utilisateur {
 		getPublications().add(new Publication(new Date(), dateFin, utilisateursAutorises, groupesAutorises, this, doc));
 	}
 	
+	/**
+	 * Créer un repertoire pour l'utilisateur 
+	 */
+	public void creerUnRepertoire(){
+		File repertoire = new File("/data/" + login); // chemin : à modifier
+		repertoire.mkdirs();
+	}
 	
 	
 
