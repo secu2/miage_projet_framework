@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
-
 import modules.gestionUtilisateur.Utilisateur;
 
 public class Serveur {
@@ -129,6 +128,39 @@ public class Serveur {
 		return existant;
 		
 
+	}
+	
+	/**
+	 * Realise une connexion entre un client et un serveur
+	 * @param utilisateur : l'utilisateur à connecter
+	 * @return true (Si connection établit)
+	 */
+	public boolean connexion(String login,  String motDepass) {
+
+		boolean result = false;
+		
+		
+			Utilisateur util;
+			try {
+				util = new Utilisateur("momo", "jojo");
+				if (login.equals(util.getLogin())) {
+					
+					
+					if(util.autoriserConnexionSecurisee(Encryptage.encrypterMotDePasse(motDepass)))
+					{
+						result = true;
+					}
+
+				}
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		return result;
 	}
 
 }

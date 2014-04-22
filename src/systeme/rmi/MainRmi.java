@@ -13,10 +13,17 @@ public class MainRmi {
 		File testFile = new File("docServeur/image.jpg");
         long len = testFile.length();
         
+        //String[] clients = clt2.getClients();
+        
+       /* for(int i =0; i< clients.length; i++)
+        {
+        	System.out.println(clients[i]);
+        }*/
+        
         long t;
         t = System.currentTimeMillis();
         try {
-			clt.telecharger(srv, testFile, new File("C:/Users/Mohamed/Desktop/download.jpg"));
+			clt.telecharger(srv, testFile, new File("C:/Users/chaiebm/Desktop/download.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -24,17 +31,11 @@ public class MainRmi {
         
         
         try {
-			clt.charger(srv, new File("C:/Users/Mohamed/Desktop/download.jpg"), new File("docServeur/test1.jpg"));
+			clt.charger(srv, new File("C:/Users/chaiebm/Desktop/download.jpg"), new File("docServeur/test1.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-        
-        
-        
-        
-        
 	}
 
 }

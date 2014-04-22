@@ -11,6 +11,8 @@ import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import systeme.Serveur;
+
 
 /**
  * @author chaiebm
@@ -18,30 +20,40 @@ import java.rmi.registry.Registry;
  */
 public class ClientRMI {
 	static int REGISTRY_PORT = 1099;
+	
+	private Registry registry;
 	public ClientRMI()
 	{
-		System.out.println("Start00 client");
+		
 		
 		try {
 			
-			// obtention de l'objet distant à partir de son nom (lookup)
-			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-    		Remote r = registry.lookup("fram");
-			//System.out.println(r);
-			
-			if (r instanceof InterfaceRmi) {
+			if(new Serveur().connexion("momo", "joj2o"))
+			{
 				
-				String rslt = ((InterfaceRmi) r).getTest();
-				System.out.println("chaine envoyee = "+ rslt);
+				// obtention de l'objet distant à partir de son nom (lookup)
+				registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+	    		Remote r = registry.lookup("fram");
+				//System.out.println(r);
+	    		System.out.println("Start00 client");
 			}
 			
-			System.out.println("End client");
+			else
+				
+			{
+				throw new ErreurConnexion("Login mot de passe invalide");
+				
+			}
+    		
 			
 			
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ErreurConnexion e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -93,5 +105,35 @@ public class ClientRMI {
     public static void charger(ServeurRMI server, File source,  File destination) throws IOException {
     	copie (new FileInputStream(source),server.getOutputStream(destination));
     }
+    
+    
+    public String[] getClients()
+    {
+    	String[] clients  = null; 
+    	String[] result = null; 
+    	int indice = 0;
+    	try {
+    		clients = registry.list();
+    		result = new String[clients.length];
+			for(int i = 0; i <clients.length; i++)
+			{
+				if (!clients[i].equals("fram"))
+				{
+					result[indice]=clients[i];
+					indice++;
+				}
+			}
+		} catch (AccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	
+    	return result;
+    }
+    
     
 }
