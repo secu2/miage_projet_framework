@@ -16,13 +16,13 @@ import java.rmi.registry.LocateRegistry;
 
 
 public class ServeurRMI {
-	
+	static int REGISTRY_PORT = 1099;
 	
 	
 	public ServeurRMI() {
 		// TODO Auto-generated method stub
 		try {
-			LocateRegistry.createRegistry(1099);
+			LocateRegistry.createRegistry(REGISTRY_PORT);
 			 
 			/*System.out.println("Mise en place du Security Manager ...");
 			if (System.getSecurityManager() == null) {
@@ -45,10 +45,15 @@ public class ServeurRMI {
 	}
 	
 	public InputStream getInputStream(File f) throws IOException {
-	    return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
+	   // return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
+		 return  new RmiImpl(new FileInputStream(f)).getIn();
+		 
 	}
 	
 	public OutputStream getOutputStream(File f) throws IOException {
-	    return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
+	  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
+	    return new RmiImpl(new FileOutputStream(f)).getOut();
+	    
+	    
 	}
 }

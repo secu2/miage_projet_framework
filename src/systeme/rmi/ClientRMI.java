@@ -17,7 +17,7 @@ import java.rmi.registry.Registry;
  *
  */
 public class ClientRMI {
-	
+	static int REGISTRY_PORT = 1099;
 	public ClientRMI()
 	{
 		System.out.println("Start00 client");
@@ -25,7 +25,7 @@ public class ClientRMI {
 		try {
 			
 			// obtention de l'objet distant à partir de son nom (lookup)
-			Registry registry = LocateRegistry.getRegistry(1099);
+			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
     		Remote r = registry.lookup("fram");
 			//System.out.println(r);
 			
@@ -65,7 +65,8 @@ public class ClientRMI {
         int len;
         //Parcour du flux d'entree et copie dans le flux sortie
         while ((len = inStream.read(b)) >= 0) {
-        	outStream.write(b, 0, len);
+        	//outStream.write(b, 0, len);
+        	outStream.write(b);
         }
         inStream.close();
         outStream.close();

@@ -9,13 +9,14 @@ public class MainRmi {
 		
 		ServeurRMI srv = new ServeurRMI();
 		ClientRMI clt = new ClientRMI();
+		ClientRMI clt2 = new ClientRMI();
 		File testFile = new File("docServeur/image.jpg");
         long len = testFile.length();
         
         long t;
         t = System.currentTimeMillis();
         try {
-			clt.telecharger(srv, testFile, new File("download.jpg"));
+			clt.telecharger(srv, testFile, new File("C:/Users/Mohamed/Desktop/download.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -23,7 +24,7 @@ public class MainRmi {
         
         
         try {
-			clt.charger(srv, new File("C:/Users/chaiebm/Desktop/Bd.zip"), new File("docServeur/Bd.zip"));
+			clt.charger(srv, new File("C:/Users/Mohamed/Desktop/download.jpg"), new File("docServeur/test1.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
