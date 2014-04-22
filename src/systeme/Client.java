@@ -26,6 +26,17 @@ public class Client {
 		utilisateur = u;
 	}
 	
+	/**
+	 * Renvoie l'utilisateur lié au client
+	 * @return utilisateur
+	 */
+	public Utilisateur getUtilisateur(){
+		return utilisateur;
+	}
+	
+	public ClientRMI getClientRMI(){
+		return client;
+	}
 	
 	
 	

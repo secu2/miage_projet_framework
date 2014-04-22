@@ -14,6 +14,12 @@ public class Serveur {
 	public ArrayList<Client> utilisateursConnectes;
 	public ServeurRMI serveur;
 	
+	public Serveur(){
+		serveur = new ServeurRMI();
+		utilisateursInscrits =  new ArrayList<Utilisateur>();
+		utilisateursConnectes = new ArrayList<Client>();
+	}
+	
 	/**
 	 * Renvoie la liste des utilisateurs inscrits
 	 * @return utilisateursInscrits
@@ -70,7 +76,7 @@ public class Serveur {
 		Utilisateur utilisateur = null;
 		if(utilisateurExistant(login)){
 			for(Utilisateur user : getUtilisateursInscrits()){
-				if(user.equals(login)){
+				if(user.getLogin().equals(login)){
 					utilisateur = user;
 				}
 			}
@@ -147,7 +153,9 @@ public class Serveur {
 					util = getUtilisateurInscrit(login);
 					// Test si le mdp est correct
 					if(util.autoriserConnexion(motDepasse)){
+						System.out.println("Dans connexion avant ajout client");
 						ajouterClient(new Client(util,motDepasse));
+						System.out.println("Après ajout client");
 						result = true;
 					}	
 				}
@@ -161,6 +169,38 @@ public class Serveur {
 			}
 
 		return result;
+	}
+	
+	/**
+	 * 
+	 * @param login
+	 * @return
+	 */
+	public Client getClientConnecte(String login){
+		Client cl = null;
+		for(Client c :  getUtilisateursConnectes() ){
+			if(c.getUtilisateur().getLogin().equals(login)){
+				cl = c;
+			}
+		}
+		
+		return cl;
+	}
+	
+	/**
+	 * Affecte le serveur rmi au serveur
+	 * @param serv
+	 */
+	public void setServeurRMI(ServeurRMI serv){
+		this.serveur = serv;
+	}
+	
+	/**
+	 * Renvoie le serveur RMI
+	 * @return serveur
+	 */
+	public ServeurRMI getServeurRMI(){
+		return serveur;
 	}
 
 }
