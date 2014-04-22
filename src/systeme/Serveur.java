@@ -82,10 +82,11 @@ public class Serveur {
 	
 	
 	/**
-	 * Inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client
+	 * Verification de l'existance de l'utilisateur et
+	 * inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client si l'utilisateur n'existe pas
 	 * @param login
 	 * @param motDePasse
-	 * @return false si le login de l'utilisateur est éjà existant, true sinon
+	 * @return false si le login de l'utilisateur est déjà existant, true sinon
 	 */
 	public boolean inscriptionSecurisee(String login, String motDePasse){
 		
@@ -106,7 +107,8 @@ public class Serveur {
 	
 	
 	/**
-	 * Inscription d'un utilisateur
+	 * Verification de l'existance de l'utilisateur et
+	 * inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client si l'utilisateur n'existe pas
 	 * @param login
 	 * @param motDePasse
 	 * @return false si le login de l'utilisateur est éjà existant, true sinon
@@ -115,7 +117,6 @@ public class Serveur {
 	 */
 	public boolean inscription(String login, String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
-
 		boolean existant = false;
 		if(!utilisateurExistant(login)){
 			Utilisateur u = new Utilisateur(login,motDePasse);
