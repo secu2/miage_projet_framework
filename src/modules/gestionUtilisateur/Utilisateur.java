@@ -32,6 +32,17 @@ public class Utilisateur {
      * @throws UnsupportedEncodingException 
      * @throws NoSuchAlgorithmException 
      */
+    public Utilisateur(String login){
+    	this.login = login;
+    }
+    
+    /**
+     * Construit un objet Utilisateur en fournissant le login et le mot de passe
+     * @param login
+     * @param motDePasse
+     * @throws UnsupportedEncodingException 
+     * @throws NoSuchAlgorithmException 
+     */
     public Utilisateur(String login, String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException{
     	this.login = login;
     	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
@@ -76,6 +87,14 @@ public class Utilisateur {
 	 */
 	public void setMotDePasse(String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
+	}
+	
+	/**
+	 * Affecte un mot de passe déjà encrypté pour cet utilisateur
+	 * @param motDePasse
+	 */
+	public void setMotDePasseSecurise(String motDePasse) {
+		this.motDePasse = motDePasse;
 	}
 	
 	/**
