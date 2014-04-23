@@ -14,8 +14,8 @@ public class MainRmi {
 		 
 		Serveur serveur = new Serveur();
 		serveur.inscription("momo", "jojo");
-		serveur.connexion("momo", "joj");
-		Client c = serveur.getClientConnecte("momo");
+		serveur.connexion("momo", "jojo");
+		//Client c = serveur.getClientConnecte("momo");
 		File testFile = new File("docServeur/image.jpg");
         long len = testFile.length();
         
@@ -25,7 +25,7 @@ public class MainRmi {
         {
         	System.out.println(clients[i]);
         }*/
-        
+        /*
         long t;
         t = System.currentTimeMillis();
         try {
@@ -41,7 +41,7 @@ public class MainRmi {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 }
