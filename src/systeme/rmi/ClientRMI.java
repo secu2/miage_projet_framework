@@ -26,7 +26,7 @@ public class ClientRMI {
 
 		try {
 
-<<<<<<< HEAD
+
 			// obtention de l'objet distant à partir de son nom (lookup)
 			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 			Remote r = registry.lookup("fram");
@@ -40,14 +40,9 @@ public class ClientRMI {
 					throw new ErreurConnexion("Login mot de passe invalide");
 				}
 			}
-=======
-			// obtention de l'objet distant ï¿½ partir de son nom (lookup)
-			registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-			r = registry.lookup("fram");
-			System.out.println("Start00 client");
 			
 			
->>>>>>> branch 'master' of https://github.com/secu2/miage_projet_framework.git
+
 
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -55,17 +50,16 @@ public class ClientRMI {
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-<<<<<<< HEAD
+
 		} catch (ErreurConnexion e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-=======
-		
 
-	}}
->>>>>>> branch 'master' of https://github.com/secu2/miage_projet_framework.git
+
+	
+
 
 	final public static int BUF_SIZE = 1024 * 64;
 
@@ -126,7 +120,7 @@ public class ClientRMI {
 		copie(new FileInputStream(source), server.getOutputStream(destination));
 	}
 
-<<<<<<< HEAD
+
 	/*public String[] getClients() {
 		String[] clients = null;
 		String[] result = null;
@@ -150,9 +144,9 @@ public class ClientRMI {
 
 		return result;
 	}*/
-=======
+
 	
->>>>>>> branch 'master' of https://github.com/secu2/miage_projet_framework.git
+
 
 	public ArrayList<Client> getClientsConnectee() {
 		ArrayList<Client> clientsConnectes = null;
