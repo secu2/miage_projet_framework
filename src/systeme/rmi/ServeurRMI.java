@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -21,9 +22,10 @@ import systeme.tools.Encryptage;
 
 
 
-public class ServeurRMI {
+public class ServeurRMI implements Serializable {
 	static int REGISTRY_PORT = 1099;
 	private Serveur serveur; 
+	
 	public ServeurRMI(Serveur serveur) {
 		// TODO Auto-generated method stub
 		try {

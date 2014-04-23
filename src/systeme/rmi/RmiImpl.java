@@ -69,18 +69,18 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 		this.in = in;
 	}
 
-	public Serveur getServeur()
+	public Serveur getServeur() throws RemoteException
 	{
 		return this.serveur;
 	}
 	
-	public ArrayList<Client> getClientsconnectee() throws RemoteException
+	public ArrayList<ClientRMI> getClientsconnectee() throws RemoteException
 	{
 		return getServeur().getUtilisateursConnectes();
 	}
 	
-	public boolean connexion(String login, String motDepasse) throws RemoteException
+	public boolean connexion(String login, String motDepasse ,ClientRMI c) throws RemoteException
 	{
-		return getServeur().connexion(login, motDepasse);
+		return getServeur().connexion(login, motDepasse, c);
 	}
 }

@@ -1,6 +1,7 @@
 package modules.gestionUtilisateur;
 
 import java.io.File;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -10,7 +11,6 @@ import java.util.Random;
 
 import modules.documents.Document;
 import modules.documents.social.Publication;
-
 import systeme.BaseDeDonnees;
 import systeme.tools.Encryptage;
 
@@ -19,7 +19,7 @@ import systeme.tools.Encryptage;
  * @author never
  *
  */
-public class Utilisateur {
+public class Utilisateur  implements Serializable{
 	private String login;
     private String motDePasse;
     private ArrayList<Groupe> groupes;

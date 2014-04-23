@@ -11,6 +11,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
+import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
 import systeme.Serveur;
 
@@ -21,23 +22,28 @@ import systeme.Serveur;
 public class ClientRMI {
 	static int REGISTRY_PORT = 1099;
 
-
+	private Utilisateur utilisateur;
+	private Registry registry;
+	private Remote r;
+	
 	public ClientRMI(String login, String motDePasse) {
 
 		try {
 
 
 			// obtention de l'objet distant à partir de son nom (lookup)
-			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-			Remote r = registry.lookup("fram");
-			if (r instanceof RmiImpl) {
-				//Serveur serveur = ((RmiImpl) r).getServeur();
-				System.out.println("Start00 client");
-				if (((RmiImpl) r).connexion(login, motDePasse)) {
+			 registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			 r = registry.lookup("fram");
+			if (r instanceof InterfaceRmi) {
+				Serveur serveur = ((InterfaceRmi) r).getServeur();
+				if (serveur.connexion(login, motDePasse,this)) {
+					this.utilisateur = serveur.getUtilisateurInscrit(login);
+					serveur.ajouterClient(this);
+					System.out.println(serveur.toString());
 					System.out.println("Start00 client");
 				} else {
-
 					throw new ErreurConnexion("Login mot de passe invalide");
+					
 				}
 			}
 			
@@ -50,11 +56,11 @@ public class ClientRMI {
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
 		} catch (ErreurConnexion e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 
@@ -146,36 +152,25 @@ public class ClientRMI {
 	}*/
 
 	
-
-
-	public ArrayList<Client> getClientsConnectee() {
-		ArrayList<Client> clientsConnectes = null;
+	public ArrayList<ClientRMI> getUtilisateurs()
+	{
+		ArrayList<ClientRMI> clients = null;
 		
-		try {
-			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-			Remote r = registry.lookup("fram");
-			System.out.println(r);
-			if (r instanceof RmiImpl) {
-				System.out.println("ldl");
-				try {
-					clientsConnectes = ((RmiImpl) r).getClientsconnectee();
-				} catch (RemoteException e) {
-
-					e.printStackTrace();
-				}
+		if (r instanceof InterfaceRmi)
+		{
+			try {
+				clients = ((InterfaceRmi) r).getClientsconnectee();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (AccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
-		return clientsConnectes;
+		return clients;
+	}
+	
+	public Utilisateur getUtilisateur(){
+		return this.utilisateur;
 	}
 
+	
 }
