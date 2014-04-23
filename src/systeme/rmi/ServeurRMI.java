@@ -16,17 +16,19 @@ import java.rmi.registry.LocateRegistry;
 import java.security.NoSuchAlgorithmException;
 
 import modules.gestionUtilisateur.Utilisateur;
+import systeme.Serveur;
 import systeme.tools.Encryptage;
 
 
 
 public class ServeurRMI {
 	static int REGISTRY_PORT = 1099;
-	
-	
-	public ServeurRMI() {
+	private Serveur serveur; 
+	public ServeurRMI(Serveur serveur) {
 		// TODO Auto-generated method stub
 		try {
+			
+			this.serveur=serveur;
 			LocateRegistry.createRegistry(REGISTRY_PORT);
 			 
 			/*System.out.println("Mise en place du Security Manager ...");
@@ -34,7 +36,7 @@ public class ServeurRMI {
 				System.setSecurityManager(new RMISecurityManager());
 			}*/
 			
-			RmiImpl informationImpl = new RmiImpl();
+			RmiImpl informationImpl = new RmiImpl(serveur);
 			String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram";
 			System.out.println("Enregistrement de l'objet avec l'url : " + url);
 			Naming.rebind(url, informationImpl);
@@ -62,6 +64,7 @@ public class ServeurRMI {
 	  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
 	    return new RmiImpl(new FileOutputStream(f)).getOut();   
 	}
+	
 	
 	
 }
