@@ -24,7 +24,19 @@ public class Utilisateur {
     private String motDePasse;
     private ArrayList<Groupe> groupes;
     private ArrayList<Publication> publications;
+    private File repertoire;
      
+    /**
+     * Construit un objet Utilisateur en fournissant le login et le mot de passe
+     * @param login
+     * @param motDePasse
+     * @throws UnsupportedEncodingException 
+     * @throws NoSuchAlgorithmException 
+     */
+    public Utilisateur(String login){
+    	this.login = login;
+    }
+    
     /**
      * Construit un objet Utilisateur en fournissant le login et le mot de passe
      * @param login
@@ -76,6 +88,14 @@ public class Utilisateur {
 	 */
 	public void setMotDePasse(String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
+	}
+	
+	/**
+	 * Affecte un mot de passe déjà encrypté pour cet utilisateur
+	 * @param motDePasse
+	 */
+	public void setMotDePasseSecurise(String motDePasse) {
+		this.motDePasse = motDePasse;
 	}
 	
 	/**
@@ -160,7 +180,6 @@ public class Utilisateur {
 	 * @param nomGroupe
 	 */
 	public void supprimerUnGroupe(int id){
-		// TODO : Voir pour la gestion des id
 		getGroupes().remove(getGroupe(id));
 	}
 	
@@ -169,7 +188,6 @@ public class Utilisateur {
 	 * @param nomGroupe
 	 */
 	public void supprimerUnGroupe(String nomGroupe){
-		// TODO : Voir pour la gestion des id
 		getGroupes().remove(getGroupe(nomGroupe));
 	}
 	
@@ -232,8 +250,18 @@ public class Utilisateur {
 	 * Créer un repertoire pour l'utilisateur 
 	 */
 	public void creerUnRepertoire(){
-		File repertoire = new File("/data/" + login); // chemin : à modifier
+		File repertoire = new File("/home/never/Documents/data/" + login); // chemin : à modifier
+		this.repertoire = repertoire;
 		repertoire.mkdirs();
+
+	}
+	
+	/**
+	 * Renvoie le repertoire de l'utilisateur sur le serveur
+	 * @return repertoire
+	 */
+	public File getRepertoire(){
+		return this.repertoire;
 	}
 	
 	
