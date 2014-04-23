@@ -24,6 +24,7 @@ public class Utilisateur {
     private String motDePasse;
     private ArrayList<Groupe> groupes;
     private ArrayList<Publication> publications;
+    private File repertoire;
      
     /**
      * Construit un objet Utilisateur en fournissant le login et le mot de passe
@@ -249,8 +250,18 @@ public class Utilisateur {
 	 * Créer un repertoire pour l'utilisateur 
 	 */
 	public void creerUnRepertoire(){
-		File repertoire = new File("/data/" + login); // chemin : à modifier
+		File repertoire = new File("/home/never/Documents/data/" + login); // chemin : à modifier
+		this.repertoire = repertoire;
 		repertoire.mkdirs();
+
+	}
+	
+	/**
+	 * Renvoie le repertoire de l'utilisateur sur le serveur
+	 * @return repertoire
+	 */
+	public File getRepertoire(){
+		return this.repertoire;
 	}
 	
 	

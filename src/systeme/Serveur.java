@@ -15,7 +15,6 @@ public class Serveur {
 	public ServeurRMI serveur;
 	
 	public Serveur(){
-		
 		utilisateursInscrits =  new ArrayList<Utilisateur>();
 		utilisateursConnectes = new ArrayList<Client>();
 		serveur = new ServeurRMI(this);
@@ -117,7 +116,7 @@ public class Serveur {
 	 * inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client si l'utilisateur n'existe pas
 	 * @param login
 	 * @param motDePasse
-	 * @return false si le login de l'utilisateur est éjà existant, true sinon
+	 * @return false si le login de l'utilisateur est déjà existant, true sinon
 	 * @throws UnsupportedEncodingException 
 	 * @throws NoSuchAlgorithmException 
 	 */
@@ -138,9 +137,36 @@ public class Serveur {
 	}
 	
 	/**
+	 * Verification de l'existance de l'utilisateur et
+	 * inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client si l'utilisateur n'existe pas
+	 * Créer un repertoire pour l'utilisateur sur le serveur
+	 * @param login
+	 * @param motDePasse
+	 * @return false si le login de l'utilisateur est déjà existant, true sinon
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchAlgorithmException 
+	 */
+	public boolean inscriptionAvecRepertoireUtilisateur(String login, String motDePasse){
+		boolean existant = false;
+		try {
+			existant = inscription(login, motDePasse);
+			getUtilisateurInscrit(login).creerUnRepertoire();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return existant;
+		
+
+	}
+	
+	/**
 	 * Realise une connexion entre un client et un serveur
-	 * @param utilisateur : l'utilisateur � connecter
-	 * @return true (Si connection �tablit)
+	 * @param utilisateur : l'utilisateur � connecter
+	 * @return true (Si connection �tablit)
 	 */
 	public boolean connexion(String login,  String motDepasse) {
 
@@ -150,13 +176,13 @@ public class Serveur {
 			Utilisateur util;
 			try {
 				if(utilisateurExistant(login)){
-					// on r�cup�re l'objet utilisateur
+					// on r�cup�re l'objet utilisateur
 					util = getUtilisateurInscrit(login);
 					// Test si le mdp est correct
 					if(util.autoriserConnexion(motDepasse)){
 						System.out.println("Dans connexion avant ajout client");
 						ajouterClient(new Client(util,motDepasse));
-						System.out.println("Apr�s ajout client");
+						System.out.println("Apr�s ajout client");
 						result = true;
 					}	
 				}
