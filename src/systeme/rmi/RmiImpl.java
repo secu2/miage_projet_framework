@@ -83,4 +83,9 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	{
 		return getServeur().connexion(login, motDepasse, c);
 	}
+
+	public void ajouterClient(ClientRMI c) throws RemoteException {
+		getServeur().ajouterClient(c);
+	}
 }
+

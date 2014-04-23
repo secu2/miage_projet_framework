@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -19,7 +20,7 @@ import systeme.Serveur;
  * @author chaiebm
  * 
  */
-public class ClientRMI {
+public class ClientRMI  implements Serializable{
 	static int REGISTRY_PORT = 1099;
 
 	private Utilisateur utilisateur;
@@ -38,7 +39,7 @@ public class ClientRMI {
 				Serveur serveur = ((InterfaceRmi) r).getServeur();
 				if (serveur.connexion(login, motDePasse,this)) {
 					this.utilisateur = serveur.getUtilisateurInscrit(login);
-					serveur.ajouterClient(this);
+					((InterfaceRmi) r).ajouterClient(this);
 					System.out.println(serveur.toString());
 					System.out.println("Start00 client");
 				} else {
