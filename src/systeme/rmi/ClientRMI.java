@@ -21,20 +21,18 @@ import systeme.Serveur;
 public class ClientRMI {
 	static int REGISTRY_PORT = 1099;
 
-	private Registry registry;
-	private Remote r;
 
 	public ClientRMI(String login, String motDePasse) {
 
 		try {
 
 			// obtention de l'objet distant à partir de son nom (lookup)
-			registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-			r = registry.lookup("fram");
+			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			Remote r = registry.lookup("fram");
 			if (r instanceof RmiImpl) {
-				Serveur serveur = ((RmiImpl) r).getServeur();
-
-				if (serveur.connexion(login, motDePasse)) {
+				//Serveur serveur = ((RmiImpl) r).getServeur();
+				System.out.println("Start00 client");
+				if (((RmiImpl) r).connexion(login, motDePasse)) {
 					System.out.println("Start00 client");
 				} else {
 
@@ -52,7 +50,6 @@ public class ClientRMI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	final public static int BUF_SIZE = 1024 * 64;
@@ -114,12 +111,12 @@ public class ClientRMI {
 		copie(new FileInputStream(source), server.getOutputStream(destination));
 	}
 
-	public String[] getClients() {
+	/*public String[] getClients() {
 		String[] clients = null;
 		String[] result = null;
 		int indice = 0;
 		try {
-			clients = registry.list();
+			//clients = registry.list();
 			result = new String[clients.length];
 			for (int i = 0; i < clients.length; i++) {
 				if (!clients[i].equals("fram")) {
@@ -136,16 +133,19 @@ public class ClientRMI {
 		}
 
 		return result;
-	}
+	}*/
 
 	public ArrayList<Client> getClientsConnectee() {
 		ArrayList<Client> clientsConnectes = null;
+		
 		try {
-			Remote remote = this.registry.lookup("fram");
-			if (remote instanceof RmiImpl) {
+			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			Remote r = registry.lookup("fram");
+			System.out.println(r);
+			if (r instanceof RmiImpl) {
 				System.out.println("ldl");
 				try {
-					clientsConnectes = ((RmiImpl) remote).getClientsconnectee();
+					clientsConnectes = ((RmiImpl) r).getClientsconnectee();
 				} catch (RemoteException e) {
 
 					e.printStackTrace();

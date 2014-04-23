@@ -78,5 +78,9 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	{
 		return getServeur().getUtilisateursConnectes();
 	}
-
+	
+	public boolean connexion(String login, String motDepasse) throws RemoteException
+	{
+		return getServeur().connexion(login, motDepasse);
+	}
 }

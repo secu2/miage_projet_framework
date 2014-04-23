@@ -30,11 +30,7 @@ public class ServeurRMI {
 			
 			this.serveur=serveur;
 			LocateRegistry.createRegistry(REGISTRY_PORT);
-			 
-			/*System.out.println("Mise en place du Security Manager ...");
-			if (System.getSecurityManager() == null) {
-				System.setSecurityManager(new RMISecurityManager());
-			}*/
+	
 			
 			RmiImpl informationImpl = new RmiImpl(serveur);
 			String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram";

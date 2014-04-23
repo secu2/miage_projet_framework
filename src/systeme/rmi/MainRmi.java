@@ -18,9 +18,9 @@ public class MainRmi {
 		serveur.inscription("momo", "jojo");
 		//serveur.inscription("jojo", "salaud");
 		//serveur.connexion("jojo", "salaud");
-		if (serveur.connexion("momo", "jojo")) {
+		ClientRMI c = new ClientRMI("momo", "jojo");
 
-			Client c = serveur.getClientConnecte("momo");
+			//Client c = serveur.getClientConnecte("momo");
 
 			File testFile = new File("docServeur/image.jpg");
 			long len = testFile.length();
@@ -51,20 +51,12 @@ public class MainRmi {
 				e.printStackTrace();
 			}*/
 			
-			ArrayList <Client>clients = c.getClientRMI().getClientsConnectee();
+		/*	ArrayList <Client>clients = c.getClientRMI().getClientsConnectee();
 			
 			for(int i=0; i<clients.size(); i++)
 			{
 				System.out.println(clients.get(i).getUtilisateur().getLogin());
-			}
-		} else {
-			try {
-				throw new ErreurConnexion("Login mot de passe invalide");
-			} catch (ErreurConnexion e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+			}*/
 	}
 
 }

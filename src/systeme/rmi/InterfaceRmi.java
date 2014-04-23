@@ -19,6 +19,8 @@ public interface InterfaceRmi extends Remote {
 	public String getTest() throws RemoteException;
 	public Serveur getServeur() throws RemoteException;
 	public ArrayList<Client> getClientsconnectee() throws RemoteException;
+	
+	public boolean connexion(String login, String motDepasse) throws RemoteException;
 }
 
 
