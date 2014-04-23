@@ -15,9 +15,10 @@ public class Serveur {
 	public ServeurRMI serveur;
 	
 	public Serveur(){
-		serveur = new ServeurRMI();
+		
 		utilisateursInscrits =  new ArrayList<Utilisateur>();
 		utilisateursConnectes = new ArrayList<Client>();
+		serveur = new ServeurRMI(this);
 	}
 	
 	/**

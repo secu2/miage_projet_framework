@@ -10,8 +10,9 @@ import systeme.Serveur;
 
 public class MainRmi {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		 
+	public static void main(String[] args) throws NoSuchAlgorithmException,
+			UnsupportedEncodingException {
+
 		Serveur serveur = new Serveur();
 		serveur.inscription("momo", "jojo");
 		serveur.connexion("momo", "jojo");
@@ -41,7 +42,45 @@ public class MainRmi {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		*/if (serveur.connexion("momo", "jojo")) {
+
+			Client c = serveur.getClientConnecte("momo");/*
+
+			File testFile = new File("docServeur/image.jpg");
+			long len = testFile.length();
+
+			/*
+			 * String[] clients = clt2.getClients();
+			 * 
+			 * for(int i =0; i< clients.length; i++) {
+			 * System.out.println(clients[i]); }
+			 * 
+			 * long t; t = System.currentTimeMillis();
+			 */
+			try {
+
+				c.getClientRMI().telecharger(serveur.getServeurRMI(), testFile,	new File("C:/Users/chaiebm/Desktop/download.jpg"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				c.getClientRMI().charger(serveur.getServeurRMI(),
+						new File("C:/Users/chaiebm/Desktop/download.jpg"),
+						new File("docServeur/test1.jpg"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				throw new ErreurConnexion("Login mot de passe invalide");
+			} catch (ErreurConnexion e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.NoSuchAlgorithmException;
 
+import systeme.Serveur;
 import systeme.tools.Encryptage;
 import modules.gestionUtilisateur.Utilisateur;
 
@@ -18,6 +19,7 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 
 	private OutputStream out;
 	private InputStream in;
+	private Serveur serveur;
 
 	public RmiImpl(OutputStream out, InputStream in) throws RemoteException {
 		super();
@@ -25,10 +27,11 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 		this.in = in;
 	}
 
-	public RmiImpl() throws RemoteException {
+	public RmiImpl(Serveur serveur) throws RemoteException {
 		super();
 		this.out = null;
 		this.in = null;
+		this.serveur = serveur;
 
 	}
 
@@ -64,6 +67,9 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 		this.in = in;
 	}
 
-
+	public Serveur getServeur()
+	{
+		return this.serveur;
+	}
 
 }
