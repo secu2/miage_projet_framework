@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
+import systeme.Client;
 import systeme.Serveur;
 import modules.gestionUtilisateur.Utilisateur;
 
@@ -16,7 +18,7 @@ public interface InterfaceRmi extends Remote {
 	 
 	public String getTest() throws RemoteException;
 	public Serveur getServeur() throws RemoteException;
-	
+	public ArrayList<Client> getClientsconnectee() throws RemoteException;
 }
 
 

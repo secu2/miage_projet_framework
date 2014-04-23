@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 
+import systeme.Client;
 import systeme.Serveur;
 
 /**
@@ -20,6 +22,7 @@ public class ClientRMI {
 	static int REGISTRY_PORT = 1099;
 
 	private Registry registry;
+	private Remote r;
 
 	public ClientRMI(String login, String motDePasse) {
 
@@ -27,7 +30,7 @@ public class ClientRMI {
 
 			// obtention de l'objet distant � partir de son nom (lookup)
 			registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-			Remote r = registry.lookup("fram");
+			r = registry.lookup("fram");
 			System.out.println("Start00 client");
 			
 			
@@ -102,5 +105,32 @@ public class ClientRMI {
 	}
 
 	
+
+	public ArrayList<Client> getClientsConnectee() {
+		ArrayList<Client> clientsConnectes = null;
+		try {
+			Remote remote = this.registry.lookup("fram");
+			if (remote instanceof RmiImpl) {
+				System.out.println("ldl");
+				try {
+					clientsConnectes = ((RmiImpl) remote).getClientsconnectee();
+				} catch (RemoteException e) {
+
+					e.printStackTrace();
+				}
+			}
+		} catch (AccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return clientsConnectes;
+	}
 
 }

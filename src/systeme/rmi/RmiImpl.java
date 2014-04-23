@@ -7,7 +7,9 @@ import java.io.UnsupportedEncodingException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
+import systeme.Client;
 import systeme.Serveur;
 import systeme.tools.Encryptage;
 import modules.gestionUtilisateur.Utilisateur;
@@ -70,6 +72,11 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	public Serveur getServeur()
 	{
 		return this.serveur;
+	}
+	
+	public ArrayList<Client> getClientsconnectee() throws RemoteException
+	{
+		return getServeur().getUtilisateursConnectes();
 	}
 
 }
