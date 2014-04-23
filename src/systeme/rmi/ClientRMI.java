@@ -25,19 +25,12 @@ public class ClientRMI {
 
 		try {
 
-			// obtention de l'objet distant à partir de son nom (lookup)
+			// obtention de l'objet distant ï¿½ partir de son nom (lookup)
 			registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 			Remote r = registry.lookup("fram");
-			if (r instanceof RmiImpl) {
-				Serveur serveur = ((RmiImpl) r).getServeur();
-
-				if (serveur.connexion(login, motDePasse)) {
-					System.out.println("Start00 client");
-				} else {
-
-					throw new ErreurConnexion("Login mot de passe invalide");
-				}
-			}
+			System.out.println("Start00 client");
+			
+			
 
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -45,12 +38,9 @@ public class ClientRMI {
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ErreurConnexion e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 
-	}
+	}}
 
 	final public static int BUF_SIZE = 1024 * 64;
 
@@ -58,7 +48,7 @@ public class ClientRMI {
 	 * Methode de copie de flux par byte
 	 * 
 	 * @param inStream
-	 *            : le flux d'entrée
+	 *            : le flux d'entrï¿½e
 	 * @param outStream
 	 *            : le flux de sortie
 	 * @throws IOException
@@ -111,28 +101,6 @@ public class ClientRMI {
 		copie(new FileInputStream(source), server.getOutputStream(destination));
 	}
 
-	public String[] getClients() {
-		String[] clients = null;
-		String[] result = null;
-		int indice = 0;
-		try {
-			clients = registry.list();
-			result = new String[clients.length];
-			for (int i = 0; i < clients.length; i++) {
-				if (!clients[i].equals("fram")) {
-					result[indice] = clients[i];
-					indice++;
-				}
-			}
-		} catch (AccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return result;
-	}
+	
 
 }

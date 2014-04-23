@@ -9,7 +9,7 @@ public class Client {
 	private ClientRMI client;
 	
 	/**
-	 * Créer un client
+	 * CrÃ©er un client
 	 * @param u
 	 * @param motDePasse
 	 */
@@ -27,13 +27,17 @@ public class Client {
 	}
 	
 	/**
-	 * Renvoie l'utilisateur lié au client
+	 * Renvoie l'utilisateur liï¿½ au client
 	 * @return utilisateur
 	 */
 	public Utilisateur getUtilisateur(){
 		return utilisateur;
 	}
 	
+	/**
+	 * Renvoie le client RMI
+	 * @return client
+	 */
 	public ClientRMI getClientRMI(){
 		return client;
 	}
