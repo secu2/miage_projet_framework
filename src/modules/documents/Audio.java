@@ -6,19 +6,20 @@ import modules.documents.social.Statistique;
 
 /**
  * Audio.java
+ * 
  * @author never
- *
+ * 
  */
 public class Audio extends Document {
-	
+
 	private String frequenceEchantillonnage;
-	private String debit; 
-	
+	private String debit;
 
 	/**
 	 * 
-	 * Constructeur de la classe Audio : construit un objet audio à partir de sa fréquence d'echantillonnage
-	 * et de son débit	
+	 * Constructeur de la classe Audio : construit un objet audio à partir de sa
+	 * fréquence d'echantillonnage et de son débit
+	 * 
 	 * @param nom
 	 * @param taille
 	 * @param format
@@ -27,26 +28,25 @@ public class Audio extends Document {
 	 * @param frequenceEchantillonnage
 	 * @param debit
 	 */
-	public Audio(String nom, float taille, String format,
-			Statistique statistique, String emplacement,
+	public Audio(String nom, Statistique statistique, 
 			String frequenceEchantillonnage, String debit) {
-		super(nom, taille, format, statistique, emplacement);
+		super(nom);
 		this.frequenceEchantillonnage = frequenceEchantillonnage;
 		this.debit = debit;
 	}
-	
+
 	/**
 	 * Renvoie la fréquence d'echantillonnage
+	 * 
 	 * @return frequenceEchantillonnage
 	 */
 	public String getFrequenceEchantillonnage() {
 		return frequenceEchantillonnage;
 	}
 
-	
-
 	/**
 	 * Affecte une fréquence d'echantillonnage au document audio
+	 * 
 	 * @param frequenceEchantillonnage
 	 */
 	public void setFrequenceEchantillonnage(String frequenceEchantillonage) {
@@ -55,6 +55,7 @@ public class Audio extends Document {
 
 	/**
 	 * Renvoie le débit du document audio
+	 * 
 	 * @return debit
 	 */
 	public String getDebit() {
@@ -63,11 +64,11 @@ public class Audio extends Document {
 
 	/**
 	 * Affecte un débit au document audio
+	 * 
 	 * @param debit
 	 */
 	public void setDebit(String debit) {
 		this.debit = debit;
 	}
-	
-	
+
 }

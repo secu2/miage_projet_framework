@@ -27,10 +27,8 @@ public class Video extends Document {
 	 * @param tailleAffichage
 	 * @param formatAffichage
 	 */
-	public Video(String nom, float taille, String format,
-			String emplacement, String encodage,
-			String tailleAffichage, String formatAffichage) {
-		super(nom, taille, format, emplacement);
+	public Video(String nom,  String encodage, String tailleAffichage, String formatAffichage) {
+		super(nom);
 		this.encodage = encodage;
 		this.tailleAffichage = tailleAffichage;
 		this.formatAffichage = formatAffichage;
@@ -47,10 +45,8 @@ public class Video extends Document {
 	 * @param tailleAffichage
 	 * @param formatAffichage
 	 */
-	public Video(String nom, float taille, String format,
-			Statistique statistique, String emplacement, String encodage,
-			String tailleAffichage, String formatAffichage) {
-		super(nom, taille, format, statistique, emplacement);
+	public Video(String nom,Statistique statistique, String encodage,String tailleAffichage, String formatAffichage) {
+		super(nom, statistique);
 		this.encodage = encodage;
 		this.tailleAffichage = tailleAffichage;
 		this.formatAffichage = formatAffichage;

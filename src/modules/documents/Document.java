@@ -1,6 +1,8 @@
 package modules.documents;
 
 
+import java.io.File;
+
 import modules.documents.social.Statistique;
 
 /**
@@ -15,9 +17,11 @@ public class Document {
 
 	private String nom;
 	private float taille;
-	private String format;
+	
 	private Statistique statistique; //Les statistiques du fichier
 	private String emplacement;
+	
+	private File fichier; 
 	
 	/**
 	 * Constructeur de la classe Document 
@@ -27,12 +31,12 @@ public class Document {
 	 * @param statistique
 	 * @param emplacement
 	 */
-	public Document(String nom, float taille, String format, Statistique statistique, String emplacement) {
+	public Document(String nom, Statistique statistique) {
 		this.nom = nom;
-		this.taille = taille;
-		this.format = format;
+		fichier = new File(nom);
+		this.taille = fichier.length();
 		this.statistique = statistique;
-		this.emplacement = emplacement;
+		this.emplacement = fichier.getPath();
 	}
 	
 	/**
@@ -42,11 +46,11 @@ public class Document {
 	 * @param format
 	 * @param emplacement
 	 */
-	public Document(String nom, float taille, String format,String emplacement) {
+	public Document(String nom) {
 		this.nom = nom;
-		this.taille = taille;
-		this.format = format;
-		this.emplacement = emplacement;
+		fichier =  new File(nom);
+		this.taille = fichier.length();
+		this.emplacement = fichier.getPath();
 	}
 
 	/**
@@ -79,22 +83,6 @@ public class Document {
 	 */
 	public void setTaille(float taille) {
 		this.taille = taille;
-	}
-
-	/**
-	 * Renvoie le format du document
-	 * @return format
-	 */
-	public String getFormat() {
-		return format;
-	}
-
-	/**
-	 * Affecte un format au document
-	 * @param format
-	 */
-	public void setFormat(String format) {
-		this.format = format;
 	}
 
 	/**

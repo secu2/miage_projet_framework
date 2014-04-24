@@ -19,9 +19,8 @@ public class Texte extends Document {
 	 * @param statistique
 	 * @param emplacement
 	 */
-	public Texte(String nom, float taille, String format,
-			Statistique statistique, String emplacement) {
-		super(nom, taille, format, statistique, emplacement);
+	public Texte(String nom,Statistique statistique) {
+		super(nom, statistique);
 	}
 	
 	/**
@@ -32,9 +31,8 @@ public class Texte extends Document {
 	 * @param statistique
 	 * @param emplacement
 	 */
-	public Texte(String nom, float taille, String format,
-			String emplacement) {
-		super(nom, taille, format, emplacement);
+	public Texte(String nom) {
+		super(nom);
 	}
 	
 	

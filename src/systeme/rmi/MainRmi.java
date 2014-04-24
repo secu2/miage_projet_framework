@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import modules.documents.Document;
 import systeme.Client;
 import systeme.Serveur;
 
@@ -15,17 +16,20 @@ public class MainRmi {
 			UnsupportedEncodingException {
 
 		Serveur serveur = new Serveur();
-		serveur.getServeurRMI().stop();
 		
 		serveur.inscription("momo", "jojo");
 		
 		serveur.inscription("momoo", "jojo");
 		
-		
-
 		ClientRMI c = new ClientRMI("momo", "jojo");
 		ClientRMI c1 = new ClientRMI("momoo", "jojo");
-		System.out.println(""+c1.toString());
+		
+		////Client import de fichier 
+		
+		Document document = new Document("C:/Users/chaiebm/Desktop/download.jpg");
+		
+		System.out.println(""+document.getTaille());
+		
 		
 		c1.deconnexion();
 
