@@ -7,9 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import javax.management.modelmbean.RequiredModelMBean;
@@ -63,15 +65,8 @@ public class ClientRMI  implements Serializable{
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}/* catch (ErreurConnexion e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
+		}
 	}
-
-
-	
 
 
 	final public static int BUF_SIZE = 1024 * 64;
@@ -202,6 +197,6 @@ public class ClientRMI  implements Serializable{
 			}
 		}
 	}
-
+	
 	
 }

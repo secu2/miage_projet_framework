@@ -15,8 +15,13 @@ public class MainRmi {
 			UnsupportedEncodingException {
 
 		Serveur serveur = new Serveur();
+		serveur.getServeurRMI().stop();
+		
 		serveur.inscription("momo", "jojo");
+		
 		serveur.inscription("momoo", "jojo");
+		
+		
 
 		ClientRMI c = new ClientRMI("momo", "jojo");
 		ClientRMI c1 = new ClientRMI("momoo", "jojo");

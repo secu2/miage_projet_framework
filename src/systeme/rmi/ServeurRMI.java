@@ -12,8 +12,11 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 import java.security.NoSuchAlgorithmException;
 
 import modules.gestionUtilisateur.Utilisateur;
@@ -62,7 +65,29 @@ public class ServeurRMI implements Serializable {
 	  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
 	    return new RmiImpl(new FileOutputStream(f)).getOut();   
 	}
-	
-	
+/**
+ * Provoque l'arret du serveur
+ */
+	public void stop()
+	{
+		try {
+			Naming.unbind("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram");
+			//UnicastRemoteObject.unexportObject((Remote) this, true);
+			System.out.println("Arret du serveur");
+			System.exit(0);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }
