@@ -38,11 +38,7 @@ public class ClientRMI  implements Serializable{
 		try {
 
 
-<<<<<<< HEAD
-			// obtention de l'objet distant � partir de son nom (lookup)
-=======
 			// obtention de l'objet distant à partir de son nom (lookup)
->>>>>>> branch 'master' of https://github.com/secu2/miage_projet_framework.git
 			 registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 			 r = registry.lookup("fram");
 			if (r instanceof InterfaceRmi) {
@@ -180,12 +176,7 @@ public class ClientRMI  implements Serializable{
 	}
 	
 	/**
-	 * getter
-<<<<<<< HEAD
-	 * @return Utilisateur : l'utilisateur associer � ce client 
-=======
 	 * @return Utilisateur : l'utilisateur associer à ce client 
->>>>>>> branch 'master' of https://github.com/secu2/miage_projet_framework.git
 	 */
 	
 	public Utilisateur getUtilisateur(){

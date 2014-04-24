@@ -14,11 +14,7 @@ import systeme.Serveur;
 import systeme.tools.Encryptage;
 import modules.gestionUtilisateur.Utilisateur;
 
-<<<<<<< HEAD
-//classe h�ritante de l'interface et d�finir les m�thodes propres au serveur.
-=======
 //classe héritante de l'interface et définir les méthodes propres au serveur.
->>>>>>> branch 'master' of https://github.com/secu2/miage_projet_framework.git
 public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 
 	private static final long serialVersionUID = 2674880711467464646L;
@@ -52,11 +48,7 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	}
 
 	public String getTest() throws RemoteException {
-<<<<<<< HEAD
-		System.out.println("Invocation de la m�thode getInformation()");
-=======
 		System.out.println("Invocation de la méthode getInformation()");
->>>>>>> branch 'master' of https://github.com/secu2/miage_projet_framework.git
 		return "Momo t'es moche ";
 	}
 
