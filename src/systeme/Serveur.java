@@ -1,22 +1,25 @@
 package systeme;
 
+import java.io.File;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import systeme.rmi.ClientRMI;
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
 import modules.gestionUtilisateur.Utilisateur;
 
-public class Serveur {
+public class Serveur implements Serializable {
 	
-	public ArrayList<Utilisateur> utilisateursInscrits;
-	public ArrayList<Client> utilisateursConnectes;
-	public ServeurRMI serveur;
+	private ArrayList<Utilisateur> utilisateursInscrits;
+	private ArrayList<ClientRMI> utilisateursConnectes;
+	private ServeurRMI serveur;
 	
 	public Serveur(){
 		utilisateursInscrits =  new ArrayList<Utilisateur>();
-		utilisateursConnectes = new ArrayList<Client>();
+		utilisateursConnectes = new ArrayList<ClientRMI>();
 		serveur = new ServeurRMI(this);
 	}
 	
@@ -32,7 +35,7 @@ public class Serveur {
 	 * Renvoie la liste des clients connectés
 	 * @return utilisateursConnectes
 	 */
-	public ArrayList<Client> getUtilisateursConnectes(){
+	public ArrayList<ClientRMI> getUtilisateursConnectes(){
 		return utilisateursConnectes;
 	}
 	
@@ -55,7 +58,7 @@ public class Serveur {
 	 * Ajoute un client à la liste des clients du serveur
 	 * @param c : client
 	 */
-	public void ajouterClient(Client c){
+	public void ajouterClient(ClientRMI c){
 		getUtilisateursConnectes().add(c);
 	}
 	
@@ -150,12 +153,10 @@ public class Serveur {
 		boolean existant = false;
 		try {
 			existant = inscription(login, motDePasse);
-			getUtilisateurInscrit(login).creerUnRepertoire();
+			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login), "/utilisateurs/");
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return existant;
@@ -168,7 +169,7 @@ public class Serveur {
 	 * @param utilisateur : l'utilisateur � connecter
 	 * @return true (Si connection �tablit)
 	 */
-	public boolean connexion(String login,  String motDepasse) {
+	public boolean connexion(String login,  String motDepasse , ClientRMI c) {
 
 		boolean result = false;
 		
@@ -176,22 +177,17 @@ public class Serveur {
 			Utilisateur util;
 			try {
 				if(utilisateurExistant(login)){
-					// on r�cup�re l'objet utilisateur
+					// on récupère l'objet utilisateur
 					util = getUtilisateurInscrit(login);
 					// Test si le mdp est correct
 					if(util.autoriserConnexion(motDepasse)){
-						System.out.println("Dans connexion avant ajout client");
-						ajouterClient(new Client(util,motDepasse));
-						System.out.println("Apr�s ajout client");
 						result = true;
 					}	
 				}
 				
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -203,9 +199,9 @@ public class Serveur {
 	 * @param login
 	 * @return
 	 */
-	public Client getClientConnecte(String login){
-		Client cl = null;
-		for(Client c :  getUtilisateursConnectes() ){
+	public ClientRMI getClientConnecte(String login){
+		ClientRMI cl = null;
+		for(ClientRMI c :  getUtilisateursConnectes() ){
 			if(c.getUtilisateur().getLogin().equals(login)){
 				cl = c;
 			}
@@ -229,5 +225,54 @@ public class Serveur {
 	public ServeurRMI getServeurRMI(){
 		return serveur;
 	}
+	
+	public void supprimerUnClient(ClientRMI client)
+	{
+		getUtilisateursConnectes().remove(indexClient(client));
+	}
+	
+	public int indexClient(ClientRMI client){
+		int num = 0;
+		int compteur = 0;
+		for(ClientRMI cl : getUtilisateursConnectes()){
+			if(cl.getUtilisateur().equals(client.getUtilisateur())){
+				num = compteur;
+			}
+			compteur++;
+		}
+		
+		return num;
+	}
 
+	/**
+	 * Créer un repertoire pour l'utilisateur 
+	 * @param u : utilisateur
+	 * @param path : chemin avant le nom d'utilisateur (Ex : /utilisateurs/ )
+	 */
+	public void creerUnRepertoireUtilisateur(Utilisateur u , String path){
+		File repertoire = new File(path+""+u.getLogin());
+		u.ajouterRepertoire(repertoire);
+		repertoire.mkdirs();
+	}
+	
+	/**
+	 * Créer un repertoire
+	 * @param path : chemin du futur repertoire
+	 */
+	public void creerUnRepertoire(String path){
+		File repertoire = new File(path);
+		repertoire.mkdirs();
+	}
+	
+	/**
+	 * Distribue un message envoyé par un client aux autres clients 
+	 * @param message
+	 */
+	public void distribuerMessage(String message,ClientRMI expediteur){
+		for(ClientRMI c : getUtilisateursConnectes()){
+			c.recevoirMessage(message,expediteur);
+		}
+	}
+
+	
 }

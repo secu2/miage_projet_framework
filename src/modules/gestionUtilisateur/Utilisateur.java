@@ -1,6 +1,7 @@
 package modules.gestionUtilisateur;
 
 import java.io.File;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -10,7 +11,6 @@ import java.util.Random;
 
 import modules.documents.Document;
 import modules.documents.social.Publication;
-
 import systeme.BaseDeDonnees;
 import systeme.tools.Encryptage;
 
@@ -19,7 +19,7 @@ import systeme.tools.Encryptage;
  * @author never
  *
  */
-public class Utilisateur {
+public class Utilisateur  implements Serializable{
 	private String login;
     private String motDePasse;
     private ArrayList<Groupe> groupes;
@@ -246,16 +246,14 @@ public class Utilisateur {
 		getPublications().remove(p);
 	}
 
-	/**
-	 * Créer un repertoire pour l'utilisateur 
-	 */
-	public void creerUnRepertoire(){
-		File repertoire = new File("/home/never/Documents/data/" + login); // chemin : à modifier
-		this.repertoire = repertoire;
-		repertoire.mkdirs();
 
+	/**
+	 * 
+	 * @param repertoire
+	 */
+	public void ajouterRepertoire(File repertoire){
+		this.repertoire = repertoire;
 	}
-	
 	/**
 	 * Renvoie le repertoire de l'utilisateur sur le serveur
 	 * @return repertoire
@@ -264,7 +262,19 @@ public class Utilisateur {
 		return this.repertoire;
 	}
 	
+	/**
+	 * Test si l'utilisateur est à égal à un autre
+	 * @param u
+	 * @return true si u est egal à cet utilisateur , false sinon
+	 */
+	public boolean equals(Utilisateur u){
+		boolean egal = false;
+		if(u.getLogin().equals(this.getLogin())){
+			egal = true;
+		}
+		
+		return egal;
+	}
 	
 	
-
 }

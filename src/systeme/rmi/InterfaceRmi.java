@@ -12,15 +12,22 @@ import systeme.Serveur;
 import modules.gestionUtilisateur.Utilisateur;
 
 
-//création de l'interface propre au RMI
+//crÃ©ation de l'interface propre au RMI
 
 public interface InterfaceRmi extends Remote {
 	 
 	public String getTest() throws RemoteException;
 	public Serveur getServeur() throws RemoteException;
-	public ArrayList<Client> getClientsconnectee() throws RemoteException;
-	
-	public boolean connexion(String login, String motDepasse) throws RemoteException;
+	public ArrayList<ClientRMI> getClientsconnectes() throws RemoteException;
+	public void ajouterClient(ClientRMI c) throws RemoteException;
+	public boolean connexion(String login, String motDepasse, ClientRMI c) throws RemoteException;
+	/**
+	 * Deconnecte un client du serveur
+	 * @param c : le client a deconnecter
+	 * @throws RemoteException
+	 */
+	public void deconnexion(ClientRMI c) throws RemoteException;
+	public void envoiMessage(String s,ClientRMI c)  throws RemoteException;
 }
 
 

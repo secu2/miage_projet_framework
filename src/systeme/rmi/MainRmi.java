@@ -11,55 +11,51 @@ import systeme.Serveur;
 
 public class MainRmi {
 
-	public static void main(String[] args) throws NoSuchAlgorithmException,UnsupportedEncodingException {
+	public static void main(String[] args) throws NoSuchAlgorithmException,
+			UnsupportedEncodingException {
 
-		Serveur serveur = new Serveur();
-		serveur.inscription("momo", "jojo");
-		//serveur.inscription("jojo", "salaud");
-		//serveur.connexion("jojo", "salaud");
-
+		
 		ClientRMI c = new ClientRMI("momo", "jojo");
+		
 
-		serveur.connexion("momo", "jojo");
-		//Client c = serveur.getClientConnecte("momo");
+		System.out.println("Chat ............................");
+		c.envoyerMessage("Bonjour", c);
+
+		// serveur.connexion("momo", "jojo");
+		// Client c = serveur.getClientConnecte("momo");
 		File testFile = new File("docServeur/image.jpg");
-        long len = testFile.length();
-        
-        //String[] clients = clt2.getClients();
-        
-       /* for(int i =0; i< clients.length; i++)
-        {
-        	System.out.println(clients[i]);
-        }*/
-        /*
-        long t;
-        t = System.currentTimeMillis();
-        try {
-			c.getClientRMI().telecharger(serveur.getServeurRMI(), testFile, new File("C:/Users/chaiebm/Desktop/download.jpg"));
+		long len = testFile.length();
+
+		// String[] clients = clt2.getClients();
+
+		/*
+		 * for(int i =0; i< clients.length; i++) {
+		 * System.out.println(clients[i]); }
+		 * 
+		 * long t; t = System.currentTimeMillis();
+		 */
+		/*try {
+			c.telecharger(serveur.getServeurRMI(), testFile, new File(
+					"C:/Users/chaiebm/Desktop/download.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        
-        try {
-        	c.getClientRMI().charger(serveur.getServeurRMI(), new File("C:/Users/chaiebm/Desktop/download.jpg"), new File("docServeur/test1.jpg"));
+
+		try {
+			c.charger(serveur.getServeurRMI(), new File("C:/Users/chaiebm/Desktop/download.jpg"), new File(
+					"docServeur/test1.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		*/if (serveur.connexion("momo", "jojo")) {
 
+		}*/
+		ArrayList<ClientRMI> clients = c.getUtilisateurs();
+		System.out.println("Utilisateurs connectés ");
+		for(int i=0; i < clients.size(); i++)
+		{
+			System.out.println(clients.get(i).getUtilisateur().getLogin());
+		}
 
-
-			//Client c = serveur.getClientConnecte("momo");
-			
-		/*	ArrayList <Client>clients = c.getClientRMI().getClientsConnectee();
-			
-			for(int i=0; i<clients.size(); i++)
-			{
-				System.out.println(clients.get(i).getUtilisateur().getLogin());
-			}*/
 	}
-	}
-
 }
