@@ -12,6 +12,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
+import javax.management.modelmbean.RequiredModelMBean;
+
+import jus.util.assertion.Ensure;
+import jus.util.assertion.Require;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
 import systeme.Serveur;
@@ -20,6 +24,8 @@ import systeme.Serveur;
  * @author chaiebm
  * 
  */
+
+
 public class ClientRMI  implements Serializable{
 	static int REGISTRY_PORT = 1099;
 
@@ -43,7 +49,8 @@ public class ClientRMI  implements Serializable{
 					System.out.println(serveur.toString());
 					System.out.println("Start00 client");
 				} else {
-					throw new ErreurConnexion("Login mot de passe invalide");
+					//throw new ErreurConnexion("Login mot de passe invalide");
+					throw new Ensure("Login mot de passe invalide");
 					
 				}
 			}
@@ -57,10 +64,10 @@ public class ClientRMI  implements Serializable{
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ErreurConnexion e) {
+		}/* catch (ErreurConnexion e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 

@@ -18,7 +18,7 @@ public class MainRmi {
 		serveur.inscription("momo", "jojo");
 		serveur.inscription("momoo", "jojo");
 
-		ClientRMI c = new ClientRMI("momo", "jojo");
+		ClientRMI c = new ClientRMI("mom", "jojo");
 		ClientRMI c1 = new ClientRMI("momoo", "jojo");
 
 		// serveur.connexion("momo", "jojo");
