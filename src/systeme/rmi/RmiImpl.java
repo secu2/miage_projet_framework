@@ -14,7 +14,7 @@ import systeme.Serveur;
 import systeme.tools.Encryptage;
 import modules.gestionUtilisateur.Utilisateur;
 
-//classe héritante de l'interface et définir les méthodes propres au serveur.
+//classe hï¿½ritante de l'interface et dï¿½finir les mï¿½thodes propres au serveur.
 public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 
 	private static final long serialVersionUID = 2674880711467464646L;
@@ -48,7 +48,7 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	}
 
 	public String getTest() throws RemoteException {
-		System.out.println("Invocation de la méthode getInformation()");
+		System.out.println("Invocation de la mï¿½thode getInformation()");
 		return "Momo t'es moche ";
 	}
 
@@ -86,6 +86,7 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 
 	public void ajouterClient(ClientRMI c) throws RemoteException {
 		getServeur().ajouterClient(c);
+
 	}
 
 	public void deconnexion(ClientRMI c) throws RemoteException {
