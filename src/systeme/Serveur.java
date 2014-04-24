@@ -1,22 +1,24 @@
 package systeme;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import systeme.rmi.ClientRMI;
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
 import modules.gestionUtilisateur.Utilisateur;
 
-public class Serveur {
+public class Serveur implements Serializable {
 	
-	public ArrayList<Utilisateur> utilisateursInscrits;
-	public ArrayList<Client> utilisateursConnectes;
-	public ServeurRMI serveur;
+	private ArrayList<Utilisateur> utilisateursInscrits;
+	private ArrayList<ClientRMI> utilisateursConnectes;
+	private ServeurRMI serveur;
 	
 	public Serveur(){
 		utilisateursInscrits =  new ArrayList<Utilisateur>();
-		utilisateursConnectes = new ArrayList<Client>();
+		utilisateursConnectes = new ArrayList<ClientRMI>();
 		serveur = new ServeurRMI(this);
 	}
 	
@@ -32,7 +34,7 @@ public class Serveur {
 	 * Renvoie la liste des clients connectés
 	 * @return utilisateursConnectes
 	 */
-	public ArrayList<Client> getUtilisateursConnectes(){
+	public ArrayList<ClientRMI> getUtilisateursConnectes(){
 		return utilisateursConnectes;
 	}
 	
@@ -55,7 +57,7 @@ public class Serveur {
 	 * Ajoute un client à la liste des clients du serveur
 	 * @param c : client
 	 */
-	public void ajouterClient(Client c){
+	public void ajouterClient(ClientRMI c){
 		getUtilisateursConnectes().add(c);
 	}
 	
@@ -168,7 +170,7 @@ public class Serveur {
 	 * @param utilisateur : l'utilisateur � connecter
 	 * @return true (Si connection �tablit)
 	 */
-	public boolean connexion(String login,  String motDepasse) {
+	public boolean connexion(String login,  String motDepasse , ClientRMI c) {
 
 		boolean result = false;
 		
@@ -181,7 +183,6 @@ public class Serveur {
 					// Test si le mdp est correct
 					if(util.autoriserConnexion(motDepasse)){
 						System.out.println("Dans connexion avant ajout client");
-						ajouterClient(new Client(util,motDepasse));
 						System.out.println("Apr�s ajout client");
 						result = true;
 					}	
@@ -203,9 +204,9 @@ public class Serveur {
 	 * @param login
 	 * @return
 	 */
-	public Client getClientConnecte(String login){
-		Client cl = null;
-		for(Client c :  getUtilisateursConnectes() ){
+	public ClientRMI getClientConnecte(String login){
+		ClientRMI cl = null;
+		for(ClientRMI c :  getUtilisateursConnectes() ){
 			if(c.getUtilisateur().getLogin().equals(login)){
 				cl = c;
 			}
@@ -228,6 +229,13 @@ public class Serveur {
 	 */
 	public ServeurRMI getServeurRMI(){
 		return serveur;
+	}
+	
+	public void supprimerUnClient(ClientRMI client)
+	{
+		System.out.println(""+getUtilisateursConnectes().size());
+		getUtilisateursConnectes().remove(client);
+		System.out.println(""+getUtilisateursConnectes().size());
 	}
 
 }

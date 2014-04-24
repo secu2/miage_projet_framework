@@ -15,7 +15,7 @@ public class Client {
 	 */
 	public Client(Utilisateur u,String motDePasse){
 		setUtilisateur(u);
-		client = new ClientRMI(u.getLogin(),motDePasse);
+		//client = new ClientRMI(u.getLogin(),motDePasse);
 	}
 	
 	/**
