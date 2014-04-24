@@ -1,5 +1,6 @@
 package systeme;
 
+import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -152,7 +153,8 @@ public class Serveur implements Serializable {
 		boolean existant = false;
 		try {
 			existant = inscription(login, motDePasse);
-			getUtilisateurInscrit(login).creerUnRepertoire();
+			// TODO : Reperrtoitr
+			getUtilisateurInscrit(login);
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -249,4 +251,15 @@ public class Serveur implements Serializable {
 		return num;
 	}
 
+	/**
+	 * Créer un repertoire pour l'utilisateur 
+	 *
+	 */
+	public void creerUnRepertoire(Utilisateur u , String path){
+		File repertoire = new File(path); // chemin : à modifier
+		u.ajouterRepertoire(repertoire);
+		repertoire.mkdirs();
+
+	}
+	
 }

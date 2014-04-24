@@ -246,16 +246,14 @@ public class Utilisateur  implements Serializable{
 		getPublications().remove(p);
 	}
 
-	/**
-	 * Créer un repertoire pour l'utilisateur 
-	 */
-	public void creerUnRepertoire(){
-		File repertoire = new File("/home/never/Documents/data/" + login); // chemin : à modifier
-		this.repertoire = repertoire;
-		repertoire.mkdirs();
 
+	/**
+	 * 
+	 * @param repertoire
+	 */
+	public void ajouterRepertoire(File repertoire){
+		this.repertoire = repertoire;
 	}
-	
 	/**
 	 * Renvoie le repertoire de l'utilisateur sur le serveur
 	 * @return repertoire
