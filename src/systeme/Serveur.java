@@ -226,6 +226,10 @@ public class Serveur implements Serializable {
 		return serveur;
 	}
 	
+	/**
+	 * Supprime le clientRMI de la liste des clients connectés
+	 * @param client
+	 */
 	public void supprimerUnClient(ClientRMI client)
 	{
 		System.out.println(""+getUtilisateursConnectes().size());
@@ -235,8 +239,13 @@ public class Serveur implements Serializable {
 		getUtilisateursConnectes().remove(indexClient(client));
 	}
 	
+	/**
+	 * Renvoie l'index du client dans la liste des clients connectés
+	 * @param client
+	 * @return si trouvé num = index du client connecté  , -1 sinon
+	 */
 	public int indexClient(ClientRMI client){
-		int num = 0;
+		int num = -1;
 		int compteur = 0;
 		for(ClientRMI cl : getUtilisateursConnectes()){
 			if(cl.getUtilisateur().equals(client.getUtilisateur())){
@@ -244,6 +253,8 @@ public class Serveur implements Serializable {
 			}
 			compteur++;
 		}
+		
+		
 		
 		return num;
 	}
@@ -276,6 +287,22 @@ public class Serveur implements Serializable {
 		for(ClientRMI c : getUtilisateursConnectes()){
 			c.recevoirMessage(message,expediteur);
 		}
+	}
+	
+	/**
+	 * Renvoie l'utilisateur du clientRMI si trouvé dans la liste des clients connectés
+	 * @param cl
+	 * @return l'utilisateur si il est connecté , null sinon
+	 */
+	public Utilisateur utilisateurConnecte(ClientRMI cl){
+		Utilisateur u = null;
+		if(getUtilisateursConnectes() != null){
+			int num = indexClient(cl);
+			if(num != -1){
+				u = getUtilisateursConnectes().get(indexClient(cl)).getUtilisateur();
+			}
+		}
+		return u;
 	}
 
 	

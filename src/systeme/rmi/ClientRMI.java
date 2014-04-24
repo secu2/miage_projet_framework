@@ -48,8 +48,12 @@ public class ClientRMI  implements Serializable{
 				if (serveur.connexion(login, motDePasse,this)) {
 					this.utilisateur = serveur.getUtilisateurInscrit(login);
 					// si l'utilisateur n 'est pas présent dans la liste des connectés
-					if(!serveur.getClientConnecte(login).getUtilisateur().equals(this.utilisateur)){
+					if(serveur.utilisateurConnecte(this) == null){
 						((InterfaceRmi) r).ajouterClient(this);
+					}
+					else{
+						System.out.println("déjà connecté");
+						System.out.println(this.getUtilisateur().getLogin());
 					}
 					System.out.println(utilisateur.getLogin()+ " se connecte");
 				} else {
@@ -200,7 +204,11 @@ public class ClientRMI  implements Serializable{
 			}
 		}
 	}
-	
+	/**
+	 * Envoie un message 
+	 * @param message
+	 * @param expediteur
+	 */
 	
 	public void envoyerMessage(String message,ClientRMI expediteur){
 
@@ -215,6 +223,11 @@ public class ClientRMI  implements Serializable{
 		}
 	}
 	
+	/**
+	 * Reception d'un message
+	 * @param message
+	 * @param expediteur
+	 */
 	public void recevoirMessage(String message, ClientRMI expediteur){
 		System.out.println(expediteur.getUtilisateur().getLogin() + " : " + message);
 	}
