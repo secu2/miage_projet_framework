@@ -74,7 +74,7 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 		return this.serveur;
 	}
 	
-	public ArrayList<ClientRMI> getClientsconnectee() throws RemoteException
+	public ArrayList<ClientRMI> getClientsconnectes() throws RemoteException
 	{
 		return getServeur().getUtilisateursConnectes();
 	}
@@ -87,5 +87,12 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	public void ajouterClient(ClientRMI c) throws RemoteException {
 		getServeur().ajouterClient(c);
 	}
+
+	public void deconnexion(ClientRMI c) throws RemoteException {
+		getServeur().supprimerUnClient(c);
+	}
+	
+	
+	
 }
 

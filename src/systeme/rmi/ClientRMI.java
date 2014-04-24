@@ -167,7 +167,7 @@ public class ClientRMI  implements Serializable{
 		if (r instanceof InterfaceRmi)
 		{
 			try {
-				clients = ((InterfaceRmi) r).getClientsconnectee();
+				clients = ((InterfaceRmi) r).getClientsconnectes();
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -176,8 +176,32 @@ public class ClientRMI  implements Serializable{
 		return clients;
 	}
 	
+	/**
+	 * getter
+	 * @return Utilisateur : l'utilisateur associer à ce client 
+	 */
+	
 	public Utilisateur getUtilisateur(){
 		return this.utilisateur;
+	}
+	
+	/**
+	 * Deconnexion du client
+	 */
+	
+	public void deconnexion()
+	{
+		if (r instanceof InterfaceRmi)
+		{
+			System.out.println("ekekd");
+			try {
+				((InterfaceRmi) r).deconnexion(this);
+				
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	

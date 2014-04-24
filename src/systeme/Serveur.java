@@ -230,5 +230,12 @@ public class Serveur implements Serializable {
 	public ServeurRMI getServeurRMI(){
 		return serveur;
 	}
+	
+	public void supprimerUnClient(ClientRMI client)
+	{
+		System.out.println(""+getUtilisateursConnectes().size());
+		getUtilisateursConnectes().remove(client);
+		System.out.println(""+getUtilisateursConnectes().size());
+	}
 
 }
