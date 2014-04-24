@@ -246,16 +246,14 @@ public class Utilisateur  implements Serializable{
 		getPublications().remove(p);
 	}
 
-	/**
-	 * Créer un repertoire pour l'utilisateur 
-	 */
-	public void creerUnRepertoire(){
-		File repertoire = new File("/home/never/Documents/data/" + login); // chemin : à modifier
-		this.repertoire = repertoire;
-		repertoire.mkdirs();
 
+	/**
+	 * 
+	 * @param repertoire
+	 */
+	public void ajouterRepertoire(File repertoire){
+		this.repertoire = repertoire;
 	}
-	
 	/**
 	 * Renvoie le repertoire de l'utilisateur sur le serveur
 	 * @return repertoire
@@ -264,6 +262,11 @@ public class Utilisateur  implements Serializable{
 		return this.repertoire;
 	}
 	
+	/**
+	 * Test si l'utilisateur est à égal à un autre
+	 * @param u
+	 * @return true si u est egal à cet utilisateur , false sinon
+	 */
 	public boolean equals(Utilisateur u){
 		boolean egal = false;
 		if(u.getLogin().equals(this.getLogin())){

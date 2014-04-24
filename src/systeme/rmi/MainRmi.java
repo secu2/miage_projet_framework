@@ -59,6 +59,7 @@ public class MainRmi {
 
 		}*/
 		ArrayList<ClientRMI> clients = c.getUtilisateurs();
+		System.out.println("Utilisateurs connectés ");
 		for(int i=0; i < clients.size(); i++)
 		{
 			System.out.println(clients.get(i).getUtilisateur().getLogin());

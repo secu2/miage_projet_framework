@@ -47,8 +47,11 @@ public class ClientRMI  implements Serializable{
 				Serveur serveur = ((InterfaceRmi) r).getServeur();
 				if (serveur.connexion(login, motDePasse,this)) {
 					this.utilisateur = serveur.getUtilisateurInscrit(login);
-					((InterfaceRmi) r).ajouterClient(this);
-					System.out.println("Start client");
+					// si l'utilisateur n 'est pas présent dans la liste des connectés
+					if(!serveur.getClientConnecte(login).getUtilisateur().equals(this.utilisateur)){
+						((InterfaceRmi) r).ajouterClient(this);
+					}
+					System.out.println(utilisateur.getLogin()+ " se connecte");
 				} else {
 					//throw new ErreurConnexion("Login mot de passe invalide");
 					throw new Ensure("Login mot de passe invalide");
@@ -198,5 +201,22 @@ public class ClientRMI  implements Serializable{
 		}
 	}
 	
+	
+	public void envoyerMessage(String message,ClientRMI expediteur){
+
+		if (r instanceof InterfaceRmi)
+		{
+			try {
+				((InterfaceRmi) r).getServeur().distribuerMessage(message,this);				
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void recevoirMessage(String message, ClientRMI expediteur){
+		System.out.println(expediteur.getUtilisateur().getLogin() + " : " + message);
+	}
 	
 }
