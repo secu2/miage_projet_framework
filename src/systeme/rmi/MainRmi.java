@@ -20,6 +20,7 @@ public class MainRmi {
 
 		ClientRMI c = new ClientRMI("momo", "jojo");
 		ClientRMI c1 = new ClientRMI("momoo", "jojo");
+		System.out.println(""+c1.toString());
 		
 		c1.deconnexion();
 

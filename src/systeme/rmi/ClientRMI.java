@@ -196,6 +196,7 @@ public class ClientRMI  implements Serializable{
 			System.out.println("ekekd");
 			try {
 				((InterfaceRmi) r).deconnexion(this);
+				System.out.println(this.toString());
 				
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block

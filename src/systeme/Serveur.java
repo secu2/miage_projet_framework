@@ -234,6 +234,7 @@ public class Serveur implements Serializable {
 	public void supprimerUnClient(ClientRMI client)
 	{
 		System.out.println(""+getUtilisateursConnectes().size());
+		//System.out.println(client.toString());
 		getUtilisateursConnectes().remove(client);
 		System.out.println(""+getUtilisateursConnectes().size());
 	}
