@@ -264,4 +264,15 @@ public class Serveur implements Serializable {
 		repertoire.mkdirs();
 	}
 	
+	/**
+	 * Distribue un message envoyé par un client aux autres clients 
+	 * @param message
+	 */
+	public void distribuerMessage(String message,ClientRMI expediteur){
+		for(ClientRMI c : getUtilisateursConnectes()){
+			c.recevoirMessage(message,expediteur);
+		}
+	}
+
+	
 }

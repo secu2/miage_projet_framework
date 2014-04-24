@@ -93,6 +93,11 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 		getServeur().supprimerUnClient(c);
 	}
 	
+	public void envoiMessage(String s,ClientRMI c)  throws RemoteException {
+		getServeur().distribuerMessage(s,c);
+	}
+
+
 	
 	
 }

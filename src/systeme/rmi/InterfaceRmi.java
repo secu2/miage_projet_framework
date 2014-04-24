@@ -27,6 +27,7 @@ public interface InterfaceRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public void deconnexion(ClientRMI c) throws RemoteException;
+	public void envoiMessage(String s,ClientRMI c)  throws RemoteException;
 }
 
 

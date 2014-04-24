@@ -14,15 +14,12 @@ public class MainRmi {
 	public static void main(String[] args) throws NoSuchAlgorithmException,
 			UnsupportedEncodingException {
 
-		Serveur serveur = new Serveur();
-		serveur.inscription("momo", "jojo");
-		serveur.inscription("momoo", "jojo");
-
-		ClientRMI c = new ClientRMI("momo", "jojo");
-		ClientRMI c1 = new ClientRMI("momoo", "jojo");
-		System.out.println(""+c1.toString());
 		
-		c1.deconnexion();
+		ClientRMI c = new ClientRMI("momo", "jojo");
+		
+
+		System.out.println("Chat ............................");
+		c.envoyerMessage("Bonjour", c);
 
 		// serveur.connexion("momo", "jojo");
 		// Client c = serveur.getClientConnecte("momo");
@@ -54,6 +51,7 @@ public class MainRmi {
 
 		}*/
 		ArrayList<ClientRMI> clients = c.getUtilisateurs();
+		System.out.println("Utilisateurs connectés ");
 		for(int i=0; i < clients.size(); i++)
 		{
 			System.out.println(clients.get(i).getUtilisateur().getLogin());
