@@ -264,6 +264,11 @@ public class Utilisateur  implements Serializable{
 		return this.repertoire;
 	}
 	
+	/**
+	 * Test si l'utilisateur est à égal à un autre
+	 * @param u
+	 * @return true si u est egal à cet utilisateur , false sinon
+	 */
 	public boolean equals(Utilisateur u){
 		boolean egal = false;
 		if(u.getLogin().equals(this.getLogin())){
