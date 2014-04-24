@@ -42,7 +42,7 @@ public class ServeurRMI implements Serializable {
 			
 		
 			 
-			System.out.println("Serveur lancé");
+			System.out.println("Serveur lancÃ©");
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			} catch (MalformedURLException e) {

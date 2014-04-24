@@ -12,7 +12,7 @@ import systeme.Serveur;
 import modules.gestionUtilisateur.Utilisateur;
 
 
-//création de l'interface propre au RMI
+//crÃ©ation de l'interface propre au RMI
 
 public interface InterfaceRmi extends Remote {
 	 
