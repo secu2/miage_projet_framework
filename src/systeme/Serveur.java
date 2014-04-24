@@ -153,13 +153,10 @@ public class Serveur implements Serializable {
 		boolean existant = false;
 		try {
 			existant = inscription(login, motDePasse);
-			// TODO : Reperrtoitr
-			getUtilisateurInscrit(login);
+			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login), "/utilisateurs/");
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return existant;
@@ -180,7 +177,7 @@ public class Serveur implements Serializable {
 			Utilisateur util;
 			try {
 				if(utilisateurExistant(login)){
-					// on r�cup�re l'objet utilisateur
+					// on récupère l'objet utilisateur
 					util = getUtilisateurInscrit(login);
 					// Test si le mdp est correct
 					if(util.autoriserConnexion(motDepasse)){
@@ -189,10 +186,8 @@ public class Serveur implements Serializable {
 				}
 				
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -233,9 +228,7 @@ public class Serveur implements Serializable {
 	
 	public void supprimerUnClient(ClientRMI client)
 	{
-		System.out.println("taille avant"+getUtilisateursConnectes().size());
 		getUtilisateursConnectes().remove(indexClient(client));
-		System.out.println("taille après"+getUtilisateursConnectes().size());
 	}
 	
 	public int indexClient(ClientRMI client){
@@ -253,13 +246,22 @@ public class Serveur implements Serializable {
 
 	/**
 	 * Créer un repertoire pour l'utilisateur 
-	 *
+	 * @param u : utilisateur
+	 * @param path : chemin avant le nom d'utilisateur (Ex : /utilisateurs/ )
 	 */
-	public void creerUnRepertoire(Utilisateur u , String path){
-		File repertoire = new File(path); // chemin : à modifier
+	public void creerUnRepertoireUtilisateur(Utilisateur u , String path){
+		File repertoire = new File(path+""+u.getLogin());
 		u.ajouterRepertoire(repertoire);
 		repertoire.mkdirs();
-
+	}
+	
+	/**
+	 * Créer un repertoire
+	 * @param path : chemin du futur repertoire
+	 */
+	public void creerUnRepertoire(String path){
+		File repertoire = new File(path);
+		repertoire.mkdirs();
 	}
 	
 }
