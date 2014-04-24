@@ -182,8 +182,6 @@ public class Serveur implements Serializable {
 					util = getUtilisateurInscrit(login);
 					// Test si le mdp est correct
 					if(util.autoriserConnexion(motDepasse)){
-						System.out.println("Dans connexion avant ajout client");
-						System.out.println("Apr�s ajout client");
 						result = true;
 					}	
 				}
@@ -237,6 +235,22 @@ public class Serveur implements Serializable {
 		System.out.println(client.toString());
 		getUtilisateursConnectes().remove(client);
 		System.out.println(""+getUtilisateursConnectes().size());
+		System.out.println("taille avant"+getUtilisateursConnectes().size());
+		getUtilisateursConnectes().remove(indexClient(client));
+		System.out.println("taille après"+getUtilisateursConnectes().size());
+	}
+	
+	public int indexClient(ClientRMI client){
+		int num = 0;
+		int compteur = 0;
+		for(ClientRMI cl : getUtilisateursConnectes()){
+			if(cl.getUtilisateur().equals(client.getUtilisateur())){
+				num = compteur;
+			}
+			compteur++;
+		}
+		
+		return num;
 	}
 
 }

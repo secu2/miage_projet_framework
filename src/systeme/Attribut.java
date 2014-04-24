@@ -7,7 +7,7 @@ package systeme;
  */
 public class Attribut {
 	
-	 // Le nom de l'attribut dans la base de données
+	 // Le nom de l'attribut dans la base de donnÃ©es
 	private String nomAttributBD;
 	// Sa valeur
 	private String valeur;

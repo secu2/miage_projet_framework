@@ -264,7 +264,14 @@ public class Utilisateur  implements Serializable{
 		return this.repertoire;
 	}
 	
+	public boolean equals(Utilisateur u){
+		boolean egal = false;
+		if(u.getLogin().equals(this.getLogin())){
+			egal = true;
+		}
+		
+		return egal;
+	}
 	
 	
-
 }

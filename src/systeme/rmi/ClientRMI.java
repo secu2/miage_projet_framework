@@ -38,7 +38,7 @@ public class ClientRMI  implements Serializable{
 		try {
 
 
-			// obtention de l'objet distant à partir de son nom (lookup)
+			// obtention de l'objet distant Ã  partir de son nom (lookup)
 			 registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 			 r = registry.lookup("fram");
 			if (r instanceof InterfaceRmi) {
@@ -46,8 +46,7 @@ public class ClientRMI  implements Serializable{
 				if (serveur.connexion(login, motDePasse,this)) {
 					this.utilisateur = serveur.getUtilisateurInscrit(login);
 					((InterfaceRmi) r).ajouterClient(this);
-					System.out.println(serveur.toString());
-					System.out.println("Start00 client");
+					System.out.println("Start client");
 				} else {
 					//throw new ErreurConnexion("Login mot de passe invalide");
 					throw new Ensure("Login mot de passe invalide");
@@ -177,8 +176,7 @@ public class ClientRMI  implements Serializable{
 	}
 	
 	/**
-	 * getter
-	 * @return Utilisateur : l'utilisateur associer à ce client 
+	 * @return Utilisateur : l'utilisateur associer Ã  ce client 
 	 */
 	
 	public Utilisateur getUtilisateur(){
