@@ -89,6 +89,7 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	}
 
 	public void deconnexion(ClientRMI c) throws RemoteException {
+		System.out.println(c.toString());
 		getServeur().supprimerUnClient(c);
 	}
 	
