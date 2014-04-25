@@ -1,4 +1,4 @@
-package systeme.rmi;
+package systeme.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
 import systeme.Serveur;
+import systeme.rmi.ClientRMI;
 
 public class MainRmi {
 
