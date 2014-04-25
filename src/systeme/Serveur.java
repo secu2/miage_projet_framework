@@ -153,7 +153,7 @@ public class Serveur implements Serializable {
 		boolean existant = false;
 		try {
 			existant = inscription(login, motDePasse);
-			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login), "/utilisateurs/");
+			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login), "/git/miage_projet_framework/docServeur/");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
