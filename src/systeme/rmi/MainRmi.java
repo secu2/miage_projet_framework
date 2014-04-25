@@ -4,9 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.security.acl.Group;
 import java.util.ArrayList;
+import java.util.Date;
 
 import modules.documents.Document;
+import modules.documents.social.Publication;
+import modules.gestionUtilisateur.Groupe;
+import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
 import systeme.Serveur;
 
@@ -28,10 +33,17 @@ public class MainRmi {
 		
 		Document document = new Document("C:/Users/chaiebm/Desktop/download.jpg");
 		
-		System.out.println(""+document.getTaille());
+		
+		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+		ArrayList<Groupe> groupe =  new ArrayList<Groupe>(); 
+		utilisateurs.add(c.getUtilisateur());
+
+		
+		ArrayList<Publication> publications = c1.getUtilisateur().getPublications();
 		
 		
-		c1.deconnexion();
+		
+		//c1.deconnexion();
 
 		// serveur.connexion("momo", "jojo");
 		// Client c = serveur.getClientConnecte("momo");

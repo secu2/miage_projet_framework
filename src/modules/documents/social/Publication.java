@@ -31,7 +31,7 @@ public class Publication {
      * @param proprietaire
      * @param document
      */
-	public Publication(Date dateDePublication, Date dateFinPublication,
+	public Publication(Date  dateDePublication, Date dateFinPublication,
 			ArrayList<Utilisateur> visibiliteUtilisateur,
 			ArrayList<Groupe> visibiliteGroupe, Utilisateur proprietaire,
 			Document document) {

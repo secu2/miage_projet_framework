@@ -35,6 +35,8 @@ public class Utilisateur  implements Serializable{
      */
     public Utilisateur(String login){
     	this.login = login;
+    	this.groupes = new ArrayList<Groupe>();
+    	this.publications = new ArrayList<Publication>();
     }
     
     /**
@@ -47,6 +49,8 @@ public class Utilisateur  implements Serializable{
     public Utilisateur(String login, String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException{
     	this.login = login;
     	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
+    	this.groupes = new ArrayList<Groupe>();
+    	this.publications = new ArrayList<Publication>();
     }
     /**
      * Construit un utilisateur et l'enregistre dans la base de données
@@ -62,6 +66,8 @@ public class Utilisateur  implements Serializable{
     	// Affecte le mot de passe encrypté
     	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
     	sauvegarderPersistant(bdd);
+    	this.groupes = new ArrayList<Groupe>();
+    	this.publications = new ArrayList<Publication>();
     }
     
     /**

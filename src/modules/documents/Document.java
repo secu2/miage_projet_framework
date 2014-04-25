@@ -36,7 +36,7 @@ public class Document {
 		fichier = new File(nom);
 		this.taille = fichier.length();
 		this.statistique = statistique;
-		this.emplacement = fichier.getPath();
+		this.emplacement = fichier.getPath().replaceAll("\\\\","/");
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class Document {
 		this.nom = nom;
 		fichier =  new File(nom);
 		this.taille = fichier.length();
-		this.emplacement = fichier.getPath();
+		this.emplacement = fichier.getPath().replaceAll("\\\\","/");
 	}
 
 	/**

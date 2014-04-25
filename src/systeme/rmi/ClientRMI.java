@@ -13,11 +13,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.management.modelmbean.RequiredModelMBean;
 
 import jus.util.assertion.Ensure;
 import jus.util.assertion.Require;
+import modules.documents.Document;
+import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
 import systeme.Serveur;
@@ -130,9 +133,10 @@ public class ClientRMI  implements Serializable{
 	 * @throws IOException
 	 */
 
-	public static void charger(ServeurRMI server, File source, File destination)
+	public void charger(ServeurRMI server, File source, File destination,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date date)
 			throws IOException {
 		copie(new FileInputStream(source), server.getOutputStream(destination));
+		this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, date);
 	}
 
 
