@@ -324,25 +324,34 @@ public class Serveur implements Serializable {
 	}
 	/**
 	 * Affiche l'ensemble des publications visibles pour un utilisateur 
-	 * @param utilisateur
+	 * @param utilisateur : l'utilisateur a verifier
 	 * @return ArrayList<Publication> : return publication visibles
 	 */
 	public ArrayList<Publication> getPublicationsVisibles(Utilisateur utilisateur)
 	{
+		
 		ArrayList<Publication> publicationsVisibles = new ArrayList<Publication>();
 		ArrayList<Publication> publications = getPublications(); 
+		
+		try {
 		for(int i=0; i < publications.size(); i++ )
 		{
+			
+			
 			ArrayList<Utilisateur> utilisateurs= publications.get(i).getVisibiliteUtilisateur();
 			ArrayList<Groupe> groupes = publications.get(i).getVisibiliteGroupe();
+			if(utilisateurs==null)
+			{
+				throw new NullPointerException();
+			}
 			for(Utilisateur util : utilisateurs)
 			{
-				if(util.equals(utilisateurs))
+				if(util.equals(utilisateur))
 				{
 					publicationsVisibles.add(publications.get(i));
 				}
 			}
-			for(Groupe groupe : groupes )
+			/*for(Groupe groupe : groupes )
 			{
 				ArrayList<Groupe> groupesUtilisateurs = utilisateur.getGroupes();
 				for(Groupe groupeUtilisateur : groupesUtilisateurs)
@@ -352,9 +361,15 @@ public class Serveur implements Serializable {
 						publicationsVisibles.add(publications.get(i));
 					}
 				}
-			}
+			}*/
 				
 		}
+		}
+		catch(NullPointerException e)
+		{
+			e.printStackTrace();
+		}
+		
 		return publicationsVisibles; 
 	}
 

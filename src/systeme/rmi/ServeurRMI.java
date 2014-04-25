@@ -55,15 +55,15 @@ public class ServeurRMI implements Serializable {
 			}
 	}
 	
-	public InputStream getInputStream(File f) throws IOException {
+	public InputStream getInputStream(File f,Serveur serv) throws IOException {
 	   // return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
-		 return  new RmiImpl(new FileInputStream(f)).getIn();
+		 return  new RmiImpl(new FileInputStream(f),serv).getIn();
 		 
 	}
 	
-	public OutputStream getOutputStream(File f) throws IOException {
+	public OutputStream getOutputStream(File f,Serveur serv) throws IOException {
 	  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
-	    return new RmiImpl(new FileOutputStream(f)).getOut();   
+	    return new RmiImpl(new FileOutputStream(f),serv).getOut();   
 	}
 /**
  * Provoque l'arret du serveur
@@ -89,5 +89,14 @@ public class ServeurRMI implements Serializable {
 			e.printStackTrace();
 		}
 	}
+
+public Serveur getServeur() {
+	return serveur;
+}
+
+public void setServeur(Serveur serveur) {
+	this.serveur = serveur;
+}
+	
 	
 }

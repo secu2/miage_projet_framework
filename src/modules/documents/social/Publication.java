@@ -1,4 +1,5 @@
 package modules.documents.social;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,7 +12,7 @@ import modules.gestionUtilisateur.Utilisateur;
  * @author never
  *
  */
-public class Publication {
+public class Publication implements Serializable {
     
     private Date dateDePublication;
     private Date dateFinPublication;

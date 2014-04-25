@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import systeme.Client;
 import systeme.Serveur;
 import systeme.tools.Encryptage;
+import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Utilisateur;
 
 //classe héritante de l'interface et définir les méthodes propres au serveur.
@@ -23,10 +24,11 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	private InputStream in;
 	private Serveur serveur;
 
-	public RmiImpl(OutputStream out, InputStream in) throws RemoteException {
+	public RmiImpl(OutputStream out, InputStream in,Serveur serveur) throws RemoteException {
 		super();
 		this.out = out;
 		this.in = in;
+		this.serveur=serveur;
 	}
 
 	public RmiImpl(Serveur serveur) throws RemoteException {
@@ -37,14 +39,16 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 
 	}
 
-	public RmiImpl(OutputStream out) throws RemoteException {
+	public RmiImpl(OutputStream out,Serveur serveur) throws RemoteException {
 		super();
 		this.out = out;
+		this.serveur=serveur;
 	}
 
-	public RmiImpl(InputStream in) throws RemoteException {
+	public RmiImpl(InputStream in,Serveur serveur) throws RemoteException {
 		super();
 		this.in = in;
+		this.serveur=serveur;
 	}
 
 	public String getTest() throws RemoteException {
@@ -96,6 +100,11 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	
 	public void envoiMessage(String s,ClientRMI c)  throws RemoteException {
 		getServeur().distribuerMessage(s,c);
+	}
+	
+	public void ajouterPublication(Publication publication)throws RemoteException
+	{
+		getServeur().AddPublication(publication);
 	}
 
 

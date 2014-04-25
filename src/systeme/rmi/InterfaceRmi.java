@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import systeme.Client;
 import systeme.Serveur;
+import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Utilisateur;
 
 
@@ -28,6 +29,7 @@ public interface InterfaceRmi extends Remote {
 	 */
 	public void deconnexion(ClientRMI c) throws RemoteException;
 	public void envoiMessage(String s,ClientRMI c)  throws RemoteException;
+	public void ajouterPublication(Publication publication)throws RemoteException;
 }
 
 

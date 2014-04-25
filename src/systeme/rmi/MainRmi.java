@@ -36,7 +36,7 @@ public class MainRmi {
 		
 		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 		ArrayList<Groupe> groupes =  new ArrayList<Groupe>(); 
-		utilisateurs.add(c.getUtilisateur());
+		utilisateurs.add(c1.getUtilisateur());
 
 		
 		ArrayList<Publication> publications = c1.getUtilisateur().getPublications();
@@ -67,12 +67,23 @@ public class MainRmi {
 		}*/
 
 		try {
-			c.charger(serveur.getServeurRMI(), new File("C:/Users/chaiebm/Desktop/download.jpg"),null, null, document, null);
+			c.charger(serveur.getServeurRMI(), new File("C:/Users/chaiebm/Desktop/download.jpg"),utilisateurs, null, document, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 
 		}
+		///Affiche les plublications visibles
+		
+		ArrayList<Publication> publicationsvisibles = c1.getPublicationsVisibles();
+		
+		for(Publication pub : publicationsvisibles)
+		{
+			
+		System.out.println("fichier visible");
+			System.out.println(""+pub.getDocument().getEmplacement());
+		}
+		
 		/*
 		ArrayList<ClientRMI> clients = c.getUtilisateurs();
 		System.out.println("Utilisateurs connectés ");

@@ -120,7 +120,7 @@ public class ClientRMI  implements Serializable{
 
 	public static void telecharger(ServeurRMI server, File source,
 			File destination) throws IOException {
-		copie(server.getInputStream(source), new FileOutputStream(destination));
+		copie(server.getInputStream(source,server.getServeur()), new FileOutputStream(destination));
 	}
 
 	/**
@@ -140,11 +140,13 @@ public class ClientRMI  implements Serializable{
 		String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
 		System.out.println(dest);
 		File destination = new File(dest);
-		copie(new FileInputStream(source), server.getOutputStream(destination));
-		this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
+		
 		if (r instanceof InterfaceRmi) {
-			Serveur serveur = ((InterfaceRmi) r).getServeur();
-			serveur.AddPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
+			InterfaceRmi inter = ((InterfaceRmi) r);
+			Serveur serveur = inter.getServeur();
+			copie(new FileInputStream(source), server.getOutputStream(destination,serveur));
+			this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
+			inter.ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
 		}
 	}
 
@@ -243,6 +245,27 @@ public class ClientRMI  implements Serializable{
 	 */
 	public void recevoirMessage(String message, ClientRMI expediteur){
 		System.out.println(expediteur.getUtilisateur().getLogin() + " : " + message);
+	}
+	/**
+	 * Affiche l'ensemble des publications visibles pour un utilisateur
+	 * @return ArrayList<Publication> : return publication visibles
+	 */
+	public ArrayList<Publication> getPublicationsVisibles()
+	{
+		ArrayList<Publication> publicationsVisibles = null;
+		
+		if (r instanceof InterfaceRmi)
+		{
+			try {
+				publicationsVisibles = ((InterfaceRmi) r).getServeur().getPublicationsVisibles(this.getUtilisateur());
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+		
+		
+		return publicationsVisibles;
 	}
 	
 }
