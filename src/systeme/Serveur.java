@@ -344,10 +344,14 @@ public class Serveur implements Serializable {
 			}
 			for(Groupe groupe : groupes )
 			{
-				//ArrayList<Groupe>
-				
-				
-				//if(groupe.equals(utilisateur.get))
+				ArrayList<Groupe> groupesUtilisateurs = utilisateur.getGroupes();
+				for(Groupe groupeUtilisateur : groupesUtilisateurs)
+				{
+					if(groupeUtilisateur.equals(groupe));
+					{
+						publicationsVisibles.add(publications.get(i));
+					}
+				}
 			}
 				
 		}
