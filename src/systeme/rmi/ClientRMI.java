@@ -39,8 +39,7 @@ public class ClientRMI  implements Serializable{
 	static int REGISTRY_PORT = 1099;
 
 	private Utilisateur utilisateur;
-	private Registry registry;
-	private Remote r;
+	private InterfaceServeurRmi serv;
 	private InterfaceClientRmi cl;
 	
 	public ClientRMI(String login, String motDePasse) {
@@ -49,13 +48,12 @@ public class ClientRMI  implements Serializable{
 
 
 			// obtention de l'objet distant à partir de son nom (lookup)
-			 registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-			 r = registry.lookup("fram");
+			 Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			 Remote r = registry.lookup("fram");
 			if (r instanceof InterfaceServeurRmi) {
+				this.serv = (InterfaceServeurRmi)r;
 				Serveur serveur = ((InterfaceServeurRmi) r).getServeur();
-				if (serveur.connexion(login, motDePasse,this)) {
-					
-					
+				if (serveur.connexion(login, motDePasse,this)) {		
 					
 					this.utilisateur = serveur.getUtilisateurInscrit(login);
 					String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/" + this.utilisateur.getLogin();
@@ -160,13 +158,13 @@ public class ClientRMI  implements Serializable{
 		System.out.println(dest);
 		File destination = new File(dest);
 		
-		if (r instanceof InterfaceServeurRmi) {
-			InterfaceServeurRmi inter = ((InterfaceServeurRmi) r);
-			Serveur serveur = inter.getServeur();
+		//if (r instanceof InterfaceServeurRmi) {
+			
+			Serveur serveur = getServeurRmiImpl().getServeur();
 			copie(new FileInputStream(source), server.getOutputStream(destination,serveur));
 			this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
-			inter.ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
-		}
+			getServeurRmiImpl().ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
+		//}
 	}
 
 
@@ -199,15 +197,14 @@ public class ClientRMI  implements Serializable{
 	{
 		ArrayList<ClientRMI> clients = null;
 		
-		if (r instanceof InterfaceServeurRmi)
-		{
+		
 			try {
-				clients = ((InterfaceServeurRmi) r).getClientsconnectes();
+				clients = getServeurRmiImpl().getClientsconnectes();
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		
 		return clients;
 	}
 	
@@ -220,35 +217,30 @@ public class ClientRMI  implements Serializable{
 	}
 	
 	/**
-	 * Deconnexion du client
+	 * Deconnecte le client
 	 */
 	
 	public void deconnexion()
 	{
-		if (r instanceof InterfaceServeurRmi)
-		{
-			System.out.println("ekekd");
+		
 			try {
-				((InterfaceServeurRmi) r).deconnexion(this);
-				System.out.println(this.toString());
-				
+				// Suppression de la liste des connectés sur le serveur
+				getServeurRmiImpl().deconnexion(this);		
+				try {
+					// Suppression de l'objet client distant sur le registry
+					LocateRegistry.getRegistry(REGISTRY_PORT).unbind(getUtilisateur().getLogin());
+				} catch (NotBoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		
 	}
 	
 	
-	/**
-	 * Reception d'un message
-	 * @param message
-	 * @param expediteur
-	 */
-	/**
-	public void recevoirMessage(String message, ClientRMI expediteur){
-		System.out.println(expediteur.getUtilisateur().getLogin() + " : " + message);
-	}**/
 	
 	/**
 	 * Affiche l'ensemble des publications visibles pour un utilisateur
@@ -258,27 +250,18 @@ public class ClientRMI  implements Serializable{
 	{
 		ArrayList<Publication> publicationsVisibles = null;
 		
-		if (r instanceof InterfaceServeurRmi)
-		{
 			try {
-				publicationsVisibles = ((InterfaceServeurRmi) r).getServeur().getPublicationsVisibles(this.getUtilisateur());
+				publicationsVisibles = getServeurRmiImpl().getServeur().getPublicationsVisibles(this.getUtilisateur());
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-		}
 		
 		
 		return publicationsVisibles;
 	}
 	
-	/**
-	 * Renvoie l'objet distant du client
-	 * @return cl
-	 */
-	public InterfaceClientRmi getClientRmiImpl(){
-		return cl;
-	}
+	
 	
 	/**
 	 * Envoie un message 
@@ -286,15 +269,12 @@ public class ClientRMI  implements Serializable{
 	 */
 	public void envoyerMessagePrive(String message,ClientRMI destinataire){
 
-		if (r instanceof InterfaceServeurRmi)
-		{
 			try {
 				getClientRmiImpl().envoyerMessage(message, this);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
 	}
 	
 	/**
@@ -303,14 +283,11 @@ public class ClientRMI  implements Serializable{
 	 */
 	public void envoyerMessage(String message){
 
-		if (r instanceof InterfaceServeurRmi)
-		{
 			try {
 				getClientRmiImpl().envoyerMessage(message, this);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
 		}
 	}
 	
@@ -328,6 +305,23 @@ public class ClientRMI  implements Serializable{
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Renvoie l'objet distant du client
+	 * @return cl
+	 */
+	public InterfaceClientRmi getClientRmiImpl(){
+		return cl;
+	}
+	
+	/**
+	 * Renvoie l'objet distant du serveur 
+	 * @return serv
+	 */
+	public InterfaceServeurRmi getServeurRmiImpl(){
+		return serv;
+	}
+	
 	
 	
 }

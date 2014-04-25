@@ -92,7 +92,7 @@ public class lanceClient2 {
 			System.out.println(clients.get(i).getUtilisateur().getLogin());
 		}*/
 		
-		while(true){
+		for(int i = 0 ; i < 10 ; i++){
 			c.envoyerMessage("De jojo");
 		}
 

@@ -27,12 +27,12 @@ public class lanceClient1 {
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		
 		c.envoyerMessage("Je fais un test");
-		c.envoyerMessagePrive("Test réussi", c.getUtilisateurs().get(0));
+		//c.envoyerMessagePrive("Test réussi", c.getUtilisateurs().get(0));
 		
 	
+	
 		
-		
-		c.deconnexion();
+		//c.deconnexion();
 
 		
 
