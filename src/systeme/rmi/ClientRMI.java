@@ -20,6 +20,7 @@ import javax.management.modelmbean.RequiredModelMBean;
 import jus.util.assertion.Ensure;
 import jus.util.assertion.Require;
 import modules.documents.Document;
+import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
@@ -133,10 +134,18 @@ public class ClientRMI  implements Serializable{
 	 * @throws IOException
 	 */
 
-	public void charger(ServeurRMI server, File source, File destination,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date date)
+	public void charger(ServeurRMI server, File source,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date dateFinPublication)
 			throws IOException {
+		//"/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+
+		String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
+		System.out.println(dest);
+		File destination = new File(dest);
 		copie(new FileInputStream(source), server.getOutputStream(destination));
-		this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, date);
+		this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
+		if (r instanceof InterfaceRmi) {
+			Serveur serveur = ((InterfaceRmi) r).getServeur();
+			serveur.AddPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
+		}
 	}
 
 

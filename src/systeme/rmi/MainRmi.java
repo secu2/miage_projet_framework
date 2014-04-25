@@ -35,7 +35,7 @@ public class MainRmi {
 		
 		
 		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
-		ArrayList<Groupe> groupe =  new ArrayList<Groupe>(); 
+		ArrayList<Groupe> groupes =  new ArrayList<Groupe>(); 
 		utilisateurs.add(c.getUtilisateur());
 
 		
@@ -64,22 +64,22 @@ public class MainRmi {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
 		try {
-			c.charger(serveur.getServeurRMI(), new File("C:/Users/chaiebm/Desktop/download.jpg"), new File(
-					"docServeur/test1.jpg"));
+			c.charger(serveur.getServeurRMI(), new File("C:/Users/chaiebm/Desktop/download.jpg"),null, null, document, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 
-		}*/
+		}
+		/*
 		ArrayList<ClientRMI> clients = c.getUtilisateurs();
 		System.out.println("Utilisateurs connectés ");
 		for(int i=0; i < clients.size(); i++)
 		{
 			System.out.println(clients.get(i).getUtilisateur().getLogin());
-		}
+		}*/
 
 	}
 }

@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.security.acl.Group;
 import java.util.ArrayList;
 
 import systeme.rmi.ClientRMI;
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
+import modules.documents.social.Publication;
+import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 
 public class Serveur implements Serializable {
@@ -16,10 +19,12 @@ public class Serveur implements Serializable {
 	private ArrayList<Utilisateur> utilisateursInscrits;
 	private ArrayList<ClientRMI> utilisateursConnectes;
 	private ServeurRMI serveur;
+	private ArrayList<Publication> publications;
 	
 	public Serveur(){
 		utilisateursInscrits =  new ArrayList<Utilisateur>();
 		utilisateursConnectes = new ArrayList<ClientRMI>();
+		publications = new ArrayList<Publication>();
 		serveur = new ServeurRMI(this);
 	}
 	
@@ -303,6 +308,50 @@ public class Serveur implements Serializable {
 			}
 		}
 		return u;
+	}
+
+	public ArrayList<Publication> getPublications() {
+		return publications;
+	}
+
+	public void setPublications(ArrayList<Publication> publications) {
+		this.publications = publications;
+	}
+	
+	public void AddPublication(Publication publication)
+	{
+		getPublications().add(publication);
+	}
+	/**
+	 * Affiche l'ensemble des publications visibles pour un utilisateur 
+	 * @param utilisateur
+	 * @return ArrayList<Publication> : return publication visibles
+	 */
+	public ArrayList<Publication> getPublicationsVisibles(Utilisateur utilisateur)
+	{
+		ArrayList<Publication> publicationsVisibles = new ArrayList<Publication>();
+		ArrayList<Publication> publications = getPublications(); 
+		for(int i=0; i < publications.size(); i++ )
+		{
+			ArrayList<Utilisateur> utilisateurs= publications.get(i).getVisibiliteUtilisateur();
+			ArrayList<Groupe> groupes = publications.get(i).getVisibiliteGroupe();
+			for(Utilisateur util : utilisateurs)
+			{
+				if(util.equals(utilisateurs))
+				{
+					publicationsVisibles.add(publications.get(i));
+				}
+			}
+			for(Groupe groupe : groupes )
+			{
+				//ArrayList<Groupe>
+				
+				
+				//if(groupe.equals(utilisateur.get))
+			}
+				
+		}
+		return publicationsVisibles; 
 	}
 
 	
