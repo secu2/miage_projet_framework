@@ -15,7 +15,7 @@ import modules.gestionUtilisateur.Utilisateur;
 
 //création de l'interface propre au RMI
 
-public interface InterfaceRmi extends Remote {
+public interface InterfaceServeurRmi extends Remote {
 	 
 	public String getTest() throws RemoteException;
 	public Serveur getServeur() throws RemoteException;
@@ -28,7 +28,7 @@ public interface InterfaceRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public void deconnexion(ClientRMI c) throws RemoteException;
-	public void envoiMessage(String s,ClientRMI c)  throws RemoteException;
+	public void envoiMessage(String message,ClientRMI expeditaire)  throws RemoteException;
 	public void ajouterPublication(Publication publication)throws RemoteException;
 }
 

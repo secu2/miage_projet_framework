@@ -16,7 +16,7 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Utilisateur;
 
 //classe héritante de l'interface et définir les méthodes propres au serveur.
-public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
+public class ServeurRmiImpl extends UnicastRemoteObject implements InterfaceServeurRmi {
 
 	private static final long serialVersionUID = 2674880711467464646L;
 
@@ -24,14 +24,14 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 	private InputStream in;
 	private Serveur serveur;
 
-	public RmiImpl(OutputStream out, InputStream in,Serveur serveur) throws RemoteException {
+	public ServeurRmiImpl(OutputStream out, InputStream in,Serveur serveur) throws RemoteException {
 		super();
 		this.out = out;
 		this.in = in;
 		this.serveur=serveur;
 	}
 
-	public RmiImpl(Serveur serveur) throws RemoteException {
+	public ServeurRmiImpl(Serveur serveur) throws RemoteException {
 		super();
 		this.out = null;
 		this.in = null;
@@ -39,13 +39,13 @@ public class RmiImpl extends UnicastRemoteObject implements InterfaceRmi {
 
 	}
 
-	public RmiImpl(OutputStream out,Serveur serveur) throws RemoteException {
+	public ServeurRmiImpl(OutputStream out,Serveur serveur) throws RemoteException {
 		super();
 		this.out = out;
 		this.serveur=serveur;
 	}
 
-	public RmiImpl(InputStream in,Serveur serveur) throws RemoteException {
+	public ServeurRmiImpl(InputStream in,Serveur serveur) throws RemoteException {
 		super();
 		this.in = in;
 		this.serveur=serveur;

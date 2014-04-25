@@ -37,7 +37,7 @@ public class ServeurRMI implements Serializable {
 			LocateRegistry.createRegistry(REGISTRY_PORT);
 	
 			
-			RmiImpl informationImpl = new RmiImpl(serveur);
+			ServeurRmiImpl informationImpl = new ServeurRmiImpl(serveur);
 			String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram";
 			System.out.println("Enregistrement de l'objet avec l'url : " + url);
 			Naming.rebind(url, informationImpl);
@@ -57,13 +57,13 @@ public class ServeurRMI implements Serializable {
 	
 	public InputStream getInputStream(File f,Serveur serv) throws IOException {
 	   // return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
-		 return  new RmiImpl(new FileInputStream(f),serv).getIn();
+		 return  new ServeurRmiImpl(new FileInputStream(f),serv).getIn();
 		 
 	}
 	
 	public OutputStream getOutputStream(File f,Serveur serv) throws IOException {
 	  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
-	    return new RmiImpl(new FileOutputStream(f),serv).getOut();   
+	    return new ServeurRmiImpl(new FileOutputStream(f),serv).getOut();   
 	}
 /**
  * Provoque l'arret du serveur

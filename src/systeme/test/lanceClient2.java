@@ -1,4 +1,4 @@
-package systeme.rmi;
+package systeme.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,22 +14,19 @@ import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
 import systeme.Serveur;
+import systeme.rmi.ClientRMI;
 
-public class MainRmi {
+public class lanceClient2 {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException,
 			UnsupportedEncodingException {
 
-		Serveur serveur = new Serveur();
 		
-		serveur.inscription("momo", "jojo");
 		
-		serveur.inscription("momoo", "jojo");
-		
-		ClientRMI c = new ClientRMI("momo", "jojo");
+		ClientRMI c = new ClientRMI("jojo", "jojo");
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		
-		c.envoyerMessage("Test");
+		c.envoyerMessage("Test ça marche !!!!!!!!");
 		
 		////Client import de fichier 
 		
@@ -82,6 +79,7 @@ public class MainRmi {
 		for(Publication pub : publicationsvisibles)
 		{
 			
+			
 		System.out.println("fichier visible");
 			System.out.println(""+pub.getDocument().getEmplacement());
 		} **/
@@ -93,6 +91,10 @@ public class MainRmi {
 		{
 			System.out.println(clients.get(i).getUtilisateur().getLogin());
 		}*/
+		
+		while(true){
+			c.envoyerMessage("De jojo");
+		}
 
 	}
 }

@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -38,6 +41,7 @@ public class ClientRMI  implements Serializable{
 	private Utilisateur utilisateur;
 	private Registry registry;
 	private Remote r;
+	private InterfaceClientRmi cl;
 	
 	public ClientRMI(String login, String motDePasse) {
 
@@ -47,13 +51,25 @@ public class ClientRMI  implements Serializable{
 			// obtention de l'objet distant à partir de son nom (lookup)
 			 registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 			 r = registry.lookup("fram");
-			if (r instanceof InterfaceRmi) {
-				Serveur serveur = ((InterfaceRmi) r).getServeur();
+			if (r instanceof InterfaceServeurRmi) {
+				Serveur serveur = ((InterfaceServeurRmi) r).getServeur();
 				if (serveur.connexion(login, motDePasse,this)) {
+					
+					
+					
 					this.utilisateur = serveur.getUtilisateurInscrit(login);
+					String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/" + this.utilisateur.getLogin();
+					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
+					cl = new ClientRmiImpl(this.utilisateur);
+					try {
+						Naming.rebind(url, cl);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					// si l'utilisateur n 'est pas présent dans la liste des connectés
 					if(serveur.utilisateurConnecte(this) == null){
-						((InterfaceRmi) r).ajouterClient(this);
+						((InterfaceServeurRmi) r).ajouterClient(this);
 					}
 					else{
 						System.out.println("déjà connecté");
@@ -74,6 +90,9 @@ public class ClientRMI  implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -141,8 +160,8 @@ public class ClientRMI  implements Serializable{
 		System.out.println(dest);
 		File destination = new File(dest);
 		
-		if (r instanceof InterfaceRmi) {
-			InterfaceRmi inter = ((InterfaceRmi) r);
+		if (r instanceof InterfaceServeurRmi) {
+			InterfaceServeurRmi inter = ((InterfaceServeurRmi) r);
 			Serveur serveur = inter.getServeur();
 			copie(new FileInputStream(source), server.getOutputStream(destination,serveur));
 			this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
@@ -180,10 +199,10 @@ public class ClientRMI  implements Serializable{
 	{
 		ArrayList<ClientRMI> clients = null;
 		
-		if (r instanceof InterfaceRmi)
+		if (r instanceof InterfaceServeurRmi)
 		{
 			try {
-				clients = ((InterfaceRmi) r).getClientsconnectes();
+				clients = ((InterfaceServeurRmi) r).getClientsconnectes();
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -206,11 +225,11 @@ public class ClientRMI  implements Serializable{
 	
 	public void deconnexion()
 	{
-		if (r instanceof InterfaceRmi)
+		if (r instanceof InterfaceServeurRmi)
 		{
 			System.out.println("ekekd");
 			try {
-				((InterfaceRmi) r).deconnexion(this);
+				((InterfaceServeurRmi) r).deconnexion(this);
 				System.out.println(this.toString());
 				
 			} catch (RemoteException e) {
@@ -219,18 +238,75 @@ public class ClientRMI  implements Serializable{
 			}
 		}
 	}
+	
+	
 	/**
-	 * Envoie un message 
+	 * Reception d'un message
 	 * @param message
 	 * @param expediteur
 	 */
+	/**
+	public void recevoirMessage(String message, ClientRMI expediteur){
+		System.out.println(expediteur.getUtilisateur().getLogin() + " : " + message);
+	}**/
 	
-	public void envoyerMessage(String message,ClientRMI expediteur){
-
-		if (r instanceof InterfaceRmi)
+	/**
+	 * Affiche l'ensemble des publications visibles pour un utilisateur
+	 * @return ArrayList<Publication> : return publication visibles
+	 */
+	public ArrayList<Publication> getPublicationsVisibles()
+	{
+		ArrayList<Publication> publicationsVisibles = null;
+		
+		if (r instanceof InterfaceServeurRmi)
 		{
 			try {
-				((InterfaceRmi) r).getServeur().distribuerMessage(message,this);				
+				publicationsVisibles = ((InterfaceServeurRmi) r).getServeur().getPublicationsVisibles(this.getUtilisateur());
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		}
+		
+		
+		return publicationsVisibles;
+	}
+	
+	/**
+	 * Renvoie l'objet distant du client
+	 * @return cl
+	 */
+	public InterfaceClientRmi getClientRmiImpl(){
+		return cl;
+	}
+	
+	/**
+	 * Envoie un message 
+	 * @param message
+	 */
+	public void envoyerMessagePrive(String message,ClientRMI destinataire){
+
+		if (r instanceof InterfaceServeurRmi)
+		{
+			try {
+				getClientRmiImpl().envoyerMessage(message, this);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Envoie un message 
+	 * @param message
+	 */
+	public void envoyerMessage(String message){
+
+		if (r instanceof InterfaceServeurRmi)
+		{
+			try {
+				getClientRmiImpl().envoyerMessage(message, this);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -243,29 +319,15 @@ public class ClientRMI  implements Serializable{
 	 * @param message
 	 * @param expediteur
 	 */
-	public void recevoirMessage(String message, ClientRMI expediteur){
-		System.out.println(expediteur.getUtilisateur().getLogin() + " : " + message);
-	}
-	/**
-	 * Affiche l'ensemble des publications visibles pour un utilisateur
-	 * @return ArrayList<Publication> : return publication visibles
-	 */
-	public ArrayList<Publication> getPublicationsVisibles()
-	{
-		ArrayList<Publication> publicationsVisibles = null;
-		
-		if (r instanceof InterfaceRmi)
-		{
-			try {
-				publicationsVisibles = ((InterfaceRmi) r).getServeur().getPublicationsVisibles(this.getUtilisateur());
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+	
+	public void recevoirMessage(String message){
+		try {
+			getClientRmiImpl().recevoirMessage(message, this);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
-		return publicationsVisibles;
 	}
+	
 	
 }
