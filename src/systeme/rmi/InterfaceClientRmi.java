@@ -8,9 +8,9 @@ import modules.gestionUtilisateur.Utilisateur;
 
 public interface InterfaceClientRmi extends Remote {
 	
-public Utilisateur getUtilisateur() throws RemoteException;
-public void envoyerMessage(String s, ClientRMI expeditaire) throws RemoteException;
-public void envoyerMessagePrive(String s, ClientRMI expeditaire, ClientRMI destinataire) throws RemoteException;
+
+public void envoyerMessage(String s, String expeditaire) throws RemoteException;
+public void envoyerMessagePrive(String s, String expeditaire, String destinataire) throws RemoteException;
 public void recevoirMessage(String s, ClientRMI expeditaire) throws RemoteException;
 
 }

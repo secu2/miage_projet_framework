@@ -17,11 +17,14 @@ import java.rmi.registry.Registry;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TreeMap;
 
 import javax.management.modelmbean.RequiredModelMBean;
 
 import jus.util.assertion.Ensure;
 import jus.util.assertion.Require;
+import modules.chat.Conversation;
+import modules.chat.MessagePrive;
 import modules.documents.Document;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
@@ -41,7 +44,14 @@ public class ClientRMI  implements Serializable{
 	private Utilisateur utilisateur;
 	private InterfaceServeurRmi serv;
 	private InterfaceClientRmi cl;
-	
+
+	/**
+	 * Créer un objet client RMI
+	 * @param login
+	 * @param motDePasse
+	 * @require : login présent dans la liste des inscrits et mot de passe correct
+	 * @ensure : objet clientRMI crée
+	 */
 	public ClientRMI(String login, String motDePasse) {
 
 		try {
@@ -58,7 +68,7 @@ public class ClientRMI  implements Serializable{
 					this.utilisateur = serveur.getUtilisateurInscrit(login);
 					String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/" + this.utilisateur.getLogin();
 					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
-					cl = new ClientRmiImpl(this.utilisateur);
+					cl = new ClientRmiImpl();
 					try {
 						Naming.rebind(url, cl);
 					} catch (MalformedURLException e) {
@@ -267,10 +277,10 @@ public class ClientRMI  implements Serializable{
 	 * Envoie un message 
 	 * @param message
 	 */
-	public void envoyerMessagePrive(String message,ClientRMI destinataire){
+	public void envoyerMessagePrive(String message,String destinataire){
 
 			try {
-				getClientRmiImpl().envoyerMessage(message, this);
+				getClientRmiImpl().envoyerMessagePrive(message, this.getUtilisateur().getLogin() , destinataire);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -284,7 +294,7 @@ public class ClientRMI  implements Serializable{
 	public void envoyerMessage(String message){
 
 			try {
-				getClientRmiImpl().envoyerMessage(message, this);
+				getClientRmiImpl().envoyerMessage(message, this.getUtilisateur().getLogin());
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

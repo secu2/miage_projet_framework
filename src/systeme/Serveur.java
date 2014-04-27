@@ -14,11 +14,14 @@ import java.rmi.registry.Registry;
 import java.security.NoSuchAlgorithmException;
 import java.security.acl.Group;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import systeme.rmi.ClientRMI;
 import systeme.rmi.InterfaceClientRmi;
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
+import modules.chat.Conversation;
+import modules.chat.MessagePrive;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
@@ -30,7 +33,20 @@ public class Serveur implements Serializable {
 	private ServeurRMI serveur;
 	private ArrayList<Publication> publications;
 	static int REGISTRY_PORT = 1099;
-
+	
+	
+	/** 
+	* Messages privés reçus lorsque le client n'était pas connecté
+	* La clé de la TreeMap est le login de l'utilisateur qui donnent accès à une autre treemap
+	* qui elle donne accès à l'ensemble des messages envoyés identifié par une clé qui est le login de l'expeditaire
+	*/ 
+	private TreeMap<String,TreeMap<String, ArrayList<MessagePrive>>> messagesPrivesUtilisateurs;
+	/**
+	 * Conversation que l'utilisateur a reçu alors qu'il était deconnecté
+	 * La clé est le login de l'utilisateur, qui donne ainsi accès à sa liste de conversations 
+	 */
+	private TreeMap<String,ArrayList<Conversation>> conversationsUtilisateurs;
+	
 	public Serveur() {
 		utilisateursInscrits = new ArrayList<Utilisateur>();
 		utilisateursConnectes = new ArrayList<ClientRMI>();
@@ -231,7 +247,7 @@ public class Serveur implements Serializable {
 	public ClientRMI getClientConnecte(String login) {
 		ClientRMI cl = null;
 		for (ClientRMI c : getUtilisateursConnectes()) {
-			if (c.getUtilisateur().getLogin().equals(login)) {
+			if(c.getUtilisateur().equals(getUtilisateurInscrit(login))){
 				cl = c;
 			}
 		}
@@ -315,7 +331,7 @@ public class Serveur implements Serializable {
 	 * 
 	 * @param message
 	 */
-	public void distribuerMessage(String message, ClientRMI expediteur) {
+	public void distribuerMessage(String message, String loginExpediteur) {
 		Registry registry;
 		try {
 			registry = LocateRegistry.getRegistry(REGISTRY_PORT);
@@ -324,6 +340,7 @@ public class Serveur implements Serializable {
 				// InetAddress.getLocalHost().getHostAddress() + "/" +
 				// c.getUtilisateur().getLogin();
 				try {
+					ClientRMI expediteur = getClientConnecte(loginExpediteur);
 					Remote rem = registry.lookup(c.getUtilisateur().getLogin());
 					((InterfaceClientRmi) rem).recevoirMessage(message,
 							expediteur);
@@ -353,17 +370,32 @@ public class Serveur implements Serializable {
 	 * @param message
 	 * @param expediteur
 	 * @param destinataire
+	 * @require : destinataire inscrit sur le serveur
+	 * @require : expediteur inscrit et connecté sur le serveur
 	 */
-	public void distribuerMessagePrive(String message, ClientRMI expediteur,
-			ClientRMI destinataire) {
-		if (utilisateurConnecte(destinataire) != null) {
+	public void distribuerMessagePrive(String message, String loginExpediteur, String loginDestinataire){
+		// si le destinataire est connecté
+		if (getClientConnecte(loginDestinataire) != null) {
 			Registry registry;
 			try {
 				registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 				Remote rem;
 				try {
+					// on récupère le client du destinataire sur le serveur
+					ClientRMI destinataire = getClientConnecte(loginDestinataire);
 					rem = registry.lookup(destinataire.getUtilisateur().getLogin());
-					((InterfaceClientRmi) rem).recevoirMessage(message, expediteur);
+					
+				
+					// On l'affiche du côté du destinataire
+					((InterfaceClientRmi) rem).recevoirMessage(message, getClientConnecte(loginExpediteur));
+					// on l'affiche également du côté de l'expediteur
+					
+					// on récupère le client du expediteur sur le serveur
+					ClientRMI expediteur = getClientConnecte(loginExpediteur);
+					// on récupère l'objet distant du client expediteur du message
+					Remote remo = registry.lookup(expediteur.getUtilisateur().getLogin());
+					((InterfaceClientRmi) remo).recevoirMessage(message, getClientConnecte(loginExpediteur));
+
 				} catch (AccessException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -374,7 +406,6 @@ public class Serveur implements Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				// c.recevoirMessage(message);
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -383,8 +414,9 @@ public class Serveur implements Serializable {
 			
 
 		} else {
-			System.out
-					.println("Le destinataire n'est pas connecté... voir comment gérer");
+			System.out.println("Le destinataire n'est pas connecté... voir comment gérer");
+			
+			
 		}
 
 	}
@@ -405,16 +437,28 @@ public class Serveur implements Serializable {
 		}
 		return u;
 	}
-
 	
+	
+	/**
+	 * Renvoie l'ensemble de publications
+	 * @return publications
+	 */
 	public ArrayList<Publication> getPublications() {
 		return publications;
 	}
 
+	/**
+	 * Affecte un ensemble de publications à l'ensemble de publications du serveur
+	 * @param publications
+	 */
 	public void setPublications(ArrayList<Publication> publications) {
 		this.publications = publications;
 	}
 
+	/**
+	 * Ajoute une publication à la liste des publications contenues sur le serveur
+	 * @param publication
+	 */
 	public void AddPublication(Publication publication) {
 		getPublications().add(publication);
 	}

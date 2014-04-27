@@ -28,9 +28,7 @@ public class lanceClient3 {
 		
 		c.envoyerMessage("Test ça marche de popo!!!!!!!!");
 		
-		while(true){
-			
-		}
+		
 
 	}
 }

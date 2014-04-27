@@ -10,20 +10,20 @@ import java.rmi.server.UnicastRemoteObject;
 
 import modules.gestionUtilisateur.Utilisateur;
 
+//TODO : A commenter
 public class ClientRmiImpl  extends UnicastRemoteObject implements InterfaceClientRmi,Serializable{
 	static int REGISTRY_PORT = 1099;
 
-	private Utilisateur util;
 	
-	public ClientRmiImpl(Utilisateur util) throws RemoteException{
-		this.util = util;
+	/**
+	 * 
+	 * @throws RemoteException
+	 */
+	public ClientRmiImpl() throws RemoteException{
 	}
 	
-	public Utilisateur getUtilisateur() throws RemoteException{
-		return this.util;
-	}
 	
-	public void envoyerMessage(String message, ClientRMI expeditaire) throws RemoteException{
+	public void envoyerMessage(String message, String expeditaire) throws RemoteException{
 		 Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 		 Remote r;
 		try {
@@ -45,7 +45,7 @@ public class ClientRmiImpl  extends UnicastRemoteObject implements InterfaceClie
 	}
 
 	
-	public void envoyerMessagePrive(String message, ClientRMI expeditaire, ClientRMI destinataire) throws RemoteException{
+	public void envoyerMessagePrive(String message, String loginExpediteur, String loginDestinataire) throws RemoteException{
 		Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 		 Remote r;
 		try {
@@ -53,7 +53,7 @@ public class ClientRmiImpl  extends UnicastRemoteObject implements InterfaceClie
 			if (r instanceof InterfaceServeurRmi)
 			{
 				try {
-					((InterfaceServeurRmi) r).getServeur().distribuerMessagePrive(message,expeditaire,destinataire);				
+					((InterfaceServeurRmi) r).getServeur().distribuerMessagePrive(message,loginExpediteur,loginDestinataire);				
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
