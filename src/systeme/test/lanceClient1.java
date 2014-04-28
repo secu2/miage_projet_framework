@@ -17,8 +17,8 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
-import systeme.Serveur;
 import systeme.rmi.ClientRMI;
+import systeme.rmi.ServeurRMI;
 
 public class lanceClient1 {
 
@@ -31,7 +31,7 @@ public class lanceClient1 {
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		try {
 			c.getUtilisateur().creerUnGroupe("amis");
-			c.getUtilisateur().ajouterUtilisateurGroupe(c.getServeurRmiImpl().getServeur().getUtilisateursInscrits().get(2), "amis");
+			c.getUtilisateur().ajouterUtilisateurGroupe(c.getServeurRmiImpl().getUtilisateursInscrits().get(2), "amis");
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -39,10 +39,10 @@ public class lanceClient1 {
 		//c.envoyerMessage(new Message("Hey ça marche :'D ", c.getUtilisateur().getLogin()));
 		ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 		try {
-			int idConversation = c.creerUneConversation(c.getServeurRmiImpl().getServeur().getUtilisateursInscrits(), null);
+			int idConversation = c.creerUneConversation(c.getServeurRmiImpl().getUtilisateursInscrits(), null);
 			ArrayList<Groupe> groupes= new ArrayList<Groupe>();
 			groupes.add(c.getUtilisateur().getGroupe("amis"));
-			c.envoyerMessageConversation(new MessageConversation(idConversation, "Ca marche!!." , c.getUtilisateur().getLogin(), c.getServeurRmiImpl().getServeur().getUtilisateursInscrits(), groupes));
+			c.envoyerMessageConversation(new MessageConversation(idConversation, "Ca marche!!." , c.getUtilisateur().getLogin(), c.getServeurRmiImpl().getUtilisateursInscrits(), groupes));
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

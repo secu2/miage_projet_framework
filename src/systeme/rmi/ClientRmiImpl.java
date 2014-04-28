@@ -38,7 +38,7 @@ public class ClientRmiImpl  extends UnicastRemoteObject implements InterfaceClie
 			if (r instanceof InterfaceServeurRmi)
 			{
 				try {
-					((InterfaceServeurRmi) r).getServeur().distribuerMessage(message);				
+					((InterfaceServeurRmi) r).distribuerMessage(message);				
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -60,7 +60,7 @@ public class ClientRmiImpl  extends UnicastRemoteObject implements InterfaceClie
 			if (r instanceof InterfaceServeurRmi)
 			{
 				try {
-					((InterfaceServeurRmi) r).getServeur().distribuerMessagePrive(message);				
+					((InterfaceServeurRmi) r).distribuerMessagePrive(message);				
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -80,7 +80,7 @@ public class ClientRmiImpl  extends UnicastRemoteObject implements InterfaceClie
 			if (r instanceof InterfaceServeurRmi)
 			{
 				try {
-					((InterfaceServeurRmi) r).getServeur().distribuerMessageConversation(message);				
+					((InterfaceServeurRmi) r).distribuerMessageConversation(message);				
 				} catch (RemoteException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

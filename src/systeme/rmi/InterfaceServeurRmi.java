@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import systeme.Client;
-import systeme.Serveur;
 import modules.chat.Conversation;
 import modules.chat.Message;
 import modules.chat.MessageConversation;
@@ -24,7 +23,6 @@ import modules.gestionUtilisateur.Utilisateur;
 public interface InterfaceServeurRmi extends Remote {
 	 
 	public String getTest() throws RemoteException;
-	public Serveur getServeur() throws RemoteException;
 	public ArrayList<ClientRMI> getClientsconnectes() throws RemoteException;
 	public void ajouterClient(ClientRMI c) throws RemoteException;
 	public boolean connexion(String login, String motDepasse, ClientRMI c) throws RemoteException;
@@ -63,5 +61,12 @@ public interface InterfaceServeurRmi extends Remote {
 	public void ajouterMessageConversation(Message message, int idConversation , String login) throws RemoteException;
 	public void distribuerMessageConversation(MessageConversation message) throws RemoteException;
 	public int creerUneConversation(ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes) throws RemoteException;
+	public void distribuerMessagePrive(MessagePrive message) throws RemoteException;
+	public void distribuerMessage(Message message) throws RemoteException;
+	public ArrayList<Publication> getPublicationsVisibles(
+			Utilisateur utilisateur) throws RemoteException;
+	public Utilisateur getUtilisateurInscrit(String login) throws RemoteException;
+	public Object utilisateurConnecte(ClientRMI clientRMI) throws RemoteException;
+	public ArrayList<Utilisateur> getUtilisateursInscrits() throws RemoteException;
 }	
 	

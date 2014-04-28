@@ -67,10 +67,9 @@ public class ClientRMI  implements Serializable{
 			 Remote r = registry.lookup("fram");
 			if (r instanceof InterfaceServeurRmi) {
 				this.serv = (InterfaceServeurRmi)r;
-				Serveur serveur = ((InterfaceServeurRmi) r).getServeur();
-				if (serveur.connexion(login, motDePasse,this)) {		
+				if (getServeurRmiImpl().connexion(login, motDePasse,this)) {		
 					
-					this.utilisateur = serveur.getUtilisateurInscrit(login);
+					this.utilisateur = getServeurRmiImpl().getUtilisateurInscrit(login);
 					String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/" + this.utilisateur.getLogin();
 					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
 					cl = new ClientRmiImpl();
@@ -84,7 +83,7 @@ public class ClientRMI  implements Serializable{
 
 					
 					// si l'utilisateur n 'est pas présent dans la liste des connectés
-					if(serveur.utilisateurConnecte(this) == null){
+					if(getServeurRmiImpl().utilisateurConnecte(this) == null){
 						((InterfaceServeurRmi) r).ajouterClient(this);
 					}
 					else{
@@ -153,9 +152,9 @@ public class ClientRMI  implements Serializable{
 	 * @throws IOException
 	 */
 
-	public static void telecharger(ServeurRMI server, File source,
+	public static void telecharger(Serveur server, File source,
 			File destination) throws IOException {
-		copie(server.getInputStream(source,server.getServeur()), new FileOutputStream(destination));
+		copie(server.getInputStream(source), new FileOutputStream(destination));
 	}
 
 	/**
@@ -169,7 +168,7 @@ public class ClientRMI  implements Serializable{
 	 * @throws IOException
 	 */
 
-	public void charger(ServeurRMI server, File source,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date dateFinPublication)
+	public void charger(Serveur server, File source,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date dateFinPublication)
 			throws IOException {
 		//"/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+
 		String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
@@ -178,8 +177,7 @@ public class ClientRMI  implements Serializable{
 		
 		//if (r instanceof InterfaceServeurRmi) {
 			
-			Serveur serveur = getServeurRmiImpl().getServeur();
-			copie(new FileInputStream(source), server.getOutputStream(destination,serveur));
+			copie(new FileInputStream(source), server.getOutputStream(destination));
 			this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
 			getServeurRmiImpl().ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
 		//}
@@ -269,7 +267,7 @@ public class ClientRMI  implements Serializable{
 		ArrayList<Publication> publicationsVisibles = null;
 		
 			try {
-				publicationsVisibles = getServeurRmiImpl().getServeur().getPublicationsVisibles(this.getUtilisateur());
+				publicationsVisibles = getServeurRmiImpl().getPublicationsVisibles(this.getUtilisateur());
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

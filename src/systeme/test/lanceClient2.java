@@ -14,8 +14,8 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
-import systeme.Serveur;
 import systeme.rmi.ClientRMI;
+import systeme.rmi.ServeurRMI;
 
 public class lanceClient2 {
 
