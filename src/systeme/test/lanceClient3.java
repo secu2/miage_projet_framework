@@ -28,7 +28,7 @@ public class lanceClient3 {
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		
 		c.envoyerMessage(new Message("Test ça marche de popo!!!!!!!!",c.getUtilisateur().getLogin()));
-		
+		c.recevoirMessageConversationAbsence();
 
 	}
 }

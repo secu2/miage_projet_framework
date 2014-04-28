@@ -27,6 +27,7 @@ import jus.util.assertion.Ensure;
 import jus.util.assertion.Require;
 import modules.chat.Conversation;
 import modules.chat.Message;
+import modules.chat.MessageConversation;
 import modules.chat.MessagePrive;
 import modules.documents.Document;
 import modules.documents.social.Publication;
@@ -295,6 +296,20 @@ public class ClientRMI  implements Serializable{
 	}
 	
 	/**
+	 * Envoie un message qui concerne une conversation
+	 * @param message
+	 */
+	public void envoyerMessageConversation(MessageConversation message){
+		try {
+			getClientRmiImpl().envoyerMessageConversation(message);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	/**
 	 * Envoie un message 
 	 * @param message
 	 */
@@ -323,6 +338,9 @@ public class ClientRMI  implements Serializable{
 		}
 	}
 	
+	/**
+	 * Reçois les messages privés reçus durant l'absence
+	 */
 	public void recevoirMessagePriveAbsence(){
 		// on test si l'utilisateur a reçu des messages connectés pendant son absence, si c'est le cas
 		// on les affiche
@@ -347,6 +365,46 @@ public class ClientRMI  implements Serializable{
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Reçois les messages des conversations reçus durant son absence
+	 */
+	public void recevoirMessageConversationAbsence(){
+		try {
+			// on affiche les messages reçus
+			ArrayList<Conversation> conversations= getServeurRmiImpl().getConversationsUtilisateurAbsent(this.getUtilisateur().getLogin());
+			for(Conversation c : conversations){
+				for(Message m : c.getListeMessages()){
+					recevoirMessage(m);
+				}
+			}
+			// on les supprime ensuite....
+			getServeurRmiImpl().getConversationsUtilisateurAbsent(this.getUtilisateur().getLogin()).clear();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Créer une conversation
+	 * @param utilisateurs
+	 * @param groupes
+	 * @return l'id de la conversation si crée, -1 sinon
+	 */
+	public int creerUneConversation(ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes){
+		int id = -1;
+		try {
+			id = getServeurRmiImpl().creerUneConversation(utilisateurs, groupes);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return id;
+		
+	}
+
 	
 	
 	/**

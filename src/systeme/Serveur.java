@@ -3,6 +3,7 @@ package systeme;
 import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.AccessException;
@@ -23,6 +24,7 @@ import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
 import modules.chat.Conversation;
 import modules.chat.Message;
+import modules.chat.MessageConversation;
 import modules.chat.MessagePrive;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
@@ -35,22 +37,16 @@ public class Serveur implements Serializable {
 	private ServeurRMI serveur;
 	private ArrayList<Publication> publications;
 	static int REGISTRY_PORT = 1099;
-	
 
-	/**
-	 * Conversation que l'utilisateur a reçu alors qu'il était deconnecté
-	 * La clé est le login de l'utilisateur, qui donne ainsi accès à sa liste de conversations 
-	 */
-	private TreeMap<String,ArrayList<Conversation>> conversationsUtilisateurs;
-	
+
+	// private TreeMap<Integer, Conversation> conversations;
+
 	public Serveur() {
 		utilisateursInscrits = new ArrayList<Utilisateur>();
 		utilisateursConnectes = new ArrayList<ClientRMI>();
 		publications = new ArrayList<Publication>();
-		conversationsUtilisateurs = new TreeMap<String, ArrayList<Conversation>>();
 		serveur = new ServeurRMI(this);
 	}
-	
 
 	/**
 	 * Renvoie la liste des utilisateurs inscrits
@@ -244,7 +240,7 @@ public class Serveur implements Serializable {
 	public ClientRMI getClientConnecte(String login) {
 		ClientRMI cl = null;
 		for (ClientRMI c : getUtilisateursConnectes()) {
-			if(c.getUtilisateur().equals(getUtilisateurInscrit(login))){
+			if (c.getUtilisateur().equals(getUtilisateurInscrit(login))) {
 				cl = c;
 			}
 		}
@@ -324,7 +320,7 @@ public class Serveur implements Serializable {
 	}
 
 	/**
-	 * Distribue un message envoyé par un client aux autres clients
+	 * Distribue un message envoyé par un client à tous les clients connectés
 	 * 
 	 * @param message
 	 */
@@ -337,7 +333,6 @@ public class Serveur implements Serializable {
 				// InetAddress.getLocalHost().getHostAddress() + "/" +
 				// c.getUtilisateur().getLogin();
 				try {
-					ClientRMI expediteur = getClientConnecte(message.getExpeditaire());
 					Remote rem = registry.lookup(c.getUtilisateur().getLogin());
 					((InterfaceClientRmi) rem).recevoirMessage(message);
 					// c.recevoirMessage(message);
@@ -363,13 +358,14 @@ public class Serveur implements Serializable {
 
 	/**
 	 * Distribue le message privé de l'expediteur au destinataire
+	 * 
 	 * @param message
 	 * @param expediteur
 	 * @param destinataire
 	 * @require : destinataire inscrit sur le serveur
 	 * @require : expediteur inscrit et connecté sur le serveur
 	 */
-	public void distribuerMessagePrive(MessagePrive message){
+	public void distribuerMessagePrive(MessagePrive message) {
 		// si le destinataire est connecté
 		if (getClientConnecte(message.getDestinataire()) != null) {
 			Registry registry;
@@ -378,18 +374,22 @@ public class Serveur implements Serializable {
 				Remote rem;
 				try {
 					// on récupère le client du destinataire sur le serveur
-					ClientRMI destinataire = getClientConnecte(message.getDestinataire());
-					rem = registry.lookup(destinataire.getUtilisateur().getLogin());
-					
-				
+					ClientRMI destinataire = getClientConnecte(message
+							.getDestinataire());
+					rem = registry.lookup(destinataire.getUtilisateur()
+							.getLogin());
+
 					// On l'affiche du côté du destinataire
 					((InterfaceClientRmi) rem).recevoirMessage(message);
 					// on l'affiche également du côté de l'expediteur
-					
+
 					// on récupère le client du expediteur sur le serveur
-					ClientRMI expediteur = getClientConnecte(message.getExpeditaire());
-					// on récupère l'objet distant du client expediteur du message
-					Remote remo = registry.lookup(expediteur.getUtilisateur().getLogin());
+					ClientRMI expediteur = getClientConnecte(message
+							.getExpeditaire());
+					// on récupère l'objet distant du client expediteur du
+					// message
+					Remote remo = registry.lookup(expediteur.getUtilisateur()
+							.getLogin());
 					((InterfaceClientRmi) remo).recevoirMessage(message);
 
 				} catch (AccessException e) {
@@ -405,15 +405,17 @@ public class Serveur implements Serializable {
 			} catch (RemoteException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}		
+			}
 
 		} else {
-			System.out.println("Le destinataire n'est pas connecté, le message sera remis à sa prochaine connexion");
+			System.out
+					.println("Le destinataire n'est pas connecté, le message sera remis à sa prochaine connexion");
 			Registry registry;
 			try {
 				registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 				Remote r = registry.lookup("fram");
-				((InterfaceServeurRmi) r).ajouterMessagePrive(message.getDestinataire(),message);
+				((InterfaceServeurRmi) r).ajouterMessagePrive(
+						message.getDestinataire(), message);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -421,15 +423,41 @@ public class Serveur implements Serializable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			 
-		//	ajouterMessagePrive(loginDestinataire,new MessagePrive(message, loginExpediteur, loginDestinataire));
-			
+
+			// ajouterMessagePrive(loginDestinataire,new MessagePrive(message,
+			// loginExpediteur, loginDestinataire));
+
 		}
+	}
+
+	/**
+	 * Distribue le message d'une conversation
+	 * 
+	 * @param message
+	 */
+	public void distribuerMessageConversation(MessageConversation message) {
+		Registry registry;
+			try {
+				registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+				InterfaceServeurRmi r = (InterfaceServeurRmi) registry.lookup("fram");
+				r.distribuerMessageConversation(message);
+
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotBoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		
 
 	}
 
 	/**
-	 * Renvoie l'utilisateur du clientRMI si trouvé dans la liste des clients connectés
+	 * Renvoie l'utilisateur du clientRMI si trouvé dans la liste des clients
+	 * connectés
+	 * 
 	 * @param cl
 	 * @return l'utilisateur si il est connecté , null sinon
 	 */
@@ -444,10 +472,10 @@ public class Serveur implements Serializable {
 		}
 		return u;
 	}
-	
-	
+
 	/**
 	 * Renvoie l'ensemble de publications
+	 * 
 	 * @return publications
 	 */
 	public ArrayList<Publication> getPublications() {
@@ -455,7 +483,9 @@ public class Serveur implements Serializable {
 	}
 
 	/**
-	 * Affecte un ensemble de publications à l'ensemble de publications du serveur
+	 * Affecte un ensemble de publications à l'ensemble de publications du
+	 * serveur
+	 * 
 	 * @param publications
 	 */
 	public void setPublications(ArrayList<Publication> publications) {
@@ -463,7 +493,9 @@ public class Serveur implements Serializable {
 	}
 
 	/**
-	 * Ajoute une publication à la liste des publications contenues sur le serveur
+	 * Ajoute une publication à la liste des publications contenues sur le
+	 * serveur
+	 * 
 	 * @param publication
 	 */
 	public void AddPublication(Publication publication) {
@@ -513,9 +545,5 @@ public class Serveur implements Serializable {
 
 		return publicationsVisibles;
 	}
-	
-	
 
-	
 }
-

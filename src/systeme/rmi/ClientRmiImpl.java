@@ -9,6 +9,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import modules.chat.Message;
+import modules.chat.MessageConversation;
 import modules.chat.MessagePrive;
 import modules.gestionUtilisateur.Utilisateur;
 
@@ -70,6 +71,27 @@ public class ClientRmiImpl  extends UnicastRemoteObject implements InterfaceClie
 			e1.printStackTrace();
 		}
 	}
+	
+	public void envoyerMessageConversation(MessageConversation message) throws RemoteException{
+		Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+		 Remote r;
+		try {
+			r = registry.lookup("fram");
+			if (r instanceof InterfaceServeurRmi)
+			{
+				try {
+					((InterfaceServeurRmi) r).getServeur().distribuerMessageConversation(message);				
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} catch (NotBoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 
 	
 	public void recevoirMessage(Message message) throws RemoteException{

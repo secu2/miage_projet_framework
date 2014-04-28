@@ -26,9 +26,9 @@ public class lanceClient2 {
 		
 		ClientRMI c = new ClientRMI("jojo", "jojo");
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
-		c.recevoirMessagePriveAbsence();
-		c.envoyerMessage(new Message("Hey ça marche :'D ", c.getUtilisateur().getLogin()));
-		
+		//c.recevoirMessagePriveAbsence();
+		//c.envoyerMessage(new Message("Hey ça marche :'D ", c.getUtilisateur().getLogin()));
+		c.recevoirMessageConversationAbsence();
 	
 
 	}

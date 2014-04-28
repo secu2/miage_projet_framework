@@ -10,9 +10,12 @@ import java.util.TreeMap;
 
 import systeme.Client;
 import systeme.Serveur;
+import modules.chat.Conversation;
 import modules.chat.Message;
+import modules.chat.MessageConversation;
 import modules.chat.MessagePrive;
 import modules.documents.social.Publication;
+import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 
 
@@ -37,6 +40,28 @@ public interface InterfaceServeurRmi extends Remote {
 	public TreeMap<String, ArrayList<MessagePrive>> getMapMessagesPrivesUtilisateur(String login)throws RemoteException;
 	public ArrayList<MessagePrive> getListeMessagesPrives(String expeditaire, String destinataire) throws RemoteException;
 	public TreeMap<String,TreeMap<String, ArrayList<MessagePrive>>> getMessagesPrivesUtilisateurs() throws RemoteException;
-}
 
+	public TreeMap<String, ArrayList<Conversation>> getConversationsUtilisateursAbsents() throws RemoteException;
+	public TreeMap<Integer, Conversation> getConversations() throws RemoteException;
+	public Conversation getConversation(int idConversation) throws RemoteException;
 
+	/**
+	 * 
+	 * @param login
+	 * @return
+	 */
+	public ArrayList<Conversation>  getConversationsUtilisateurAbsent(String login) throws RemoteException;	
+	/**
+	 * 
+	 * @param login
+	 * @param idConversation
+	 * @return
+	 */
+	public Conversation getConversation(String login, int idConversation) throws RemoteException;
+	
+	
+	public void ajouterMessageConversation(Message message, int idConversation , String login) throws RemoteException;
+	public void distribuerMessageConversation(MessageConversation message) throws RemoteException;
+	public int creerUneConversation(ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes) throws RemoteException;
+}	
+	

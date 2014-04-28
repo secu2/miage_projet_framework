@@ -174,11 +174,9 @@ public class Utilisateur  implements Serializable{
 	 * Permet de créer un groupe
 	 * @param nomGroupe : nom du groupe
 	 */
-	public void creerUnGroupe(int idGroupe , String nomGroupe){
-		Groupe gr = new Groupe(nomGroupe);
-		gr.ajouterUtilisateur(this);
+	public void creerUnGroupe(String nomGroupe){
+		Groupe gr = new Groupe(nomGroupe,this); 
 		getGroupes().add(gr);
-		
 	}
 	
 	/**
@@ -218,14 +216,26 @@ public class Utilisateur  implements Serializable{
 	 */
 	public Groupe getGroupe(String nom){
 		Groupe gr = null;
-		for(int i = 0; i < getGroupes().size() ; i++){
-			if(gr.getNomGroupe().equals(nom)){
-				gr = getGroupes().get(i);
+		for(Groupe g : getGroupes()){
+			if(g.getNomGroupe().equals(nom)){
+				gr = g;
 			}
 		}
 		return gr;
 	}
 	
+	/**
+	 * Ajoute un utilisateur dans un groupe de l'utilisateur
+	 * @param utilisateur
+	 * @param nomGroupe
+	 * @require : groupe 'nomGroupe' doit exister
+	 */
+	public void ajouterUtilisateurGroupe(Utilisateur utilisateur, String nomGroupe){
+		Groupe gr = getGroupe(nomGroupe);
+		if(gr != null){
+			gr.getUtilisateurs().add(utilisateur);
+		}
+	}
 	/**
 	 * Renvoie la liste des publications de l'utilisateur
 	 * @return publications
