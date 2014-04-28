@@ -8,6 +8,7 @@ import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Date;
 
+import modules.chat.Message;
 import modules.documents.Document;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
@@ -26,8 +27,7 @@ public class lanceClient3 {
 		ClientRMI c = new ClientRMI("popo", "popo");
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		
-		c.envoyerMessage("Test ça marche de popo!!!!!!!!");
-		
+		c.envoyerMessage(new Message("Test ça marche de popo!!!!!!!!",c.getUtilisateur().getLogin()));
 		
 
 	}

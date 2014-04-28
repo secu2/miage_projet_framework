@@ -6,9 +6,12 @@ import java.io.OutputStream;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import systeme.Client;
 import systeme.Serveur;
+import modules.chat.Message;
+import modules.chat.MessagePrive;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Utilisateur;
 
@@ -28,8 +31,12 @@ public interface InterfaceServeurRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public void deconnexion(ClientRMI c) throws RemoteException;
-	public void envoiMessage(String message,String expeditaire)  throws RemoteException;
+	public void envoiMessage(Message message)  throws RemoteException;
 	public void ajouterPublication(Publication publication)throws RemoteException;
+	public void ajouterMessagePrive(String login, MessagePrive message) throws RemoteException;
+	public TreeMap<String, ArrayList<MessagePrive>> getMapMessagesPrivesUtilisateur(String login)throws RemoteException;
+	public ArrayList<MessagePrive> getListeMessagesPrives(String expeditaire, String destinataire) throws RemoteException;
+	public TreeMap<String,TreeMap<String, ArrayList<MessagePrive>>> getMessagesPrivesUtilisateurs() throws RemoteException;
 }
 
 

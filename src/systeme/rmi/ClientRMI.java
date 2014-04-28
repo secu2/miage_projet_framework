@@ -17,6 +17,8 @@ import java.rmi.registry.Registry;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.management.modelmbean.RequiredModelMBean;
@@ -24,6 +26,7 @@ import javax.management.modelmbean.RequiredModelMBean;
 import jus.util.assertion.Ensure;
 import jus.util.assertion.Require;
 import modules.chat.Conversation;
+import modules.chat.Message;
 import modules.chat.MessagePrive;
 import modules.documents.Document;
 import modules.documents.social.Publication;
@@ -34,6 +37,7 @@ import systeme.Serveur;
 
 /**
  * @author chaiebm
+ * @param <K>
  * 
  */
 
@@ -75,6 +79,9 @@ public class ClientRMI  implements Serializable{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+
+					
 					// si l'utilisateur n 'est pas présent dans la liste des connectés
 					if(serveur.utilisateurConnecte(this) == null){
 						((InterfaceServeurRmi) r).ajouterClient(this);
@@ -277,10 +284,10 @@ public class ClientRMI  implements Serializable{
 	 * Envoie un message 
 	 * @param message
 	 */
-	public void envoyerMessagePrive(String message,String destinataire){
+	public void envoyerMessagePrive(MessagePrive message){
 
 			try {
-				getClientRmiImpl().envoyerMessagePrive(message, this.getUtilisateur().getLogin() , destinataire);
+				getClientRmiImpl().envoyerMessagePrive(message);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -291,10 +298,10 @@ public class ClientRMI  implements Serializable{
 	 * Envoie un message 
 	 * @param message
 	 */
-	public void envoyerMessage(String message){
+	public void envoyerMessage(Message message){
 
 			try {
-				getClientRmiImpl().envoyerMessage(message, this.getUtilisateur().getLogin());
+				getClientRmiImpl().envoyerMessage(message);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -307,14 +314,40 @@ public class ClientRMI  implements Serializable{
 	 * @param expediteur
 	 */
 	
-	public void recevoirMessage(String message){
+	public void recevoirMessage(Message message){
 		try {
-			getClientRmiImpl().recevoirMessage(message, this);
+			getClientRmiImpl().recevoirMessage(message);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	public void recevoirMessagePriveAbsence(){
+		// on test si l'utilisateur a reçu des messages connectés pendant son absence, si c'est le cas
+		// on les affiche
+		try {
+			TreeMap<String, ArrayList<MessagePrive>> mapUtilisateur = getServeurRmiImpl().getMapMessagesPrivesUtilisateur(getUtilisateur().getLogin());
+			
+			Set cles = mapUtilisateur.keySet();
+			Iterator it = cles.iterator();
+			
+			while(it.hasNext()){
+				ArrayList<MessagePrive> messages = mapUtilisateur.get(it.next());
+				for(Message m : messages){
+					recevoirMessage(m);
+				}
+			}
+			// je supprime la clé pour cet utilisateur
+			getServeurRmiImpl().getMessagesPrivesUtilisateurs().remove(this.getUtilisateur().getLogin());
+			
+
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	/**
 	 * Renvoie l'objet distant du client

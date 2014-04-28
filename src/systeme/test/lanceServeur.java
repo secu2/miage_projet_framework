@@ -28,7 +28,6 @@ public class lanceServeur {
 		serveur.inscription("popo", "popo");
 
 		// TODO : Faire l'echange de messages asynchrones -> Création d'un tableau de message qui sera transmit à la connexion puis vidé?
-		// TODO : Modifier pour l'envoi de message -> utiliser le login plutôt que le client rmi
 		// TODO : Voir si il est mieux de tout passer le serveur dans l'implémentation de l'interface
 	}
 } 

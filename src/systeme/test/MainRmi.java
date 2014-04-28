@@ -30,7 +30,7 @@ public class MainRmi {
 		ClientRMI c = new ClientRMI("momo", "jojo");
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		
-		c.envoyerMessage("Test");
+		//c.envoyerMessage("Test");
 		
 		////Client import de fichier 
 		
