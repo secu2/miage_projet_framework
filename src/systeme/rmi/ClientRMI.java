@@ -171,8 +171,9 @@ public class ClientRMI  implements Serializable{
 	public void charger(Serveur server, File source,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date dateFinPublication)
 			throws IOException {
 		//"/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+
-		String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
-		System.out.println(dest);
+		//String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
+		String dest ="C:/Users/Mohamed/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
+		//System.out.println(dest);
 		File destination = new File(dest);
 		
 		//if (r instanceof InterfaceServeurRmi) {
