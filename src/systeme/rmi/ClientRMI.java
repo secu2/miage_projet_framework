@@ -175,11 +175,12 @@ public class ClientRMI  implements Serializable{
 		String dest ="C:/Users/Mohamed/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
 		//System.out.println(dest);
 		File destination = new File(dest);
+		document.setEmplacement(dest);
 		
 		//if (r instanceof InterfaceServeurRmi) {
 			
 			copie(new FileInputStream(source), server.getOutputStream(destination));
-			this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
+			//this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
 			getServeurRmiImpl().ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
 		//}
 	}
@@ -260,7 +261,7 @@ public class ClientRMI  implements Serializable{
 	
 	
 	/**
-	 * Affiche l'ensemble des publications visibles pour un utilisateur
+	 * retourne l'ensemble des publications visibles pour un utilisateur
 	 * @return ArrayList<Publication> : return publication visibles
 	 */
 	public ArrayList<Publication> getPublicationsVisibles()
@@ -277,8 +278,235 @@ public class ClientRMI  implements Serializable{
 		
 		return publicationsVisibles;
 	}
+	/**
+	 * Renvoie la liste des publications d'un utilisateurs
+	 * @return ArrayList<Publication> : les publications de l'utilisateur
+	 */
+	public ArrayList<Publication> getPublications()
+	{
+		ArrayList<Publication> publications = null;
+		try {
+			publications = getServeurRmiImpl().getPublications(this.getUtilisateur());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return publications;
+	}
 	
+	public void supprimerUnePublication(Publication publication)
+	{
+		try {
+			getServeurRmiImpl().supprimerUnePublication(this.getUtilisateur(), publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Rend visible une publication a un utilisateur
+	 * @param utilisateur : l'utilisateur à autoriser 
+	 * @param publicaion : la publication concernée
+	 * Require seul le prorietaire de la publication est autorise a l'utiliser
+	 */
+	public void autoriserPublicationUtilisateur(Publication publication, Utilisateur utilisateur)
+	{
+		
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().autoriserUnePublicationUtilisateur(utilisateur, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Retire la visibilite d'une personnes
+	 * @param utilisateur : l'utilisateur à retirer
+	 * @param publication : la publication concernée
+	 * Require seul le prorietaire de la publication est autorise a l'utiliser
+	 */
+	public void retirerUnePublicationutilisateur(Publication publication, Utilisateur utilisateur)
+	{
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().retirerUnePublicationutilisateur(utilisateur, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Rend visible une publication a un groupe
+	 * @param groupe : le groupe à autorisier
+	 * @param publication : la publication concernée
+	 */
+	public void autoriserUnePublicationGroupe(Publication publication, Groupe groupe)
+	{
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().autoriserUnePublicationGroupe(groupe, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Retire la visibilite d'un groupe
+	 * @param groupe : le groupe à retirer
+	 * @param publication : la publication concernée
+	 */
+	public void retirerUnePublicationGroupe(Publication publication, Groupe groupe)
+	{
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().retirerUnePublicationGroupe(groupe, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
+	/**
+	 * Creer un groupe 
+	 * @param nomGroupe :  le nom du groupe à creer 
+	 */
+	public void creerUnGroupe(String nomGroupe)
+	{
+		try {
+			getServeurRmiImpl().creerUnGroupe(nomGroupe, this.getUtilisateur().getLogin());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Ajoute un utilisateur dans un groupe
+	 * @param idGroupe : le groupe concerné
+	 * @param utilisateur : l'utilisateur à ajouter
+	 * @throws RemoteException
+	 */
+	public void ajouterUnUtlisateurDansGroupe(int idGroupe, Utilisateur utilisateur)
+	{
+		if (!(this.estProprietaire(idGroupe)))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de ce groupe.");
+		}
+		try {
+			getServeurRmiImpl().ajouterUnUtlisateurDansGroupe(idGroupe, utilisateur);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Supprime un utilisateur du groupe
+	 * @param idGroupe : le groupe concerné
+	 * @param utilisateur : l'utilisateur à supprimer
+	 * @throws RemoteException
+	 */
+	public void supprimerUnUtilsateurDuGroupe(int idGroupe, Utilisateur utilisateur)
+	{
+		if (!(this.estProprietaire(idGroupe)))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de ce groupe.");
+		}
+		try {
+			getServeurRmiImpl().supprimerUnUtilsateurDuGroupe(idGroupe, utilisateur);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Supprime un groupe
+	 * @param idGroupe : le groupe à supprimer
+	 * @throws RemoteException
+	 */
+	public void supprimerGroupe(int idGroupe)
+	{
+		if (!(this.estProprietaire(idGroupe)))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de ce groupe.");
+		}
+		try {
+			getServeurRmiImpl().supprimerGroupe(idGroupe);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Retourne la liste des groupes auxquelle l'utilisateur est propriétaire
+	 * @return ArrayList<Groupe> liste des groupes dont un utilisateur est propriétaire
+	 */
+	public ArrayList<Groupe> getGroupesProp() 
+	{
+		ArrayList<Groupe> groupes = null;
+		try {
+			groupes = getServeurRmiImpl().getGroupesProp(this.getUtilisateur());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return groupes;
+	}
+	
+	/**
+	 * Retourne la liste des groupes aux quelles un utilisateur appartients
+	 * @return ArrayList<Groupe> liste des groupes qui appartiennent à un utilisateur
+	 */
+	public ArrayList<Groupe> getGroupes()
+	{
+		ArrayList<Groupe> groupes = null;
+		try {
+			groupes = getServeurRmiImpl().getGroupes(this.getUtilisateur());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return groupes;
+	}
+	
+	public boolean estProprietaire(int idGroupe)
+	{
+		Groupe groupe = null;
+		
+		try {
+			groupe = getServeurRmiImpl().getGroupe(idGroupe);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return groupe.getProprietaire().getLogin().equals(this.getUtilisateur().getLogin());
+	}
+	
+	/**
+	 * true si l'objet courant est proprietaire d'une publication
+	 * @param publication
+	 * @return true si l'objet courant est proprietaire d'une publication
+	 */
+	public boolean estProprietaire(Publication publication)
+	{
+		return this.getUtilisateur().getLogin().equals(publication.getProprietaire().getLogin());
+	}
 	
 	/**
 	 * Envoie un message 

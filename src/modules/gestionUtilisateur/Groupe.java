@@ -1,11 +1,13 @@
 package modules.gestionUtilisateur;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 import systeme.BaseDeDonnees;
+import systeme.rmi.ClientRMI;
 
 /**
  * Groupe.java
@@ -109,5 +111,32 @@ public class Groupe implements Serializable{
 	public void ajouterUtilisateur(Utilisateur u){
 		getUtilisateurs().add(u);
 	}
+	
+	public void supprimerUtilisateur(Utilisateur u)
+	{
+		getUtilisateurs().remove(indexUtilisateur(u));
+	}
+	
+	public int indexUtilisateur(Utilisateur utilisateur) {
+		int num = -1;
+		int compteur = 0;
+		for (Utilisateur util : getUtilisateurs()) {
+			if (util.getLogin().equals(utilisateur.getLogin())) {
+				num = compteur;
+			}
+			compteur++;
+		}
+
+		return num;
+	}
+
+	public Utilisateur getProprietaire() {
+		return proprietaire;
+	}
+
+	public void setProprietaire(Utilisateur proprietaire) {
+		this.proprietaire = proprietaire;
+	}
+	
 	
 }
