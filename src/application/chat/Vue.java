@@ -115,19 +115,19 @@ public class Vue extends JFrame {
 		panel_2.setBounds(370, 269, 184, 127);
 		contentPane.add(panel_2);
 		
-//		 // création de la boîte de dialogue
+//		 // crï¿½ation de la boï¿½te de dialogue
 //        JFileChooser dialogue = new JFileChooser();
 //         
 //        // affichage
 //        dialogue.showOpenDialog(null);
 //         
-//        // récupération du fichier sélectionné
+//        // rï¿½cupï¿½ration du fichier sï¿½lectionnï¿½
 //        System.out.println("Fichier choisi : " + dialogue.getSelectedFile());
 	}
 	
 	/**
-	 * Cré un nouvel onglet qui contiendra la zone de texte d'une nouvel conversation
-	 * @param user : l'utilisateur avec qui on démarre la converse
+	 * Crï¿½ un nouvel onglet qui contiendra la zone de texte d'une nouvel conversation
+	 * @param user : l'utilisateur avec qui on dï¿½marre la converse
 	 */
 	public void nouvelConverse(Utilisateur user){
 		
