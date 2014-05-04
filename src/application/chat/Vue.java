@@ -18,9 +18,11 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.border.CompoundBorder;
 
+import systeme.rmi.ClientRMI;
 import modules.gestionUtilisateur.Utilisateur;
 import modules.*;
 public class Vue extends JFrame {
@@ -49,6 +51,7 @@ public class Vue extends JFrame {
 	 * Create the frame.
 	 */
 	public Vue() {
+		setTitle("IBN Chat room");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 580, 446);
@@ -56,6 +59,7 @@ public class Vue extends JFrame {
 		contentPane.setBorder(new CompoundBorder());
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
 		tabbedPane.setBounds(10, 80, 350, 251);
@@ -68,7 +72,7 @@ public class Vue extends JFrame {
 	
 		
 		JTextArea textArea = new JTextArea();
-		textArea.setBounds(0, 0, 345, 223);
+		textArea.setBounds(0, -13, 345, 236);
 		textArea.setRows(4);
 		panel.add(textArea);
 		
@@ -88,19 +92,15 @@ public class Vue extends JFrame {
 		btnEnvoiFichier.setBounds(114, 373, 119, 23);
 		contentPane.add(btnEnvoiFichier);
 		
-		JLabel lblNewLabel = new JLabel("IBN Chat room");
-		lblNewLabel.setFont(new Font("Consolas", Font.BOLD, 15));
-		lblNewLabel.setBounds(10, 11, 111, 14);
-		contentPane.add(lblNewLabel);
-		
 		textField_1 = new JTextField();
 		textField_1.setBounds(10, 342, 250, 23);
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
 		
+		
 		JLabel lblUsersName = new JLabel("User's name");
 		lblUsersName.setFont(new Font("Consolas", Font.BOLD, 16));
-		lblUsersName.setBounds(370, 11, 184, 35);
+		lblUsersName.setBounds(176, 11, 184, 35);
 		contentPane.add(lblUsersName);
 		
 		JLabel lblPersonnesConnectes = new JLabel("Personnes connect\u00E9es");
@@ -115,23 +115,49 @@ public class Vue extends JFrame {
 		panel_2.setBounds(370, 269, 184, 127);
 		contentPane.add(panel_2);
 		
-//		 // crÈation de la boÓte de dialogue
+		JButton btnAdd = new JButton("+");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnAdd.setBounds(271, 57, 89, 23);
+		contentPane.add(btnAdd);
+		
+//		 // cr√©ation de la bo√Æte de dialogue
 //        JFileChooser dialogue = new JFileChooser();
 //         
 //        // affichage
 //        dialogue.showOpenDialog(null);
 //         
-//        // rÈcupÈration du fichier sÈlectionnÈ
+//        // r√©cup√©ration du fichier s√©lectionn√©
 //        System.out.println("Fichier choisi : " + dialogue.getSelectedFile());
 	}
 	
 	/**
-	 * CrÈ un nouvel onglet qui contiendra la zone de texte d'une nouvel conversation
-	 * @param user : l'utilisateur avec qui on dÈmarre la converse
+	 * Cr√©e un nouvel onglet qui contiendra la zone de texte d'une nouvel conversation
+	 * @param user : l'utilisateur avec qui on d√©marre la converse
 	 */
 	public void nouvelConverse(Utilisateur user){
 		
 	}
+	
+	/**
+	 * Ajoute un utilisateur dans une conversation
+	 * @param convers : conversation de l'ajout
+	 * @param user : L'utilisateur √† ajouter
+	 */
+	public void addUser(String convers, Utilisateur user){
+		
+	}
+	
+	/**
+	 * cr√© un bouton pour chaque utilisateur connect√©
+	 */
+//	public void afficheUtilisateursCo(){
+//		ArrayList<ClientRMI> clients = 
+//		for(int i = 0; i < getutilisateurs())
+//	}
+	
 	
 	
 }
