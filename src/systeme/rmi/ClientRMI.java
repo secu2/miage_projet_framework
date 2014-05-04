@@ -233,7 +233,7 @@ public class ClientRMI  implements Serializable{
 			throws IOException {
 		//"/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+
 		//String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
-		String dest ="C:/Users/Mohamed/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
+		String dest = System.getProperty("user.dir")+"/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
 		//System.out.println(dest);
 		File destination = new File(dest);
 		document.setEmplacement(dest);

@@ -43,6 +43,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -251,7 +252,14 @@ public class InterfaceDrive {
 					Document doc = new Document(fichier.getName());
 					ArrayList<Utilisateur> user = new ArrayList<Utilisateur>();
 					user.add(client.getUtilisateur());
-					client.charger(client.getServeurRmiImpl()., fichier, user, null, doc, null);
+					try {
+						client.charger(fichier, user, null, doc, null);
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(fenetre,
+							    "Erreur lors de l'enregistrement : "+e,
+							    "Inane error",
+							    JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
