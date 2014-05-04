@@ -164,8 +164,7 @@ public interface InterfaceServeurRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public Groupe getGroupe(int idGroupe) throws RemoteException;
-	public OutputStream getOutputStream(File f) throws IOException , RemoteException;
-	public InputStream getInputStream(File f) throws IOException, RemoteException;
+	
 
 }	
 

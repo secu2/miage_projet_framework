@@ -40,7 +40,7 @@ public class MainRmi {
 				ClientRMI c1 = new ClientRMI("jojo","momo");
 				
 			////////////Chargement d'un document /////////////////
-				Document document = new Document("C:/Users/Mohamed/Desktop/download.jpg");
+				Document document = new Document("/home/never/test.png");
 				
 				ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 				ArrayList<Groupe> groupes =  new ArrayList<Groupe>(); 
@@ -60,7 +60,7 @@ public class MainRmi {
 				
 			////Le client charge le document en fonction de la visibilité et de la date de fin de publication
 				try {
-					c.charger(new File("C:/Users/Ceyfiroth/Pictures/urbex/1394543903353.jpg"),utilisateurs, null, document, null);
+					c.charger(document.getFichier(),utilisateurs, null, document, null);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

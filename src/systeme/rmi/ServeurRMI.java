@@ -1183,14 +1183,5 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	}
 	
-	public InputStream getInputStream(File f) throws IOException, RemoteException {
-		   // return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
-			 return new FileInputStream(f) ;
-			 
-		}
-		
-		public OutputStream getOutputStream(File f) throws IOException , RemoteException {
-		  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
-		    return new FileOutputStream(f);   
-		}
+
 }

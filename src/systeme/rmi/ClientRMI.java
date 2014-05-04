@@ -215,7 +215,7 @@ public class ClientRMI  implements Serializable{
 
 	public void telecharger(File source,
 			File destination) throws IOException {
-		copie(getServeurRmiImpl().getInputStream(source), new FileOutputStream(destination));
+		copie(new FileInputStream(source), new FileOutputStream(destination));
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class ClientRMI  implements Serializable{
 		
 		//if (r instanceof InterfaceServeurRmi) {
 			
-			copie(new FileInputStream(source),  getServeurRmiImpl().getOutputStream(destination));
+			copie(new FileInputStream(source),  new FileOutputStream(destination));
 			//this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
 			getServeurRmiImpl().ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
 		//}
