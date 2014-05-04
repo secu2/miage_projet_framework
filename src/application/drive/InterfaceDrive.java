@@ -41,6 +41,9 @@ import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JMenu;
@@ -48,6 +51,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
+
+import modules.documents.Document;
+import modules.documents.social.Publication;
+import systeme.rmi.ClientRMI;
 
 
 public class InterfaceDrive {
@@ -59,32 +66,18 @@ public class InterfaceDrive {
 	private JTextField txtSelectionnerFichier;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InterfaceDrive window = new InterfaceDrive();
-					window.fenetre.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
+	 * @throws RemoteException 
 	 */
-	public InterfaceDrive() {
-		initialize();
+	public InterfaceDrive(ClientRMI client) throws RemoteException {
+		initialize(client);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws RemoteException 
 	 */
-	private void initialize() {
+	private void initialize(ClientRMI client) throws RemoteException {
 		fenetre = new JFrame();
 		fenetre.setTitle("Fichiers");
 		fenetre.setBounds(100, 100, 592, 412);
@@ -108,17 +101,17 @@ public class InterfaceDrive {
 		JScrollPane mesFichiersPane = new JScrollPane();
 		mesFichiersPane.setToolTipText("Les fichiers disponibles dans votre dossier utilisateur");
 		middle.add(mesFichiersPane);
-		
 		filesLocal = new JTable();
+		Object[][] listeFilesLocal = null;
+		client.getPublications().add(new Publication(new Date(), new Date(), client.getServeurRmiImpl().getUtilisateursInscrits(), client.getGroupes(), client.getUtilisateur(), new Document("test")));
+		ArrayList<Publication> publicationsClient = client.getPublications();
+		System.out.println(client.getPublications());
+		for(int i = 0; i < publicationsClient.size(); i++){
+			listeFilesLocal[i][0] = publicationsClient.get(i).getDocument().getNom();
+			listeFilesLocal[i][1] = publicationsClient.get(i).getDocument().getTaille();
+		}
 		filesLocal.setModel(new DefaultTableModel(
-				new Object[][] {
-						{"test1.txt", "2Ko"},
-						{"test.mp3", "12Mo"},
-						{"lolwut.pdf", "1Mo"},
-						{"niceOne.wtf", "1,32Mo"},
-						{"wololo.jpg", "513Ko"},
-						{"chaton.gif", "43Mo"},
-				},
+				listeFilesLocal,
 				new String[] {
 						"Fichier", "Taille"
 				}

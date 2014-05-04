@@ -23,7 +23,7 @@ import systeme.rmi.ServeurRMI;
 public class lanceClient1 {
 
 	public static void main(String[] args) throws NoSuchAlgorithmException,
-			UnsupportedEncodingException {
+			UnsupportedEncodingException, RemoteException {
 
 		
 		
@@ -48,6 +48,7 @@ public class lanceClient1 {
 			e.printStackTrace();
 		}
 		//c.envoyerMessagePrive("Test réussi", c.getUtilisateurs().get(0));
+		
 		
 	//	c.nouvelleConversation(utilisateurs,groupes);
 	// c.envoyerMessage(message,conversation)

@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.util.Formatter;
 import java.util.StringTokenizer;
 
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -24,6 +25,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.text.DefaultFormatter;
 import javax.swing.text.MaskFormatter;
 
+import systeme.rmi.ClientRMI;
 import application.chat.Vue;
 import application.drive.InterfaceDrive;
 
@@ -109,7 +111,7 @@ public class MainConnexion {
 		frmConnexionAuServeur.getContentPane().add(ipTextField);
 		
 		
-		JFormattedTextField usernameTextField = new JFormattedTextField();
+		final JFormattedTextField usernameTextField = new JFormattedTextField();
 		usernameTextField.setBounds(129, 61, 112, 20);
 		frmConnexionAuServeur.getContentPane().add(usernameTextField);
 		
@@ -121,13 +123,25 @@ public class MainConnexion {
 		btnConnexion.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(rdbtnDrive.isSelected()){
-					new InterfaceDrive().fenetre.setVisible(true);
-				}else{
-					new Vue().setVisible(true);
-				}
+				try {
+					ClientRMI c = new ClientRMI(usernameTextField.getText(), passwordTextField.getText());
+					if(rdbtnDrive.isSelected()){
+						new InterfaceDrive(c).fenetre.setVisible(true);
+					}else{
+						new Vue().setVisible(true);
+					}
 
-				window.frmConnexionAuServeur.setVisible(false);
+					window.frmConnexionAuServeur.setVisible(false);
+				}
+				catch(Exception e) {
+					JOptionPane.showMessageDialog(frmConnexionAuServeur,
+						    "Erreur: Impossible de se connecter, vérifiez vos informations de connexion",
+						    "Inane error",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
+
 			}
 		});
 		btnConnexion.setBounds(10, 140, 231, 23);
