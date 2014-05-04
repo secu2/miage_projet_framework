@@ -60,7 +60,7 @@ public class MainRmi {
 				
 			////Le client charge le document en fonction de la visibilité et de la date de fin de publication
 				try {
-					c.charger(serveur, new File("C:/Users/Mohamed/Desktop/download.jpg"),utilisateurs, null, document, null);
+					c.charger(new File("C:/Users/Mohamed/Desktop/download.jpg"),utilisateurs, null, document, null);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

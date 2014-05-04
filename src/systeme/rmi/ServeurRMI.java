@@ -1,6 +1,8 @@
 package systeme.rmi;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -1180,4 +1182,15 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		return groupe;
 
 	}
+	
+	public InputStream getInputStream(File f) throws IOException, RemoteException {
+		   // return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
+			 return new FileInputStream(f) ;
+			 
+		}
+		
+		public OutputStream getOutputStream(File f) throws IOException , RemoteException {
+		  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
+		    return new FileOutputStream(f);   
+		}
 }
