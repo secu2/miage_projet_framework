@@ -6,6 +6,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -41,6 +42,7 @@ import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,6 +56,7 @@ import javax.swing.ImageIcon;
 
 import modules.documents.Document;
 import modules.documents.social.Publication;
+import modules.gestionUtilisateur.Utilisateur;
 import systeme.rmi.ClientRMI;
 
 
@@ -77,7 +80,7 @@ public class InterfaceDrive {
 	 * Initialize the contents of the frame.
 	 * @throws RemoteException 
 	 */
-	private void initialize(ClientRMI client) throws RemoteException {
+	private void initialize(final ClientRMI client) throws RemoteException {
 		fenetre = new JFrame();
 		fenetre.setTitle("Fichiers");
 		fenetre.setBounds(100, 100, 592, 412);
@@ -103,7 +106,6 @@ public class InterfaceDrive {
 		middle.add(mesFichiersPane);
 		filesLocal = new JTable();
 		Object[][] listeFilesLocal = null;
-		client.getPublications().add(new Publication(new Date(), new Date(), client.getServeurRmiImpl().getUtilisateursInscrits(), client.getGroupes(), client.getUtilisateur(), new Document("test")));
 		ArrayList<Publication> publicationsClient = client.getPublications();
 		System.out.println(client.getPublications());
 		for(int i = 0; i < publicationsClient.size(); i++){
@@ -231,6 +233,28 @@ public class InterfaceDrive {
 		south.add(splitPane, BorderLayout.WEST);
 		
 		JButton btnEnvoyer = new JButton("Envoyer");
+		btnEnvoyer.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				File fichier = new File(txtSelectionnerFichier.getText());
+				if(!fichier.canRead()){
+					JOptionPane.showMessageDialog(fenetre,
+						    "Erreur: Impossible de lire le fichier, veuillez vérifier que vous possédez les droits de lecture sur ce fichier",
+						    "Inane error",
+						    JOptionPane.ERROR_MESSAGE);
+				}else if(!fichier.exists()){
+					JOptionPane.showMessageDialog(fenetre,
+						    "Erreur: Fichier inexistant",
+						    "Inane error",
+						    JOptionPane.ERROR_MESSAGE);
+				}else{
+					Document doc = new Document(fichier.getName());
+					ArrayList<Utilisateur> user = new ArrayList<Utilisateur>();
+					user.add(client.getUtilisateur());
+					client.charger(client.getServeurRmiImpl()., fichier, user, null, doc, null);
+				}
+			}
+		});
 		splitPane.setRightComponent(btnEnvoyer);
 		choixFichier = new JFileChooser();
 		txtSelectionnerFichier = new JTextField();
