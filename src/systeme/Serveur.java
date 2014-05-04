@@ -29,6 +29,10 @@ public class Serveur implements Serializable {
 	static int REGISTRY_PORT = 1099;
 	private ServeurRMI serveur; 
 	
+	/**
+	 * Constructeur du serveur : 
+	 * Créer un objet serveur  qui lancera le serveur localement
+	 */
 	public Serveur() {
 		// TODO Auto-generated method stub
 		try {
@@ -51,6 +55,35 @@ public class Serveur implements Serializable {
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+	}
+	
+	/**
+	 * Constructeur du serveur : 
+	 * Créer un objet serveur où l'on aura précisé l'adresse
+	 * @param adresse : adresse du serveur
+	 */
+	public Serveur(String adresse) {
+		// TODO Auto-generated method stub
+		try {
+			
+			LocateRegistry.createRegistry(REGISTRY_PORT);
+	
+			
+			ServeurRMI informationImpl = new ServeurRMI(this);
+			serveur = informationImpl;
+			String url = "rmi://" + adresse + "/fram";
+			System.out.println("Enregistrement de l'objet avec l'url : " + url);
+			Naming.rebind(url, informationImpl);
+			
+			
+		
+			 
+			System.out.println("Serveur lancé");
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 	}

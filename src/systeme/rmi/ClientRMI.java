@@ -51,7 +51,7 @@ public class ClientRMI  implements Serializable{
 	private InterfaceClientRmi cl;
 
 	/**
-	 * Créer un objet client RMI
+	 * Créer un objet client RMI qui sera connecté à un serveur local
 	 * @param login
 	 * @param motDePasse
 	 * @require : login présent dans la liste des inscrits et mot de passe correct
@@ -113,7 +113,68 @@ public class ClientRMI  implements Serializable{
 		}
 	}
 
+	
+	/**
+	 * Créer un objet client RMI qui sera connecté au serveur RMI distant (à l'adresse donnée)
+	 * @param login
+	 * @param motDePasse
+	 * @param adresse
+	 * @require : adresse correcte, login présent dans la liste des inscrits sur le serveur et mot de passe correct 
+	 * @ensure : objet clientRMI crée
+	 */
+	public ClientRMI(String login, String motDePasse,String adresse) {
 
+		try {
+
+
+			// obtention de l'objet distant à partir de son nom (lookup)
+			 Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			 Remote r = registry.lookup("fram");
+			if (r instanceof InterfaceServeurRmi) {
+				this.serv = (InterfaceServeurRmi)r;
+				if (getServeurRmiImpl().connexion(login, motDePasse,this)) {		
+					
+					this.utilisateur = getServeurRmiImpl().getUtilisateurInscrit(login);
+					String url = "rmi://" + adresse + "/" + this.utilisateur.getLogin();
+					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
+					cl = new ClientRmiImpl();
+					try {
+						Naming.rebind(url, cl);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+
+					
+					// si l'utilisateur n 'est pas présent dans la liste des connectés
+					if(getServeurRmiImpl().utilisateurConnecte(this) == null){
+						((InterfaceServeurRmi) r).ajouterClient(this);
+					}
+					else{
+						System.out.println("déjà connecté");
+						System.out.println(this.getUtilisateur().getLogin());
+					}
+					System.out.println(utilisateur.getLogin()+ " se connecte");
+				} else {
+					//throw new ErreurConnexion("Login mot de passe invalide");
+					throw new Ensure("Login mot de passe invalide");
+					
+				}
+			}
+			
+			
+
+
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+	
 	final public static int BUF_SIZE = 1024 * 64;
 
 	/**
