@@ -125,7 +125,7 @@ public class Inscription extends JFrame {
 
 					try {
 						r = registry.lookup("fram");
-						((InterfaceServeurRmi) r).inscription(textFieldLogin.getText(), textFieldPass.getText());
+						((InterfaceServeurRmi) r).inscriptionAvecRepertoireUtilisateur(textFieldLogin.getText(), textFieldPass.getText());
 					} catch (AccessException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -133,12 +133,6 @@ public class Inscription extends JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (NotBoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchAlgorithmException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
