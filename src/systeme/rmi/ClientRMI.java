@@ -215,7 +215,6 @@ public class ClientRMI  implements Serializable{
 
 	public void telecharger(File source,
 			File destination) throws IOException {
-		System.out.println("Aaaa"+destination.getAbsolutePath());
 		copie(new FileInputStream(source), new FileOutputStream(destination));
 		
 	}
@@ -249,29 +248,6 @@ public class ClientRMI  implements Serializable{
 	}
 
 
-	/*public String[] getClients() {
-		String[] clients = null;
-		String[] result = null;
-		int indice = 0;
-		try {
-			//clients = registry.list();
-			result = new String[clients.length];
-			for (int i = 0; i < clients.length; i++) {
-				if (!clients[i].equals("fram")) {
-					result[indice] = clients[i];
-					indice++;
-				}
-			}
-		} catch (AccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return result;
-	}*/
 /**
  * tous les utilisateur inscrit sur le serveur
  * @return ArrayList<Utilisateur> : retourne liste de tous les utilisateur inscrit sur le serveur
