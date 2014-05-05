@@ -29,6 +29,11 @@ import modules.gestionUtilisateur.Utilisateur;
 
 import javax.swing.JList;
 import javax.swing.SwingConstants;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuItem;
 
 public class Vue extends JFrame {
 	/**
@@ -45,8 +50,8 @@ public class Vue extends JFrame {
 	private JPanel contentPane;
 	private List messageList;
 	private JTextField txtIn;
-	private List listCo;
 	private List listDeco;
+	private List listCo;
 
 	/**
 	 * Launch the application.
@@ -67,21 +72,21 @@ public class Vue extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Vue(final Client client) {
+	public Vue(final Client c) {
 		// Definition des éléments du chat
 		//Nom de client
-		login = client.getUtilisateur().getLogin();
+		c.setVue(this);
+		login = c.getUtilisateur().getLogin();
+		System.out.println(login);
 		// Crée une conversation
 		id_conv = 1;
 		//ajout du client à la conversation
 		//participants.add(client.getUtilisateur());
 		//conversation = new Conversation(id_conv, participants, groupesParticipants);
-		participants.add(client.getUtilisateur());
-		conversation = new Conversation(id_conv, participants, groupesParticipants);
-
+		
 		//Général
 		setTitle("IBN Chat room");
-
+		contentPane = new JPanel();
 		JLabel lblUsersName = new JLabel(login);
 		lblUsersName.setFont(new Font("Consolas", Font.BOLD, 16));
 		lblUsersName.setBounds(176, 11, 184, 35);
@@ -103,9 +108,8 @@ public class Vue extends JFrame {
 		btnEnvoitxt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Message mess = new Message(txtIn.getText(), login);
-				client.envoyerMessage(mess);
-				messageList.add(login + " : " + mess.getMessage());
-				client.envoyerMessage(mess);
+				c.envoyerMessage(mess);
+
 				//messageList.add(login + " : " + client.recevoirMessage().get;);
 				
 			}
@@ -149,23 +153,37 @@ public class Vue extends JFrame {
 		lblPersonnesConnectes.setBounds(405, 57, 111, 14);
 		contentPane.add(lblPersonnesConnectes);
 		
-		listCo = new List();
-		listCo.setBounds(372, 252, 178, 144);
-		contentPane.add(listCo);
+		listDeco = new List();
+		listDeco.setBounds(372, 252, 178, 144);
+		contentPane.add(listDeco);
 		
-		afficheUtilisateursCo(client);		
 		
 		JLabel lblPersonnesDeconnectes = new JLabel("Personnes deconnectées");
 		lblPersonnesDeconnectes.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPersonnesDeconnectes.setBounds(372, 232, 179, 14);
 		contentPane.add(lblPersonnesDeconnectes);
 		
-		listDeco = new List();
-		listDeco.setBounds(370, 82, 184, 144);
-		contentPane.add(listDeco);		
+		listCo = new List();
+		listCo.setBounds(370, 82, 184, 144);
+		contentPane.add(listCo);		
 		
-		afficheUtilisateursDeco(client);
-		afficheUtilisateursCo(client);
+		afficheUtilisateursDeco(c);
+		afficheUtilisateursCo(c);
+		
+		
+		JPopupMenu popupMenu = new JPopupMenu();
+		
+		addPopup(listCo, popupMenu);
+		
+		JMenuItem mntmMessagePriv = new JMenuItem("Message privé");
+		mntmMessagePriv.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("heelo");
+			}
+		});
+		popupMenu.add(mntmMessagePriv);
+		
+		
 
 		// <<<<<<< HEAD
 
@@ -201,9 +219,8 @@ public class Vue extends JFrame {
 	 * crée une liste d'utilisateurs connectés
 	 */
 	public void afficheUtilisateursCo(final Client client) {
-
-		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
-			listCo.add(client.getUtilisateurs().get(i).getLogin());
+		for (int i = 0; i < client.getUtilisateursConnectes().size() ; i++) {
+			listCo.add(client.getUtilisateursConnectes().get(i).getUtilisateur().getLogin());
 		}
 	}
 	
@@ -212,14 +229,29 @@ public class Vue extends JFrame {
 	 */
 	public void afficheUtilisateursDeco(final Client client) {
 
-		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
+		for (int i = 0; i < client.getUtilisateursDeconnectes().size(); i++) {
 			listDeco.add(client.getUtilisateursDeconnectes().get(i).getLogin());
 		}
-	
 	}
 	
-	
-	public Vue getVue(){
-		return this;
+	public List getListeMessage(){
+		return this.messageList;
+	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }
