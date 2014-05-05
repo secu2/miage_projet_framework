@@ -62,6 +62,7 @@ public class Inscription extends JFrame {
 	 * Create the frame.
 	 */
 	public Inscription() {
+		setTitle("Inscription");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 259, 191);
 		contentPane = new JPanel();
@@ -69,12 +70,12 @@ public class Inscription extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel lblLogin = new JLabel("Login");
-		lblLogin.setBounds(63, 46, 46, 14);
+		JLabel lblLogin = new JLabel("Nom D'utilisateur");
+		lblLogin.setBounds(10, 46, 99, 14);
 		contentPane.add(lblLogin);
 
 		JLabel lblPass = new JLabel("Mot de passe");
-		lblPass.setBounds(30, 71, 70, 14);
+		lblPass.setBounds(10, 71, 90, 14);
 		contentPane.add(lblPass);
 
 		JLabel lblTitre = new JLabel("Inscription au serveur :");
@@ -93,11 +94,11 @@ public class Inscription extends JFrame {
 		textFieldPass.setColumns(10);
 
 		JButton btnInscription = new JButton("Inscription");
-		btnInscription.setBounds(119, 124, 89, 23);
+		btnInscription.setBounds(106, 121, 110, 23);
 		contentPane.add(btnInscription);
 
 		JLabel lblConfirmation = new JLabel("Confirmation ");
-		lblConfirmation.setBounds(33, 96, 76, 14);
+		lblConfirmation.setBounds(10, 96, 99, 14);
 		contentPane.add(lblConfirmation);
 
 		textFieldConfirmation = new JPasswordField();
