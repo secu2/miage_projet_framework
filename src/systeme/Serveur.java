@@ -73,7 +73,7 @@ public class Serveur implements Serializable {
 	 * @param adresse : adresse du serveur
 	 */
 	public Serveur(String adresse) {
-		// TODO Auto-generated method stub
+		
 		try {
 			
 			LocateRegistry.createRegistry(REGISTRY_PORT);
@@ -121,23 +121,44 @@ public class Serveur implements Serializable {
 			e.printStackTrace();
 		}
 	}
-
+/**
+ * getter de serveur
+ * @return Serveur : l'objet serveur
+ */
 public ServeurRMI getServeur() {
 	return serveur;
 }
-
+/**
+ * Setter de serveur
+ * @param serveur : l'objet serveur
+ */
 public void setServeur(ServeurRMI serveur) {
 	this.serveur = serveur;
 }
-
+/**
+ * Retourne une liste de clients connectées
+ * @return ArrayList<Client> : liste des clients connectées 
+ * @throws RemoteException
+ */
 public ArrayList<Client> getClientsconnectes() throws RemoteException{
 	return getServeur().getClientsconnectes();
 }
-
+/**
+ * établit une connexion
+ * @param login : login user
+ * @param motDepasse : mot de passe user
+ * @param c : Objet client
+ * @return true si connexion établie
+ * @throws RemoteException
+ */
 public boolean connexion(String login, String motDepasse, Client c) throws RemoteException{
 	return getServeur().connexion(login, motDepasse, c);
 }
-
+/**
+ * Ajoute une publication au serveur
+ * @param publication : la publication a ajouter
+ * @throws RemoteException
+ */
 public void ajouterPublication(Publication publication)throws RemoteException{
 	getServeur().AddPublication(publication);
 }
@@ -209,7 +230,12 @@ public void distribuerMessagePrive(MessagePrive message) throws RemoteException{
 public void distribuerMessage(Message message) throws RemoteException{
 	getServeur().distribuerMessage(message);
 }
-
+/**
+ * Retourne les publications visibles pour un utilisateur
+ * @param utilisateur : l'utilisateur
+ * @return ArrayList<Publication> les publications visibles
+ * @throws RemoteException
+ */
 public ArrayList<Publication> getPublicationsVisibles(Utilisateur utilisateur) throws RemoteException{
 	return getPublicationsVisibles(utilisateur);
 }
@@ -217,6 +243,11 @@ public ArrayList<Publication> getPublicationsVisibles(Utilisateur utilisateur) t
 public Utilisateur getUtilisateurInscrit(String login) throws RemoteException{
 	return getServeur().getUtilisateurInscrit(login);
 }
+/**
+ * Retroune les utilisateurs inscrits sur le serveur
+ * @return ArrayList<Utilisateur> : les utilisateurs inscrits sur le serveur
+ * @throws RemoteException
+ */
 
 public ArrayList<Utilisateur> getUtilisateursInscrits() throws RemoteException{
 	return getServeur().getUtilisateursInscrits();
@@ -346,18 +377,43 @@ public ArrayList<Groupe> getGroupes(Utilisateur utilisateur) throws RemoteExcept
 public Groupe getGroupe(int idGroupe) throws RemoteException{
 	return getServeur().getGroupe(idGroupe);
 }
-
+/**
+ * Effectue une inscription
+ * @param login : le login 
+ * @param motDePasse : le mot de passe
+ * @return vrai si inscription effectuée
+ * @throws NoSuchAlgorithmException
+ * @throws UnsupportedEncodingException
+ * @throws RemoteException
+ */
 public boolean inscription(String login, String motDePasse)
 		throws NoSuchAlgorithmException, UnsupportedEncodingException,
 		RemoteException{
 	return getServeur().inscription(login, motDePasse);
 }
-
+/**
+ * Effectue une inscription avec création d'un répertoire
+ * @param login : le login 
+ * @param motDePasse : le mot de passe
+ * @return vrai si inscription effectuée
+ * @throws NoSuchAlgorithmException
+ * @throws UnsupportedEncodingException
+ * @throws RemoteException
+ */
 public boolean inscriptionAvecRepertoireUtilisateur(String login,
 		String motDePasse) throws RemoteException{
 	return getServeur().inscriptionAvecRepertoireUtilisateur(login, motDePasse);
 }
 
+/**
+ * Effectue une inscription sécurisée
+ * @param login : le login 
+ * @param motDePasse : le mot de passe
+ * @return vrai si inscription effectuée
+ * @throws NoSuchAlgorithmException
+ * @throws UnsupportedEncodingException
+ * @throws RemoteException
+ */
 public boolean inscriptionSecurisee(String login, String motDePasse)
 		throws RemoteException{
 	return getServeur().inscriptionSecurisee(login, motDePasse);

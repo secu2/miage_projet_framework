@@ -98,9 +98,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Deconnecte un client
-	 * 
-	 * @param c
-	 *            : clientRMI
+	 * @param c: clientRMI
 	 */
 	public void deconnexion(Client c) throws RemoteException {
 		System.out.println(c.toString());
@@ -109,7 +107,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Envoi un message aux autres utilisateurs
-	 * 
 	 * @param message
 	 */
 	public void envoiMessage(Message message) throws RemoteException {
@@ -118,7 +115,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Ajoute une publication à la liste des publications du serveur
-	 * 
 	 * @param publication
 	 */
 	public void ajouterPublication(Publication publication)
@@ -128,7 +124,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Renvoie la treemap des messages privés des utilisateurs
-	 * 
 	 * @return messagesPrivesUtilisateurs
 	 */
 	public TreeMap<String, TreeMap<String, ArrayList<MessagePrive>>> getMessagesPrivesUtilisateurs()
@@ -138,8 +133,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Renvoie la treemap des conversations des utilisateurs qui ont eu lieu
-	 * lors de leur absence
-	 * 
+	 * lors de leur absence 
 	 * @return conversationsUtilisateursAbsent
 	 */
 	public TreeMap<String, ArrayList<Conversation>> getConversationsUtilisateursAbsents()
@@ -149,10 +143,8 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Renvoie la liste des conversations d'un utilisateur
-	 * 
 	 * @param login
-	 * @return liste des conversations de l'utilisateur si elle existe, null
-	 *         sinon
+	 * @return liste des conversations de l'utilisateur si elle existe, null sinon
 	 */
 	public ArrayList<Conversation> getConversationsUtilisateurAbsent(
 			String login) throws RemoteException {
@@ -162,7 +154,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Renvoie la conversation où l'utilisateur était absent
-	 * 
 	 * @param login
 	 * @param idConversation
 	 * @return la conversation si il existe , null sinon
@@ -890,9 +881,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Affiche l'ensemble des publications visibles pour un utilisateur
-	 * 
-	 * @param utilisateur
-	 *            : l'utilisateur a verifier
+	 * @param utilisateur         : l'utilisateur a verifier
 	 * @return ArrayList<Publication> : return publication visibles
 	 */
 	public ArrayList<Publication> getPublicationsVisibles(Utilisateur utilisateur) throws RemoteException {
@@ -942,7 +931,12 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 		return publicationsVisibles;
 	}
-
+	/**
+	 * Renvoie la liste des publications d'un utilisateurs
+	 * @param utilisateur : Objet utilisateur 
+	 * @return ArrayList<Publication> : les publications de l'utilisateur utilisateur
+	 * @throws RemoteException
+	 */
 	public ArrayList<Publication> getPublications(Utilisateur utilisateur)
 			throws RemoteException {
 		ArrayList<Publication> publicationsProp = new ArrayList<Publication>();
@@ -955,7 +949,12 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		}
 		return publicationsProp;
 	}
-
+	/**
+	 * Rend visible une publication a un utilisateur
+	 * @param utilisateur : l'utilisateur à autoriser 
+	 * @param publicaion : la publication concernée
+	 * @throws RemoteException
+	 */
 	public void supprimerUnePublication(Utilisateur utilisateur,
 			Publication publication) throws RemoteException {
 		ArrayList<Publication> lespublications = getPublications();
@@ -979,7 +978,11 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		}
 
 	}
-
+	/**
+	 * Supprime une publication
+	 * @param pub : la publication
+	 * @throws RemoteException
+	 */
 	public void supprimerUnePublication(Publication pub) throws RemoteException {
 		try {
 			getPublications().remove(indexPublication(pub));
@@ -991,7 +994,12 @@ public class ServeurRMI extends UnicastRemoteObject implements
 			e.printStackTrace();
 		}
 	}
-
+/**
+ * Retourn l'index d'une publication
+ * @param publication
+ * @return int : index
+ * @throws RemoteException
+ */
 	public int indexPublication(Publication publication) throws RemoteException {
 		int num = -1;
 		int compteur = 0;
@@ -1005,38 +1013,68 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 		return num;
 	}
-
+	/**
+	 * Rend visible une publication a un utilisateur
+	 * @param utilisateur : l'utilisateur à autoriser 
+	 * @param publicaion : la publication concernée
+	 * @throws RemoteException
+	 */
 	public void autoriserUnePublicationUtilisateur(Utilisateur utilisateur,
 			Publication publication) throws RemoteException {
 		getPublications().get(indexPublication(publication))
 				.autoriserAccesUtilisateur(utilisateur);
 	}
-
+	/**
+	 * Retire la visibilite d'un utilisateur
+	 * @param utilisateur : l'utilisateur à retirer
+	 * @param publication : la publication concernée
+	 * @throws RemoteException
+	 */
 	public void retirerUnePublicationutilisateur(Utilisateur utilisateur,
 			Publication publication) throws RemoteException {
 		getPublications().get(indexPublication(publication))
 				.retirerAccesUtilisateur(utilisateur);
 	}
-
+	/**
+	 * Rend visible une publication a un groupe
+	 * @param groupe : le groupe à autorisier
+	 * @param publication : la publication concernée
+	 * @throws RemoteException
+	 */
 	public void autoriserUnePublicationGroupe(Groupe groupe,
 			Publication publication) throws RemoteException {
 		getPublications().get(indexPublication(publication))
 				.autoriserAccesGroupe(groupe);
 	}
-
+	/**
+	 * Retire la visibilite d'un groupe
+	 * @param groupe : le groupe à retirer
+	 * @param publication : la publication concernée
+	 * @throws RemoteException
+	 */
 	public void retirerUnePublicationGroupe(Groupe groupe,
 			Publication publication) throws RemoteException {
 		getPublications().get(indexPublication(publication))
 				.retirerAccesGroupe(groupe);
 	}
-
+	/**
+	 * Creer un groupe 
+	 * @param nomGroupe :  le nom du groupe à creer 
+	 * @param utilisateur : l'utilisateur propriétaire
+	 * @throws RemoteException
+	 */
 	public void creerUnGroupe(String nomGroupe, String utilisateur)
 			throws RemoteException {
 		Utilisateur utili = getUtilisateurInscrit(utilisateur);
 		utili.creerUnGroupe(nomGroupe);
 		// System.out.println(""+utili.getGroupes().size());
 	}
-
+	/**
+	 * Ajoute un utilisateur dans un groupe
+	 * @param idGroupe : le groupe concerné
+	 * @param utilisateur : l'utilisateur à ajouter
+	 * @throws RemoteException
+	 */
 	public void ajouterUnUtlisateurDansGroupe(int idGroupe,
 			Utilisateur utilisateur) throws RemoteException {
 		Groupe groupe = null;
@@ -1053,7 +1091,12 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		groupe.ajouterUtilisateur(utilisateur);
 		util1.ajouterGroupe(groupe);
 	}
-
+	/**
+	 * Supprime un utilisateur du groupe
+	 * @param idGroupe : le groupe concerné
+	 * @param utilisateur : l'utilisateur à supprimer
+	 * @throws RemoteException
+	 */
 	public void supprimerUnUtilsateurDuGroupe(int idGroupe,
 			Utilisateur utilisateur) throws RemoteException {
 		Groupe groupeTrouve = null;
@@ -1070,7 +1113,11 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		groupeTrouve.supprimerUtilisateur(utilisateur);
 		util1.supprimerUnGroupe(idGroupe);
 	}
-
+	/**
+	 * Supprime un groupe
+	 * @param idGroupe : le groupe à supprimer
+	 * @throws RemoteException
+	 */
 	public void supprimerGroupe(int idGroupe) throws RemoteException {
 		Groupe groupeTrouve = null;
 		for (Utilisateur util : getUtilisateursInscrits()) {
@@ -1081,7 +1128,11 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		Utilisateur prorietaire = groupeTrouve.getProprietaire();
 		prorietaire.supprimerUnGroupe(idGroupe);
 	}
-
+	/**
+	 * Retourne la liste des groupes
+	 * @return ArrayList<Groupe> liste des groupes 
+	 * @throws RemoteException
+	 */
 	public ArrayList<Groupe> getGroupes() throws RemoteException {
 		ArrayList<Groupe> lesGroupes = new ArrayList<Groupe>();
 
@@ -1093,7 +1144,12 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 		return lesGroupes;
 	}
-
+	/**
+	 * Retourne la liste des groupes auxquelle l'utilisateur est propriétaire
+	 * @param utilisateur : l'utilisateur concerné 
+	 * @return ArrayList<Groupe> liste des groupes dont un utilisateur est propriétaire
+	 * @throws RemoteException
+	 */
 	public ArrayList<Groupe> getGroupesProp(Utilisateur utilisateur)
 			throws RemoteException {
 		ArrayList<Groupe> lesGroupes = new ArrayList<Groupe>();
@@ -1112,7 +1168,9 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		}
 		return lesGroupes;
 	}
-
+/**
+ * Retourn tous les groupes d'un utilisateur
+ */
 	public ArrayList<Groupe> getGroupes(Utilisateur utilisateur)
 			throws RemoteException {
 
@@ -1134,7 +1192,12 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		return lesGroupesRech;
 
 	}
-
+	/**
+	 * Retour un Objet groupe pour un idgroupe
+	 * @param idGroupe : le groupe à chercher
+	 * @return Retour un Objet groupe pour un idgroupe
+	 * @throws RemoteException
+	 */
 	public Groupe getGroupe(int idGroupe) throws RemoteException {
 		ArrayList<Groupe> lesGroupesRech = new ArrayList<Groupe>();
 

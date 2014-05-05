@@ -26,7 +26,16 @@ import modules.gestionUtilisateur.Utilisateur;
 public interface InterfaceServeurRmi extends Remote {
 	 
 	public String getTest() throws RemoteException;
+	/**
+	 * Renvoie la liste des clients connectés sur le serveur
+	 * @return utilisateursConnectes
+	 */
 	public ArrayList<Client> getClientsconnectes() throws RemoteException;
+	/**
+	 * ajoute un client au serveur
+	 * @param c : le client
+	 * @throws RemoteException
+	 */
 	public void ajouterClient(Client c) throws RemoteException;
 	public boolean connexion(String login, String motDepasse, Client c) throws RemoteException;
 	/**
@@ -35,13 +44,29 @@ public interface InterfaceServeurRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public void deconnexion(Client c) throws RemoteException;
+	/**
+	 * Envoi un message aux autres utilisateurs
+	 * @param message
+	 */
 	public void envoiMessage(Message message)  throws RemoteException;
+	/**
+	 * Ajoute une publication à la liste des publications du serveur
+	 * @param publication
+	 */
 	public void ajouterPublication(Publication publication)throws RemoteException;
 	public void ajouterMessagePrive(String login, MessagePrive message) throws RemoteException;
 	public TreeMap<String, ArrayList<MessagePrive>> getMapMessagesPrivesUtilisateur(String login)throws RemoteException;
 	public ArrayList<MessagePrive> getListeMessagesPrives(String expeditaire, String destinataire) throws RemoteException;
+	/**
+	 * Renvoie la treemap des messages privés des utilisateurs
+	 * @return messagesPrivesUtilisateurs
+	 */
 	public TreeMap<String,TreeMap<String, ArrayList<MessagePrive>>> getMessagesPrivesUtilisateurs() throws RemoteException;
-
+	/**
+	 * Renvoie la treemap des conversations des utilisateurs qui ont eu lieu
+	 * lors de leur absence 
+	 * @return conversationsUtilisateursAbsent
+	 */
 	public TreeMap<String, ArrayList<Conversation>> getConversationsUtilisateursAbsents() throws RemoteException;
 	public TreeMap<Integer, Conversation> getConversations() throws RemoteException;
 	public Conversation getConversation(int idConversation) throws RemoteException;
@@ -66,6 +91,11 @@ public interface InterfaceServeurRmi extends Remote {
 	public int creerUneConversation(ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes) throws RemoteException;
 	public void distribuerMessagePrive(MessagePrive message) throws RemoteException;
 	public void distribuerMessage(Message message) throws RemoteException;
+	/**
+	 * Affiche l'ensemble des publications visibles pour un utilisateur
+	 * @param utilisateur         : l'utilisateur a verifier
+	 * @return ArrayList<Publication> : return publication visibles
+	 */
 	public ArrayList<Publication> getPublicationsVisibles(Utilisateur utilisateur) throws RemoteException;
 	public Utilisateur getUtilisateurInscrit(String login) throws RemoteException;
 	public Object utilisateurConnecte(Client clientRMI) throws RemoteException;
