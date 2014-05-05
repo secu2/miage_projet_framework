@@ -23,6 +23,8 @@ import java.util.TreeMap;
 
 import javax.management.modelmbean.RequiredModelMBean;
 
+import application.chat.Vue;
+
 import jus.util.assertion.Ensure;
 import jus.util.assertion.Require;
 import modules.chat.Conversation;
@@ -725,6 +727,20 @@ public class Client  implements Serializable{
 	public InterfaceServeurRmi getServeurRmiImpl(){
 		return serv;
 	}
+	
+	public Vue getVue() throws RemoteException{
+		return getClientRmiImpl().getVue();
+	}
+	
+	public void setVue(Vue vue){
+		try {
+			getClientRmiImpl().setVue(vue);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	

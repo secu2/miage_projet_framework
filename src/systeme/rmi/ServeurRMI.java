@@ -761,6 +761,8 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		}
 
 	}
+	
+	
 
 	/**
 	 * Distribue le message privé de l'expediteur au destinataire

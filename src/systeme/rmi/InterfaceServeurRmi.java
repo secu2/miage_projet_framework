@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import systeme.Client;
-import systeme.Client1;
 import modules.chat.Conversation;
 import modules.chat.Message;
 import modules.chat.MessageConversation;

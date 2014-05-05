@@ -8,6 +8,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import application.chat.Vue;
+
 import modules.chat.Message;
 import modules.chat.MessageConversation;
 import modules.chat.MessagePrive;
@@ -20,7 +22,7 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	 */
 	private static final long serialVersionUID = 1L;
 	static int REGISTRY_PORT = 1099;
-
+	private Vue vue;
 	
 	/**
 	 * 
@@ -93,13 +95,17 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	}
 
 
-	
 	public void recevoirMessage(Message message) throws RemoteException{
-		System.out.println(message.getExpeditaire() + " : " + message.getMessage());
+		vue.getListeMessage().add("[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] "  + message.getExpeditaire() + " : " + message.getMessage());
 	}
 	
-	public void recevoirMessageGraphique(Message message) throws RemoteException{
-		
+
+	public Vue getVue()throws RemoteException{
+		return vue;
+	}
+	
+	public void setVue(Vue vue)throws RemoteException{
+		this.vue = vue;
 	}
 
 

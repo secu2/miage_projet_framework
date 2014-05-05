@@ -125,6 +125,7 @@ public class MainConnexion {
 			public void mouseClicked(MouseEvent arg0) {
 				try {
 					Client c = new Client(usernameTextField.getText(), passwordTextField.getText());
+					System.out.println(c);
 					if(rdbtnDrive.isSelected()){
 						new InterfaceDrive(c).fenetre.setVisible(true);
 					}else{
