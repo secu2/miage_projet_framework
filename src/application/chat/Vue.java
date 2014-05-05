@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import javax.swing.border.CompoundBorder;
 
+import systeme.Client;
 import systeme.rmi.*;
 import modules.chat.Conversation;
 import modules.chat.Message;
@@ -49,7 +50,7 @@ public class Vue extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(final ClientRMI client) {
+	public static void main(final Client client) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -65,14 +66,14 @@ public class Vue extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Vue(final ClientRMI client) {
+	public Vue(final Client c) {
 		// Definition des éléments du chat
 		//Nom de client
-		login = client.getUtilisateur().getLogin();
+		login = c.getUtilisateur().getLogin();
 		// Crée une conversation
 		id_conv = 1;
 		//ajout du client à la conversation
-		participants.add(client.getUtilisateur());
+		participants.add(c.getUtilisateur());
 		conversation = new Conversation(id_conv, participants, groupesParticipants);
 
 		// Général
@@ -103,8 +104,8 @@ public class Vue extends JFrame {
 		btnEnvoitxt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Message mess = new Message(txtIn.getText(), login );
-				client.envoyerMessage(mess);
-				messageList.add(login + " : " + client.recevoirMessage().get;);
+				c.envoyerMessage(mess);
+				messageList.add(login + " : " + c.recevoirMessage().get;);
 				
 			}
 		});
@@ -146,7 +147,7 @@ public class Vue extends JFrame {
 		listCo = new List();
 		listCo.setBounds(370, 82, 184, 314);
 		contentPane.add(listCo);
-		afficheUtilisateursCo(client);
+		afficheUtilisateursCo(c);
 
 		// <<<<<<< HEAD
 
@@ -181,10 +182,10 @@ public class Vue extends JFrame {
 	/**
 	 * crée une liste pour chaque utilisateur connecté
 	 */
-	public void afficheUtilisateursCo(final ClientRMI client) {
+	public void afficheUtilisateursCo(final Client c) {
 
-		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
-			listCo.add(client.getUtilisateurs().get(i).getUtilisateur().getLogin());
+		for (int i = 0; i < c.getUtilisateurs().size(); i++) {
+			listCo.add(c.getUtilisateurs().get(i).getLogin());
 		}
 	}
 	

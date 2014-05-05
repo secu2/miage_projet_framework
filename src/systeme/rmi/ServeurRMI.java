@@ -21,6 +21,7 @@ import java.util.TreeMap;
 
 import jus.util.assertion.Require;
 
+import systeme.Client;
 import systeme.Serveur;
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
@@ -41,7 +42,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	private Serveur serveur;
 
 	private ArrayList<Utilisateur> utilisateursInscrits;
-	private ArrayList<ClientRMI> utilisateursConnectes;
+	private ArrayList<Client> utilisateursConnectes;
 	private ArrayList<Publication> publications;
 	static int REGISTRY_PORT = 1099;
 
@@ -72,9 +73,11 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		this.conversations = new TreeMap<Integer, Conversation>();
 
 		utilisateursInscrits = new ArrayList<Utilisateur>();
-		utilisateursConnectes = new ArrayList<ClientRMI>();
+		utilisateursConnectes = new ArrayList<Client>();
 		publications = new ArrayList<Publication>();
 		this.serveur = serveur;
+		
+		
 	}
 
 	public String getTest() throws RemoteException {
@@ -89,7 +92,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * 
 	 * @return utilisateursConnectes
 	 */
-	public ArrayList<ClientRMI> getClientsconnectes() throws RemoteException {
+	public ArrayList<Client> getClientsconnectes() throws RemoteException {
 		return getUtilisateursConnectes();
 	}
 
@@ -99,7 +102,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * @param c
 	 *            : clientRMI
 	 */
-	public void deconnexion(ClientRMI c) throws RemoteException {
+	public void deconnexion(Client c) throws RemoteException {
 		System.out.println(c.toString());
 		supprimerUnClient(c);
 	}
@@ -320,7 +323,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 						// d'utilisateurs soit dans inclus dans un groupe
 						// d'utilisateurs
 						if (!utilisateursDistribues.contains(u.getLogin())) {
-							ClientRMI client = getClientConnecte(u.getLogin());
+							Client client = getClientConnecte(u.getLogin());
 
 							// le client est connecté
 							if (client != null) {
@@ -371,7 +374,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 					// d'utilisateurs
 
 					if (!utilisateursDistribues.contains(u.getLogin())) {
-						ClientRMI client = getClientConnecte(u.getLogin());
+						Client client = getClientConnecte(u.getLogin());
 
 						// le client est connecté
 						if (client != null) {
@@ -461,7 +464,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * 
 	 * @return utilisateursConnectes
 	 */
-	public ArrayList<ClientRMI> getUtilisateursConnectes()
+	public ArrayList<Client> getUtilisateursConnectes()
 			throws RemoteException {
 		return utilisateursConnectes;
 	}
@@ -489,7 +492,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * @param c
 	 *            : client
 	 */
-	public void ajouterClient(ClientRMI c) throws RemoteException {
+	public void ajouterClient(Client c) throws RemoteException {
 		getUtilisateursConnectes().add(c);
 	}
 
@@ -611,7 +614,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 *            : l'utilisateur � connecter
 	 * @return true (Si connection �tablit)
 	 */
-	public boolean connexion(String login, String motDepasse, ClientRMI c)
+	public boolean connexion(String login, String motDepasse, Client c)
 			throws RemoteException {
 
 		boolean result = false;
@@ -641,9 +644,9 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * @param login
 	 * @return
 	 */
-	public ClientRMI getClientConnecte(String login) throws RemoteException {
-		ClientRMI cl = null;
-		for (ClientRMI c : getUtilisateursConnectes()) {
+	public Client getClientConnecte(String login) throws RemoteException {
+		Client cl = null;
+		for (Client c : getUtilisateursConnectes()) {
 			if (c.getUtilisateur().equals(getUtilisateurInscrit(login))) {
 				cl = c;
 			}
@@ -675,7 +678,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * 
 	 * @param client
 	 */
-	public void supprimerUnClient(ClientRMI client) throws RemoteException {
+	public void supprimerUnClient(Client client) throws RemoteException {
 		getUtilisateursConnectes().remove(indexClient(client));
 	}
 
@@ -685,10 +688,10 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * @param client
 	 * @return si trouvé num = index du client connecté , -1 sinon
 	 */
-	public int indexClient(ClientRMI client) throws RemoteException {
+	public int indexClient(Client client) throws RemoteException {
 		int num = -1;
 		int compteur = 0;
-		for (ClientRMI cl : getUtilisateursConnectes()) {
+		for (Client cl : getUtilisateursConnectes()) {
 			if (cl.getUtilisateur().equals(client.getUtilisateur())) {
 				num = compteur;
 			}
@@ -733,7 +736,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		Registry registry;
 		try {
 			registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-			for (ClientRMI c : getUtilisateursConnectes()) {
+			for (Client c : getUtilisateursConnectes()) {
 				// String url = "rmi://" +
 				// InetAddress.getLocalHost().getHostAddress() + "/" +
 				// c.getUtilisateur().getLogin();
@@ -780,7 +783,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 				Remote rem;
 				try {
 					// on récupère le client du destinataire sur le serveur
-					ClientRMI destinataire = getClientConnecte(message
+					Client destinataire = getClientConnecte(message
 							.getDestinataire());
 					rem = registry.lookup(destinataire.getUtilisateur()
 							.getLogin());
@@ -790,7 +793,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 					// on l'affiche également du côté de l'expediteur
 
 					// on récupère le client du expediteur sur le serveur
-					ClientRMI expediteur = getClientConnecte(message
+					Client expediteur = getClientConnecte(message
 							.getExpeditaire());
 					// on récupère l'objet distant du client expediteur du
 					// message
@@ -843,7 +846,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 * @param cl
 	 * @return l'utilisateur si il est connecté , null sinon
 	 */
-	public Utilisateur utilisateurConnecte(ClientRMI cl) throws RemoteException {
+	public Utilisateur utilisateurConnecte(Client cl) throws RemoteException {
 		Utilisateur u = null;
 		if (getUtilisateursConnectes() != null) {
 			int num = indexClient(cl);

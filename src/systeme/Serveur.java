@@ -28,7 +28,6 @@ import modules.chat.MessagePrive;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
-import systeme.rmi.ClientRMI;
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
 
@@ -131,11 +130,11 @@ public void setServeur(ServeurRMI serveur) {
 	this.serveur = serveur;
 }
 
-public ArrayList<ClientRMI> getClientsconnectes() throws RemoteException{
+public ArrayList<Client> getClientsconnectes() throws RemoteException{
 	return getServeur().getClientsconnectes();
 }
 
-public boolean connexion(String login, String motDepasse, ClientRMI c) throws RemoteException{
+public boolean connexion(String login, String motDepasse, Client c) throws RemoteException{
 	return getServeur().connexion(login, motDepasse, c);
 }
 

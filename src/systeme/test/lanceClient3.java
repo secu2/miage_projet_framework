@@ -14,7 +14,7 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
-import systeme.rmi.ClientRMI;
+import systeme.Client1;
 import systeme.rmi.ServeurRMI;
 
 public class lanceClient3 {
@@ -24,7 +24,7 @@ public class lanceClient3 {
 
 		
 		
-		ClientRMI c = new ClientRMI("popo", "popo");
+		Client c = new Client("popo", "popo");
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		
 		c.envoyerMessage(new Message("Test ça marche de popo!!!!!!!!",c.getUtilisateur().getLogin()));

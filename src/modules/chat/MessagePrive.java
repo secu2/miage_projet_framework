@@ -3,7 +3,7 @@ package modules.chat;
 import java.io.Serializable;
 import java.util.Date;
 
-import systeme.rmi.ClientRMI;
+import systeme.Client;
 
 public class MessagePrive extends Message implements Serializable {
 

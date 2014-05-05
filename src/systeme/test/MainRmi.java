@@ -17,8 +17,8 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
+import systeme.Client1;
 import systeme.Serveur;
-import systeme.rmi.ClientRMI;
 import systeme.rmi.ServeurRMI;
 
 public class MainRmi {
@@ -36,8 +36,8 @@ public class MainRmi {
 				serveur.getServeur().inscription("momo", "jojo");	
 				serveur.getServeur().inscription("jojo", "momo");
 			//connexion d'un client
-				ClientRMI c = new ClientRMI("momo", "jojo");
-				ClientRMI c1 = new ClientRMI("jojo","momo");
+				Client c = new Client("momo", "jojo");
+				Client c1 = new Client("jojo","momo");
 				
 				
 				try {

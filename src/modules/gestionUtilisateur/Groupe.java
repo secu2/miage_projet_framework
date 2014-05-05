@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import systeme.BaseDeDonnees;
-import systeme.rmi.ClientRMI;
+import systeme.Client;
 
 /**
  * Groupe.java

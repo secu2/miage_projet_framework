@@ -14,7 +14,7 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
-import systeme.rmi.ClientRMI;
+import systeme.Client1;
 import systeme.rmi.ServeurRMI;
 
 public class lanceClient2 {
@@ -24,7 +24,7 @@ public class lanceClient2 {
 
 		
 		
-		ClientRMI c = new ClientRMI("jojo", "jojo");
+		Client c = new Client("jojo", "jojo");
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		//c.recevoirMessagePriveAbsence();
 		//c.envoyerMessage(new Message("Hey ça marche :'D ", c.getUtilisateur().getLogin()));
