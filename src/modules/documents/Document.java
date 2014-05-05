@@ -1,30 +1,32 @@
 package modules.documents;
 
-
 import java.io.File;
+import java.io.Serializable;
 
 import modules.documents.social.Statistique;
 
 /**
  * Document.java
+ * 
  * @author never
- *
+ * 
  */
-public class Document {
+public class Document implements Serializable {
 	// D�finition et Gestion des documents pr�sents sur le drive. Son nom, son
 	// propri�taire, son type, sa d�finition, sa description sa date
 	// d�expiration, et sa visibilit� (par d�faut visible seulement par lui)
 
 	private String nom;
 	private float taille;
-	
-	private Statistique statistique; //Les statistiques du fichier
+
+	private Statistique statistique; // Les statistiques du fichier
 	private String emplacement;
-	
-	private File fichier; 
-	
+
+	private File fichier;
+
 	/**
-	 * Constructeur de la classe Document 
+	 * Constructeur de la classe Document
+	 * 
 	 * @param nom
 	 * @param taille
 	 * @param format
@@ -36,11 +38,12 @@ public class Document {
 		fichier = new File(nom);
 		this.taille = fichier.length();
 		this.statistique = statistique;
-		this.emplacement = fichier.getPath();
+		this.emplacement = fichier.getPath().replaceAll("\\\\", "/");
 	}
-	
+
 	/**
 	 * Constructeur de la classe Document sans Statistique
+	 * 
 	 * @param nom
 	 * @param taille
 	 * @param format
@@ -48,13 +51,14 @@ public class Document {
 	 */
 	public Document(String nom) {
 		this.nom = nom;
-		fichier =  new File(nom);
+		fichier = new File(nom);
 		this.taille = fichier.length();
-		this.emplacement = fichier.getPath();
+		this.emplacement = fichier.getPath().replaceAll("\\\\", "/");
 	}
 
 	/**
 	 * Renvoie le nom du document
+	 * 
 	 * @return nom
 	 */
 	public String getNom() {
@@ -63,6 +67,7 @@ public class Document {
 
 	/**
 	 * Affecte un nouveau au document
+	 * 
 	 * @param nom
 	 */
 	public void setNom(String nom) {
@@ -71,6 +76,7 @@ public class Document {
 
 	/**
 	 * Renvoie la taille du document
+	 * 
 	 * @return taille
 	 */
 	public float getTaille() {
@@ -79,6 +85,7 @@ public class Document {
 
 	/**
 	 * Affecte une taille au document
+	 * 
 	 * @param taille
 	 */
 	public void setTaille(float taille) {
@@ -87,6 +94,7 @@ public class Document {
 
 	/**
 	 * Renvoie l'objet Statistique du document
+	 * 
 	 * @return statistique
 	 */
 	public Statistique getStatistique() {
@@ -95,6 +103,7 @@ public class Document {
 
 	/**
 	 * Affecte un objet Statistique au document
+	 * 
 	 * @param statistique
 	 */
 	public void setStatistique(Statistique statistique) {
@@ -103,6 +112,7 @@ public class Document {
 
 	/**
 	 * Renvoie l'emplacement du document
+	 * 
 	 * @return emplacement
 	 */
 	public String getEmplacement() {
@@ -111,14 +121,19 @@ public class Document {
 
 	/**
 	 * Affecte l'emplacement du document
+	 * 
 	 * @param emplacement
 	 */
 	public void setEmplacement(String emplacement) {
 		this.emplacement = emplacement;
 	}
-	
-	
-	
-	
+
+	public File getFichier() {
+		return fichier;
+	}
+
+	public void setFichier(File fichier) {
+		this.fichier = fichier;
+	}
 
 }

@@ -3,6 +3,7 @@ package modules.gestionUtilisateur;
 import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ public class Utilisateur  implements Serializable{
      */
     public Utilisateur(String login){
     	this.login = login;
+    	this.groupes = new ArrayList<Groupe>();
+    	this.publications = new ArrayList<Publication>();
+    	
     }
     
     /**
@@ -47,6 +51,8 @@ public class Utilisateur  implements Serializable{
     public Utilisateur(String login, String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException{
     	this.login = login;
     	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
+    	this.groupes = new ArrayList<Groupe>();
+    	this.publications = new ArrayList<Publication>();
     }
     /**
      * Construit un utilisateur et l'enregistre dans la base de données
@@ -62,6 +68,8 @@ public class Utilisateur  implements Serializable{
     	// Affecte le mot de passe encrypté
     	this.motDePasse = Encryptage.encrypterMotDePasse(motDePasse);
     	sauvegarderPersistant(bdd);
+    	this.groupes = new ArrayList<Groupe>();
+    	this.publications = new ArrayList<Publication>();
     }
     
     /**
@@ -168,11 +176,9 @@ public class Utilisateur  implements Serializable{
 	 * Permet de créer un groupe
 	 * @param nomGroupe : nom du groupe
 	 */
-	public void creerUnGroupe(int idGroupe , String nomGroupe){
-		Groupe gr = new Groupe(nomGroupe);
-		gr.ajouterUtilisateur(this);
+	public void creerUnGroupe(String nomGroupe){
+		Groupe gr = new Groupe(nomGroupe,this); 
 		getGroupes().add(gr);
-		
 	}
 	
 	/**
@@ -180,7 +186,7 @@ public class Utilisateur  implements Serializable{
 	 * @param nomGroupe
 	 */
 	public void supprimerUnGroupe(int id){
-		getGroupes().remove(getGroupe(id));
+		getGroupes().remove(indexGroupe(id));
 	}
 	
 	/**
@@ -198,9 +204,12 @@ public class Utilisateur  implements Serializable{
 	 */
 	public Groupe getGroupe(int idGroupe){
 		Groupe gr = null;
-		for(int i = 0; i < getGroupes().size() ; i++){
-			if(gr.getIdGroupe() == idGroupe){
-				gr = getGroupes().get(i);
+		//System.out.println("a"+groupes.size());
+		for(Groupe groupe : getGroupes())
+		{
+			if(groupe.getIdGroupe()==idGroupe)
+			{
+				gr=groupe;
 			}
 		}
 		return gr;
@@ -212,14 +221,31 @@ public class Utilisateur  implements Serializable{
 	 */
 	public Groupe getGroupe(String nom){
 		Groupe gr = null;
-		for(int i = 0; i < getGroupes().size() ; i++){
-			if(gr.getNomGroupe().equals(nom)){
-				gr = getGroupes().get(i);
+		for(Groupe g : getGroupes()){
+			if(g.getNomGroupe().equals(nom)){
+				gr = g;
 			}
 		}
 		return gr;
 	}
 	
+	/**
+	 * Ajoute un utilisateur dans un groupe de l'utilisateur
+	 * @param utilisateur
+	 * @param nomGroupe
+	 * @require : groupe 'nomGroupe' doit exister
+	 */
+	public void ajouterUtilisateurGroupe(Utilisateur utilisateur, String nomGroupe){
+		Groupe gr = getGroupe(nomGroupe);
+		if(gr != null){
+			gr.getUtilisateurs().add(utilisateur);
+		}
+	}
+	
+	public void ajouterGroupe(Groupe groupe)
+	{
+		getGroupes().add(groupe);
+	}
 	/**
 	 * Renvoie la liste des publications de l'utilisateur
 	 * @return publications
@@ -274,6 +300,18 @@ public class Utilisateur  implements Serializable{
 		}
 		
 		return egal;
+	}
+	public int indexGroupe(int idgroupe) {
+		int num = -1;
+		int compteur = 0;
+		for (Groupe grp : getGroupes()) {
+			if (grp.getIdGroupe()==idgroupe) {
+				num = compteur;
+			}
+			compteur++;
+		}
+
+		return num;
 	}
 	
 	

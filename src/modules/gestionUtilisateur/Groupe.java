@@ -1,17 +1,20 @@
 package modules.gestionUtilisateur;
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
 import systeme.BaseDeDonnees;
+import systeme.rmi.ClientRMI;
 
 /**
  * Groupe.java
  * @author never
  *
  */
-public class Groupe {
+public class Groupe implements Serializable{
 	
 	// identifiant du groupe
 	private int idGroupe;
@@ -27,9 +30,11 @@ public class Groupe {
 	 * @param idGroupe l'id du groupe, est unique
 	 * @param nomGroupe le nom du groupe
 	 */
-	public Groupe(String nomGroupe){
-		idGroupe = proprietaire.getGroupes().size();
+	public Groupe(String nomGroupe,Utilisateur u) {
+		this.proprietaire = u;
+		this.idGroupe = proprietaire.getGroupes().size();
 		this.nomGroupe = nomGroupe;
+		this.utilisateurs = new ArrayList<Utilisateur>();
 	}
 	
 	/**
@@ -39,10 +44,12 @@ public class Groupe {
 	 * @param nomGroupe
 	 * @throws SQLException 
 	 */
-	public Groupe(BaseDeDonnees bdd,String nomGroupe) throws SQLException{
+	public Groupe(BaseDeDonnees bdd,String nomGroupe,Utilisateur u) throws SQLException{
+		this.proprietaire = u;
 		idGroupe = proprietaire.getGroupes().size();
 		this.nomGroupe = nomGroupe;
 		sauvegarderPersistant(bdd);
+		this.utilisateurs = new ArrayList<Utilisateur>();
 	}
 
 	/**
@@ -104,5 +111,32 @@ public class Groupe {
 	public void ajouterUtilisateur(Utilisateur u){
 		getUtilisateurs().add(u);
 	}
+	
+	public void supprimerUtilisateur(Utilisateur u)
+	{
+		getUtilisateurs().remove(indexUtilisateur(u));
+	}
+	
+	public int indexUtilisateur(Utilisateur utilisateur) {
+		int num = -1;
+		int compteur = 0;
+		for (Utilisateur util : getUtilisateurs()) {
+			if (util.getLogin().equals(utilisateur.getLogin())) {
+				num = compteur;
+			}
+			compteur++;
+		}
+
+		return num;
+	}
+
+	public Utilisateur getProprietaire() {
+		return proprietaire;
+	}
+
+	public void setProprietaire(Utilisateur proprietaire) {
+		this.proprietaire = proprietaire;
+	}
+	
 	
 }

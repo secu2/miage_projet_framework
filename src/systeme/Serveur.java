@@ -1,309 +1,135 @@
 package systeme;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
-import systeme.rmi.ClientRMI;
+import modules.gestionUtilisateur.Utilisateur;
 import systeme.rmi.ServeurRMI;
 import systeme.tools.Encryptage;
-import modules.gestionUtilisateur.Utilisateur;
+
+
 
 public class Serveur implements Serializable {
-	
-	private ArrayList<Utilisateur> utilisateursInscrits;
-	private ArrayList<ClientRMI> utilisateursConnectes;
-	private ServeurRMI serveur;
-	
-	public Serveur(){
-		utilisateursInscrits =  new ArrayList<Utilisateur>();
-		utilisateursConnectes = new ArrayList<ClientRMI>();
-		serveur = new ServeurRMI(this);
-	}
+	static int REGISTRY_PORT = 1099;
+	private ServeurRMI serveur; 
 	
 	/**
-	 * Renvoie la liste des utilisateurs inscrits
-	 * @return utilisateursInscrits
+	 * Constructeur du serveur : 
+	 * Créer un objet serveur  qui lancera le serveur localement
 	 */
-	public ArrayList<Utilisateur> getUtilisateursInscrits(){
-		return utilisateursInscrits;
-	}
-	
-	/**
-	 * Renvoie la liste des clients connectés
-	 * @return utilisateursConnectes
-	 */
-	public ArrayList<ClientRMI> getUtilisateursConnectes(){
-		return utilisateursConnectes;
-	}
-	
- 	/**
- 	 * Permet de tester si l'utilisateur de login 'login' existe
- 	 * @param login : login de l'utilisateur
- 	 * @return true si l'utilisateur existe , false sinon
- 	 */
-	public boolean utilisateurExistant(String login){
-		boolean existant = false;
-		for(Utilisateur u : getUtilisateursInscrits()){
-			if(u.getLogin().equals(login)){
-				existant = true;
-			}
-		}
-		return existant;
-	}
-	
-	/**
-	 * Ajoute un client à la liste des clients du serveur
-	 * @param c : client
-	 */
-	public void ajouterClient(ClientRMI c){
-		getUtilisateursConnectes().add(c);
-	}
-	
-	/**
-	 * Ajoute un utilisatuer à la liste des utilisateurs inscrits sur le serveur
-	 * @param u : utilisateur
-	 */
-	public void ajouterUtilisateur(Utilisateur u){
-		getUtilisateursInscrits().add(u);
-	}
-	
-	/**
-	 * Renvoie l'utilisateur de login 'login'
-	 * @param login : login de l'utilisateur
-	 * @return utilisateur si existant , null sinon
-	 */
-	public Utilisateur getUtilisateurInscrit(String login){
-		Utilisateur utilisateur = null;
-		if(utilisateurExistant(login)){
-			for(Utilisateur user : getUtilisateursInscrits()){
-				if(user.getLogin().equals(login)){
-					utilisateur = user;
-				}
-			}
-		}
-		
-		return utilisateur;
-	}
-	
-	
-	/**
-	 * Verification de l'existance de l'utilisateur et
-	 * inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client si l'utilisateur n'existe pas
-	 * @param login
-	 * @param motDePasse
-	 * @return false si le login de l'utilisateur est déjà existant, true sinon
-	 */
-	public boolean inscriptionSecurisee(String login, String motDePasse){
-		
-		boolean existant = false;
-		if(!utilisateurExistant(login)){
-			Utilisateur u = new Utilisateur(login);
-			u.setMotDePasseSecurise(motDePasse);
-			ajouterUtilisateur(u);
-		}
-		else{
-			existant = true;
-		}
-		
-		return existant;
-		
-	}
-	
-	
-	
-	/**
-	 * Verification de l'existance de l'utilisateur et
-	 * inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client si l'utilisateur n'existe pas
-	 * @param login
-	 * @param motDePasse
-	 * @return false si le login de l'utilisateur est déjà existant, true sinon
-	 * @throws UnsupportedEncodingException 
-	 * @throws NoSuchAlgorithmException 
-	 */
-	public boolean inscription(String login, String motDePasse) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		
-		boolean existant = false;
-		if(!utilisateurExistant(login)){
-			Utilisateur u = new Utilisateur(login,motDePasse);
-			ajouterUtilisateur(u);
-		}
-		else{
-			existant = true;
-		}
-		
-		return existant;
-		
-
-	}
-	
-	/**
-	 * Verification de l'existance de l'utilisateur et
-	 * inscription d'un utilisateur dont le mot de passe a déjà été encrypté côté client si l'utilisateur n'existe pas
-	 * Créer un repertoire pour l'utilisateur sur le serveur
-	 * @param login
-	 * @param motDePasse
-	 * @return false si le login de l'utilisateur est déjà existant, true sinon
-	 * @throws UnsupportedEncodingException 
-	 * @throws NoSuchAlgorithmException 
-	 */
-	public boolean inscriptionAvecRepertoireUtilisateur(String login, String motDePasse){
-		boolean existant = false;
+	public Serveur() {
+		// TODO Auto-generated method stub
 		try {
-			existant = inscription(login, motDePasse);
-			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login), "/utilisateurs/");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return existant;
-		
-
-	}
+			
+			LocateRegistry.createRegistry(REGISTRY_PORT);
 	
-	/**
-	 * Realise une connexion entre un client et un serveur
-	 * @param utilisateur : l'utilisateur � connecter
-	 * @return true (Si connection �tablit)
-	 */
-	public boolean connexion(String login,  String motDepasse , ClientRMI c) {
-
-		boolean result = false;
+			
+			ServeurRMI informationImpl = new ServeurRMI(this);
+			serveur = informationImpl;
+			String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram";
+			System.out.println("Enregistrement de l'objet avec l'url : " + url);
+			Naming.rebind(url, informationImpl);
+			
+			
 		
-		
-			Utilisateur util;
-			try {
-				if(utilisateurExistant(login)){
-					// on récupère l'objet utilisateur
-					util = getUtilisateurInscrit(login);
-					// Test si le mdp est correct
-					if(util.autoriserConnexion(motDepasse)){
-						result = true;
-					}	
-				}
-				
-			} catch (NoSuchAlgorithmException e) {
+			 
+			System.out.println("Serveur lancé");
+			} catch (RemoteException e) {
 				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
-
-		return result;
 	}
 	
 	/**
-	 * 
-	 * @param login
-	 * @return
+	 * Constructeur du serveur : 
+	 * Créer un objet serveur où l'on aura précisé l'adresse
+	 * @param adresse : adresse du serveur
 	 */
-	public ClientRMI getClientConnecte(String login){
-		ClientRMI cl = null;
-		for(ClientRMI c :  getUtilisateursConnectes() ){
-			if(c.getUtilisateur().getLogin().equals(login)){
-				cl = c;
-			}
-		}
+	public Serveur(String adresse) {
+		// TODO Auto-generated method stub
+		try {
+			
+			LocateRegistry.createRegistry(REGISTRY_PORT);
+	
+			
+			ServeurRMI informationImpl = new ServeurRMI(this);
+			serveur = informationImpl;
+			String url = "rmi://" + adresse + "/fram";
+			System.out.println("Enregistrement de l'objet avec l'url : " + url);
+			Naming.rebind(url, informationImpl);
+			
+			
 		
-		return cl;
+			 
+			System.out.println("Serveur lancé");
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
 	}
 	
-	/**
-	 * Affecte le serveur rmi au serveur
-	 * @param serv
-	 */
-	public void setServeurRMI(ServeurRMI serv){
-		this.serveur = serv;
+	public InputStream getInputStream(File f) throws IOException {
+	   // return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
+		 return  new ServeurRMI(new FileInputStream(f)).getIn();
+		 
 	}
 	
-	/**
-	 * Renvoie le serveur RMI
-	 * @return serveur
-	 */
-	public ServeurRMI getServeurRMI(){
-		return serveur;
+	public OutputStream getOutputStream(File f) throws IOException {
+	  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
+	    return new ServeurRMI(new FileOutputStream(f)).getOut();   
 	}
-	
-	/**
-	 * Supprime le clientRMI de la liste des clients connectés
-	 * @param client
-	 */
-	public void supprimerUnClient(ClientRMI client)
+/**
+ * Provoque l'arret du serveur
+ */
+	public void stop()
 	{
-		System.out.println(""+getUtilisateursConnectes().size());
-		System.out.println(client.toString());
-		getUtilisateursConnectes().remove(client);
-		System.out.println(""+getUtilisateursConnectes().size());
-		getUtilisateursConnectes().remove(indexClient(client));
-	}
-	
-	/**
-	 * Renvoie l'index du client dans la liste des clients connectés
-	 * @param client
-	 * @return si trouvé num = index du client connecté  , -1 sinon
-	 */
-	public int indexClient(ClientRMI client){
-		int num = -1;
-		int compteur = 0;
-		for(ClientRMI cl : getUtilisateursConnectes()){
-			if(cl.getUtilisateur().equals(client.getUtilisateur())){
-				num = compteur;
-			}
-			compteur++;
+		try {
+			Naming.unbind("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram");
+			//UnicastRemoteObject.unexportObject((Remote) this, true);
+			System.out.println("Arret du serveur");
+			System.exit(0);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
-		
-		return num;
 	}
 
-	/**
-	 * Créer un repertoire pour l'utilisateur 
-	 * @param u : utilisateur
-	 * @param path : chemin avant le nom d'utilisateur (Ex : /utilisateurs/ )
-	 */
-	public void creerUnRepertoireUtilisateur(Utilisateur u , String path){
-		File repertoire = new File(path+""+u.getLogin());
-		u.ajouterRepertoire(repertoire);
-		repertoire.mkdirs();
-	}
-	
-	/**
-	 * Créer un repertoire
-	 * @param path : chemin du futur repertoire
-	 */
-	public void creerUnRepertoire(String path){
-		File repertoire = new File(path);
-		repertoire.mkdirs();
-	}
-	
-	/**
-	 * Distribue un message envoyé par un client aux autres clients 
-	 * @param message
-	 */
-	public void distribuerMessage(String message,ClientRMI expediteur){
-		for(ClientRMI c : getUtilisateursConnectes()){
-			c.recevoirMessage(message,expediteur);
-		}
-	}
-	
-	/**
-	 * Renvoie l'utilisateur du clientRMI si trouvé dans la liste des clients connectés
-	 * @param cl
-	 * @return l'utilisateur si il est connecté , null sinon
-	 */
-	public Utilisateur utilisateurConnecte(ClientRMI cl){
-		Utilisateur u = null;
-		if(getUtilisateursConnectes() != null){
-			int num = indexClient(cl);
-			if(num != -1){
-				u = getUtilisateursConnectes().get(indexClient(cl)).getUtilisateur();
-			}
-		}
-		return u;
-	}
+public ServeurRMI getServeur() {
+	return serveur;
+}
 
+public void setServeur(ServeurRMI serveur) {
+	this.serveur = serveur;
+}
+	
 	
 }
