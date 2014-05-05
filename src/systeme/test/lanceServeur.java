@@ -30,6 +30,17 @@ public class lanceServeur {
 			serveur.inscription("popo", "popo");
 			serveur.inscriptionAvecRepertoireUtilisateur("yoyo", "yoyo");
 			
+			serveur.creerUnGroupe("groupe1", "jojo");
+			serveur.creerUnGroupe("groupe2", "momo");
+			serveur.creerUnGroupe("groupe3", "momo");
+			serveur.creerUnGroupe("groupe4", "momo");
+			ArrayList<Groupe> group = serveur.getGroupes();
+			for(Groupe grp : group){
+				if(grp.getNomGroupe().equals("groupe2")){
+					serveur.getUtilisateurInscrit("jojo").ajouterGroupe(grp);
+				}
+			}			
+			
 		
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
