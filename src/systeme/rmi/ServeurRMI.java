@@ -1216,6 +1216,24 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	}
 	
+	public void actualiserListesUtilisateurs() throws RemoteException{
+		for(Client client : getClientsconnectes()){
+			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			// on récupère le client du destinataire sur le serveur
+			Client destinataire = getClientConnecte(client.getUtilisateur().getLogin());
+			Remote rem;
+			try {
+				rem = registry.lookup(destinataire.getUtilisateur().getLogin());
+				// On l'affiche du côté du destinataire
+				((InterfaceClientRmi) rem).actualiserListes();
+			} catch (NotBoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			
+		}
+	}
 	 
 
 }

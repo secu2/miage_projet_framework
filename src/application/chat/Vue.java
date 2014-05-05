@@ -23,7 +23,11 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
 import javax.swing.border.CompoundBorder;
@@ -56,6 +60,8 @@ public class Vue extends JFrame {
 	private String login;
 	private ArrayList<Utilisateur> participants;
 	private ArrayList<Groupe> groupesParticipants;
+	static int REGISTRY_PORT = 1099;
+
 	
 	
 	private JPanel contentPane;
@@ -82,11 +88,14 @@ public class Vue extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws RemoteException 
 	 */
-	public Vue(final Client c) {
+	public Vue(final Client c) throws RemoteException {
+		
 		// Definition des éléments du chat
-		//Nom de client
+				//Nom de client
 		c.setVue(this);
+		
 		login = c.getUtilisateur().getLogin();
 		System.out.println(login);
 		// Crée une conversation
@@ -98,6 +107,7 @@ public class Vue extends JFrame {
 		//Général
 		setTitle("IBN Chat room");
 		contentPane = new JPanel();
+
 		JLabel lblUsersName = new JLabel(login);
 		lblUsersName.setFont(new Font("Consolas", Font.BOLD, 16));
 		lblUsersName.setBounds(176, 11, 184, 35);
@@ -123,6 +133,16 @@ public class Vue extends JFrame {
 
 				//messageList.add(login + " : " + client.recevoirMessage().get;);
 				
+			}
+		});
+		
+		Runtime.getRuntime().addShutdownHook(new Thread()
+		{
+			@Override
+			public void run()
+			{
+				System.out.println("Déconnexion de "+c.getUtilisateur().getLogin());
+				c.deconnexion();
 			}
 		});
 
@@ -173,8 +193,8 @@ public class Vue extends JFrame {
 		contentPane.add(lblPersonnesDeconnectes);
 		
 
-		afficheUtilisateursDeco(c);
-		afficheUtilisateursCo(c);
+		
+	
 		
 		
 		
@@ -200,6 +220,24 @@ public class Vue extends JFrame {
 		// >>>>>>> branch 'master' of
 		// https://github.com/secu2/miage_projet_framework.git
 		// System.out.println("Fichier choisi : " + dialogue.getSelectedFile());
+		 afficheUtilisateursCo(c);
+		 afficheUtilisateursDeco(c);
+
+			try{
+			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			 Remote r;
+			
+	 
+					r = registry.lookup("fram");
+				
+		
+				
+			((InterfaceServeurRmi) r).actualiserListesUtilisateurs();	
+				}
+			 catch (NotBoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	}
 
 	/**

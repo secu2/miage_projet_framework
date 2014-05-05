@@ -75,7 +75,7 @@ public class Client  implements Serializable{
 					this.utilisateur = getServeurRmiImpl().getUtilisateurInscrit(login);
 					String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/" + this.utilisateur.getLogin();
 					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
-					cl = new ClientRMI();
+					cl = new ClientRMI(this);
 					try {
 						Naming.rebind(url, cl);
 					} catch (MalformedURLException e) {
@@ -140,7 +140,7 @@ public class Client  implements Serializable{
 					this.utilisateur = getServeurRmiImpl().getUtilisateurInscrit(login);
 					String url = "rmi://" + adresse + "/" + this.utilisateur.getLogin();
 					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
-					cl = new ClientRMI();
+					cl = new ClientRMI(this);
 					try {
 						Naming.rebind(url, cl);
 					} catch (MalformedURLException e) {
@@ -752,6 +752,11 @@ public class Client  implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void actualiserListes() throws RemoteException{
+		getClientRmiImpl().actualiserListes();
+
 	}
 	
 	

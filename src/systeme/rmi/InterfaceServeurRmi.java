@@ -174,7 +174,7 @@ public interface InterfaceServeurRmi extends Remote {
 	public boolean inscriptionSecurisee(String login, String motDePasse)
 			throws RemoteException;
 	
-	
+	public void actualiserListesUtilisateurs() throws RemoteException;
 
 }	
 

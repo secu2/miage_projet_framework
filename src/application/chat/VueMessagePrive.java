@@ -12,7 +12,6 @@ import modules.chat.MessagePrive;
 
 import systeme.Client;
 
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -20,7 +19,6 @@ public class VueMessagePrive extends JFrame{
 	/**
 	 * @wbp.nonvisual location=189,9
 	 */
-	private final JLabel label = DefaultComponentFactory.getInstance().createTitle("New JGoodies title");
 	public VueMessagePrive(final Client c,final String destinataire) {
 		setTitle("Envoyer un message privé");
 		this.setSize(500, 300);

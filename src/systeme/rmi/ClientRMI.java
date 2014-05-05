@@ -8,6 +8,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import systeme.Client;
+
 import application.chat.Vue;
 
 import modules.chat.Message;
@@ -23,12 +25,14 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	private static final long serialVersionUID = 1L;
 	static int REGISTRY_PORT = 1099;
 	private Vue vue;
+	private Client client;
 	
 	/**
 	 * 
 	 * @throws RemoteException
 	 */
-	public ClientRMI() throws RemoteException{
+	public ClientRMI(Client client) throws RemoteException{
+		this.client = client;
 	}
 
 	/** permet d'envoyer un message
@@ -121,6 +125,37 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	public void setVue(Vue vue)throws RemoteException{
 		this.vue = vue;
 	}
+
+	@Override
+	public void actualiserListes() throws RemoteException {
+		// TODO Auto-generated method stub
+		System.out.println("je dois actualiser :(");
+		System.out.println(client);
+		vue.afficheUtilisateursCo(client);
+		vue.afficheUtilisateursDeco(client);
+		
+	}
+	
+	public void actualiserListesUtilisateurs() throws RemoteException{
+		Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+		 Remote r;
+		try {
+			r = registry.lookup("fram");
+			if (r instanceof InterfaceServeurRmi)
+			{
+				try {
+					((InterfaceServeurRmi) r).actualiserListesUtilisateurs();				
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} catch (NotBoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 
 
 	

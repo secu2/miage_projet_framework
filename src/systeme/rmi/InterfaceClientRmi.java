@@ -21,5 +21,6 @@ public void recevoirMessage(Message message) throws RemoteException;
 public void recevoirMessagePrive(MessagePrive message) throws RemoteException;
 public Vue getVue() throws RemoteException;
 public void setVue(Vue vue) throws RemoteException;
+public void actualiserListes() throws RemoteException;
 
 }
