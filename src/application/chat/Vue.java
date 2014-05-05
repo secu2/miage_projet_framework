@@ -27,6 +27,7 @@ import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 
 import javax.swing.JList;
+import javax.swing.SwingConstants;
 
 public class Vue extends JFrame {
 	/**
@@ -41,10 +42,10 @@ public class Vue extends JFrame {
 	
 	
 	private JPanel contentPane;
-	private JTextField textField;
 	private List messageList;
 	private JTextField txtIn;
 	private List listCo;
+	private List listDeco;
 
 	/**
 	 * Launch the application.
@@ -72,10 +73,10 @@ public class Vue extends JFrame {
 		// Crée une conversation
 		id_conv = 1;
 		//ajout du client à la conversation
-		participants.add(client.getUtilisateur());
-		conversation = new Conversation(id_conv, participants, groupesParticipants);
+		//participants.add(client.getUtilisateur());
+		//conversation = new Conversation(id_conv, participants, groupesParticipants);
 
-		// Général
+		//Général
 		setTitle("IBN Chat room");
 
 		JLabel lblUsersName = new JLabel(login);
@@ -88,11 +89,7 @@ public class Vue extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new CompoundBorder());
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
-
-		JLabel lblPersonnesConnectes = new JLabel("Personnes connect\u00E9es");
-		lblPersonnesConnectes.setBounds(405, 57, 111, 14);
-		contentPane.add(lblPersonnesConnectes);
+		contentPane.setLayout(null);		
 
 		// Boutons d'envoi de txt et de fichiers
 		JButton btnEnvoitxt = new JButton("Envoyer");
@@ -102,9 +99,9 @@ public class Vue extends JFrame {
 		// Met le message dans la liste
 		btnEnvoitxt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Message mess = new Message(txtIn.getText(), login );
+				Message mess = new Message(txtIn.getText(), login);
 				client.envoyerMessage(mess);
-				messageList.add(login + " : " + client.recevoirMessage().get;);
+				messageList.add(login + " : " + mess.getMessage());
 				
 			}
 		});
@@ -142,11 +139,27 @@ public class Vue extends JFrame {
 		messageList.setBounds(10, 80, 345, 245);
 		contentPane.add(messageList);
 
-		// Liste utlisateurs connectés
+		// Listes utlisateurs co/deco
+		JLabel lblPersonnesConnectes = new JLabel("Personnes connect\u00E9es");
+		lblPersonnesConnectes.setBounds(405, 57, 111, 14);
+		contentPane.add(lblPersonnesConnectes);
+		
 		listCo = new List();
-		listCo.setBounds(370, 82, 184, 314);
+		listCo.setBounds(372, 252, 178, 144);
 		contentPane.add(listCo);
-		afficheUtilisateursCo(client);
+		
+		afficheUtilisateursCo(client);		
+		
+		JLabel lblPersonnesDeconnectes = new JLabel("Personnes deconnectées");
+		lblPersonnesDeconnectes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPersonnesDeconnectes.setBounds(372, 232, 179, 14);
+		contentPane.add(lblPersonnesDeconnectes);
+		
+		listDeco = new List();
+		listDeco.setBounds(370, 82, 184, 144);
+		contentPane.add(listDeco);		
+		
+		afficheUtilisateursDeco(client);
 
 		// <<<<<<< HEAD
 
@@ -179,15 +192,27 @@ public class Vue extends JFrame {
 	}
 
 	/**
-	 * crée une liste pour chaque utilisateur connecté
+	 * crée une liste d'utilisateurs connectés
 	 */
 	public void afficheUtilisateursCo(final ClientRMI client) {
 
 		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
-			listCo.add(client.getUtilisateurs().get(i).getUtilisateur().getLogin());
+			listCo.add(client.getUtilisateurs().get(i).getLogin());
+		}
+	}
+	
+	/**
+	 * crée une liste d'utilisateurs deconnectés
+	 */
+	public void afficheUtilisateursDeco(final ClientRMI client) {
+
+		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
+			listDeco.add(client.getUtilisateursDeconnectes().get(i).getLogin());
 		}
 	}
 	
 	
-
+	public Vue getVue(){
+		return this;
+	}
 }
