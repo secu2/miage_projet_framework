@@ -23,6 +23,7 @@ public class Publication implements Serializable {
     private ArrayList<Groupe> visibiliteGroupe;
     private Utilisateur proprietaire;
     private Document document;
+    private ArrayList<Commentaire> commentaire;
     
     /**
      * Constructeur de la classe Publication : construit un objet Publication
