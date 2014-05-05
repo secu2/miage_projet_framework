@@ -40,6 +40,7 @@ public class Inscription extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldLogin;
 	private JTextField textFieldPass;
+	private JTextField textFieldConfirmation;
 
 	/**
 	 * Launch the application.
@@ -62,7 +63,7 @@ public class Inscription extends JFrame {
 	 */
 	public Inscription() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 259, 180);
+		setBounds(100, 100, 259, 191);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -92,51 +93,59 @@ public class Inscription extends JFrame {
 		textFieldPass.setColumns(10);
 
 		JButton btnInscription = new JButton("Inscription");
-		btnInscription.setBounds(119, 107, 89, 23);
+		btnInscription.setBounds(119, 124, 89, 23);
 		contentPane.add(btnInscription);
+
+		JLabel lblConfirmation = new JLabel("Confirmation ");
+		lblConfirmation.setBounds(33, 96, 76, 14);
+		contentPane.add(lblConfirmation);
+
+		textFieldConfirmation = new JPasswordField();
+		textFieldConfirmation.setBounds(119, 93, 86, 20);
+		contentPane.add(textFieldConfirmation);
+		textFieldConfirmation.setColumns(10);
+
 		btnInscription.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Registry registry = null;
-				try {
-					registry = LocateRegistry.getRegistry(REGISTRY_PORT);
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				// verification de la correspondance des 2 mots de passe
+				if (!(textFieldPass.getText().equals(textFieldConfirmation.getText()))) {
+					JOptionPane.showMessageDialog(contentPane, "Les mots de passe ne correspondent pas", "Confirmation mdp", JOptionPane.ERROR_MESSAGE);
+					textFieldPass.setText("");
+					textFieldConfirmation.setText("");
+				} else {
+
+					Registry registry = null;
+					try {
+						registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Remote r;
+
+					try {
+						r = registry.lookup("fram");
+						((InterfaceServeurRmi) r).inscriptionAvecRepertoireUtilisateur(textFieldLogin.getText(), textFieldPass.getText());
+					} catch (AccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NotBoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					JOptionPane.showMessageDialog(contentPane, "Inscription effectuée", "Confirmation inscription", JOptionPane.INFORMATION_MESSAGE);
+
+					try {
+						new MainConnexion().main(null);
+						dispose();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-				Remote r;
-
-				try {
-					r = registry.lookup("fram");
-					((InterfaceServeurRmi) r).inscription(textFieldLogin.getText(), textFieldPass.getText());
-				} catch (AccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NotBoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NoSuchAlgorithmException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				JOptionPane.showMessageDialog(contentPane, "Inscription effectuée", "Confirmation inscription", JOptionPane.INFORMATION_MESSAGE);
-
-				try {
-					
-					new MainConnexion().main(null);
-					dispose();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				
-
 			}
 		});
 
