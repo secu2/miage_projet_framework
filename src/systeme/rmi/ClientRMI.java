@@ -213,9 +213,9 @@ public class ClientRMI  implements Serializable{
 	 * @throws IOException
 	 */
 
-	public static void telecharger(Serveur server, File source,
+	public void telecharger(File source,
 			File destination) throws IOException {
-		copie(server.getInputStream(source), new FileOutputStream(destination));
+		copie(new FileInputStream(source), new FileOutputStream(destination));
 	}
 
 	/**
@@ -229,18 +229,18 @@ public class ClientRMI  implements Serializable{
 	 * @throws IOException
 	 */
 
-	public void charger(Serveur server, File source,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date dateFinPublication)
+	public void charger(File source,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date dateFinPublication)
 			throws IOException {
 		//"/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+
 		//String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
-		String dest ="C:/Users/Mohamed/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
+		String dest = System.getProperty("user.dir")+"/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
 		//System.out.println(dest);
 		File destination = new File(dest);
 		document.setEmplacement(dest);
 		
 		//if (r instanceof InterfaceServeurRmi) {
 			
-			copie(new FileInputStream(source), server.getOutputStream(destination));
+			copie(new FileInputStream(source),  new FileOutputStream(destination));
 			//this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
 			getServeurRmiImpl().ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
 		//}

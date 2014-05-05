@@ -88,16 +88,7 @@ public class Serveur implements Serializable {
 			}
 	}
 	
-	public InputStream getInputStream(File f) throws IOException {
-	   // return new RMIInputStream(new RMIInputStreamImpl(new FileInputStream(f)));
-		 return  new ServeurRMI(new FileInputStream(f)).getIn();
-		 
-	}
-	
-	public OutputStream getOutputStream(File f) throws IOException {
-	  // return new RMIOutputStream(new RMIOutputStreamImpl(new FileOutputStream(f)));
-	    return new ServeurRMI(new FileOutputStream(f)).getOut();   
-	}
+
 /**
  * Provoque l'arret du serveur
  */

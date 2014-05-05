@@ -1,5 +1,6 @@
 package systeme.rmi;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -163,5 +164,8 @@ public interface InterfaceServeurRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public Groupe getGroupe(int idGroupe) throws RemoteException;
+	
+
 }	
+
 	
