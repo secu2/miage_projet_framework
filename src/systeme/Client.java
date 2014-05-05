@@ -342,7 +342,7 @@ public class Client  implements Serializable{
 	 */
 	public ArrayList<Publication> getPublicationsVisibles()
 	{
-		ArrayList<Publication> publicationsVisibles = null;
+		ArrayList<Publication> publicationsVisibles = new ArrayList<Publication>();
 		
 			try {
 				publicationsVisibles = getServeurRmiImpl().getPublicationsVisibles(this.getUtilisateur());
@@ -413,6 +413,20 @@ public class Client  implements Serializable{
 		}
 		try {
 			getServeurRmiImpl().retirerUnePublicationutilisateur(utilisateur, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * retire la visibilité d'un document
+	 * @param publication : la publication concernée
+	 */
+	public void seRetirerUnePublicationutilisateur(Publication publication)
+	{
+		try {
+			getServeurRmiImpl().retirerUnePublicationutilisateur(this.utilisateur, publication);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
