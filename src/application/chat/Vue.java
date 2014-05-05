@@ -29,6 +29,11 @@ import modules.gestionUtilisateur.Utilisateur;
 
 import javax.swing.JList;
 import javax.swing.SwingConstants;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuItem;
 
 public class Vue extends JFrame {
 	/**
@@ -162,6 +167,12 @@ public class Vue extends JFrame {
 		listCo.setBounds(370, 82, 184, 144);
 		contentPane.add(listCo);		
 		
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(listCo, popupMenu);
+		
+		JMenuItem mntmMessagePriv = new JMenuItem("Message privé");
+		popupMenu.add(mntmMessagePriv);
+		
 		afficheUtilisateursDeco(c);
 		afficheUtilisateursCo(c);
 
@@ -216,5 +227,22 @@ public class Vue extends JFrame {
 	
 	public List getListeMessage(){
 		return this.messageList;
+	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }
