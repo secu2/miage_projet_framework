@@ -167,14 +167,23 @@ public class Vue extends JFrame {
 		listCo.setBounds(370, 82, 184, 144);
 		contentPane.add(listCo);		
 		
+		afficheUtilisateursDeco(c);
+		afficheUtilisateursCo(c);
+		
+		
 		JPopupMenu popupMenu = new JPopupMenu();
+		
 		addPopup(listCo, popupMenu);
 		
 		JMenuItem mntmMessagePriv = new JMenuItem("Message privé");
+		mntmMessagePriv.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("heelo");
+			}
+		});
 		popupMenu.add(mntmMessagePriv);
 		
-		afficheUtilisateursDeco(c);
-		afficheUtilisateursCo(c);
+		
 
 		// <<<<<<< HEAD
 
