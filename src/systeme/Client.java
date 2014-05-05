@@ -575,6 +575,11 @@ public class Client  implements Serializable{
 		return groupes;
 	}
 	
+	/**
+	 * Test si l'utilisateur du client est propriétaire du groupe
+	 * @param idGroupe
+	 * @return true si il est le proprietaire, false sinon
+	 */
 	public boolean estProprietaire(int idGroupe)
 	{
 		Groupe groupe = null;
@@ -628,7 +633,7 @@ public class Client  implements Serializable{
 	}
 	
 	/**
-	 * Envoie un message 
+	 * Envoie un message à tous les utilisateurs connectés
 	 * @param message
 	 */
 	public void envoyerMessage(Message message){
@@ -657,7 +662,7 @@ public class Client  implements Serializable{
 	}
 	
 	/**
-	 * Reçois les messages privés reçus durant l'absence
+	 * Permet la reception des messages privés reçus durant l'absence
 	 */
 	public void recevoirMessagePriveAbsence(){
 		// on test si l'utilisateur a reçu des messages connectés pendant son absence, si c'est le cas
@@ -682,6 +687,19 @@ public class Client  implements Serializable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Permet de tester si un utilisateur a reçu des messages privés durant son absence
+	 * @return true si il en a reçu durant son absence, false sinon
+	 * @throws RemoteException
+	 */
+	public boolean aRecuMessagePriveDurantAbsence() throws RemoteException{
+		boolean aRecu = false;
+		if(getServeurRmiImpl().getMapMessagesPrivesUtilisateur(getUtilisateur().getLogin()) != null){
+			aRecu = true;
+		}
+		return aRecu;
 	}
 	
 	/**

@@ -112,11 +112,20 @@ public class Groupe implements Serializable{
 		getUtilisateurs().add(u);
 	}
 	
+	/**
+	 * Supprime un utilisateur du groupe
+	 * @param u
+	 */
 	public void supprimerUtilisateur(Utilisateur u)
 	{
 		getUtilisateurs().remove(indexUtilisateur(u));
 	}
 	
+	/**
+	 * Renvoie l'index de l'utilisateur dans la liste des utilisateurs
+	 * @param utilisateur
+	 * @return index si trouvé , -1 sinon
+	 */
 	public int indexUtilisateur(Utilisateur utilisateur) {
 		int num = -1;
 		int compteur = 0;
@@ -130,10 +139,18 @@ public class Groupe implements Serializable{
 		return num;
 	}
 
+	/**
+	 * Renvoie le propriétaire d'un groupe
+	 * @return proprietaire
+	 */
 	public Utilisateur getProprietaire() {
 		return proprietaire;
 	}
 
+	/**
+	 * Affecte un proprietaire au groupe
+	 * @param proprietaire
+	 */
 	public void setProprietaire(Utilisateur proprietaire) {
 		this.proprietaire = proprietaire;
 	}

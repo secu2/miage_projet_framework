@@ -238,6 +238,9 @@ public class Vue extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			if(c.aRecuMessagePriveDurantAbsence()){
+				c.recevoirMessagePriveAbsence();
+			}
 	}
 
 	/**
@@ -346,7 +349,8 @@ public class Vue extends JFrame {
 		JMenuItem mntmMessagePrive = new JMenuItem("Envoyer un message privé");
 		mntmMessagePrive.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(listDeco.getValueAt(listDeco.getSelectedRow(), 0));
+				VueMessagePrive messagePrive = new VueMessagePrive(client,(String)listDeco.getValueAt(listDeco.getSelectedRow(), 0));
+				//System.out.println(listCo.getValueAt(listCo.getSelectedRow(), 0));
 			}
 		});
 		

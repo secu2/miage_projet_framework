@@ -220,12 +220,20 @@ public class Publication implements Serializable {
 		getVisibiliteGroupe().remove(indexGroupe(g));
 	}
     
+	/**
+	 * Teste si deux publications sont égales
+	 * @param publi
+	 * @return true si égales, false sinon
+	 */
    public boolean equals(Publication publi)
    {
 	   return this.getDateDePublication().equals(publi.getDateDePublication());
    }
     
    
+   /**
+    * Retirer tous les accès à la publication
+    */
    public void retirerAcces()
    {
 	   this.visibiliteGroupe=null;
@@ -245,6 +253,11 @@ public class Publication implements Serializable {
 		return num;
 	}
    
+   /**
+    * Renvoie l'index du groupe dans la liste des groupes ayant accès à la publication
+    * @param groupe
+    * @return index si trouvé, -1 sinon
+    */
    public int indexGroupe(Groupe groupe)
    {
 	   int num = -1;

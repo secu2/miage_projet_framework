@@ -28,14 +28,15 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	private Client client;
 	
 	/**
-	 * 
+	 * Constructeur de la classe ClientRMI
+	 * @param client 
 	 * @throws RemoteException
 	 */
 	public ClientRMI(Client client) throws RemoteException{
 		this.client = client;
 	}
 
-	/** permet d'envoyer un message
+	/** Envoie un message à tous les utilisateurs connectés sur le serveur
 	 * @param Message message : le message à envoyer
 	 */
 	public void envoyerMessage(Message message) throws RemoteException{
@@ -60,7 +61,7 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	}
 
 	/**
-	 * permet d'envoyer un message privé
+	 * Envoyer un message privé
 	 * @param Message message : le message à envoyer 
 	 */
 	public void envoyerMessagePrive(MessagePrive message) throws RemoteException{
@@ -83,6 +84,10 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 		}
 	}
 	
+	/**
+	 * Envoie un message à plusieurs participants d'une conversation (utilisations et/ou groupes)
+	 * @param message
+	 */
 	public void envoyerMessageConversation(MessageConversation message) throws RemoteException{
 		Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 		 Remote r;
@@ -104,38 +109,53 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	}
 
 /**
- * permet de recevoir un message
+ * Méthode permettant de traiter le message distribué par le serveur aux différents clients connectés
  * @param Message message : le message à recevoir 
  */
 	public void recevoirMessage(Message message) throws RemoteException{
-		vue.getListeMessage().add("[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] "  + message.getExpeditaire() + " : " + message.getMessage());
+		if(message instanceof MessagePrive){
+			if(message.getExpeditaire().equals(client.getUtilisateur().getLogin())){
+				vue.getListeMessage().add("[Message privé envoyé à  " + ((MessagePrive)message).getDestinataire() + "[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] " + message.getMessage());
+			}
+			else{
+				vue.getListeMessage().add("[Message privé de " + message.getExpeditaire() + "[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] " + message.getMessage());
+			}
+			}else
+		{
+			
+				vue.getListeMessage().add("[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] "  + message.getExpeditaire() + " : " + message.getMessage());
+			
+		}
 	}
 	
-	public void recevoirMessagePrive(MessagePrive message)
-			throws RemoteException {
-		
-		vue.getListeMessage().add("[Message privé de " + message.getExpeditaire() + "[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] " + message.getMessage());
-		
-	}
-
+	/**
+	 * Renvoie la vue de l'application de chat
+	 */
 	public Vue getVue()throws RemoteException{
 		return vue;
 	}
 	
+	/**
+	 * Affecte la vue de l'application de chat
+	 */
 	public void setVue(Vue vue)throws RemoteException{
 		this.vue = vue;
 	}
 
-	@Override
+	/**
+	 * Actualise la liste des clients connecté et déconnectés dans la vue du chat graphique
+	 */
 	public void actualiserListes() throws RemoteException {
-		// TODO Auto-generated method stub
-		System.out.println("je dois actualiser :(");
-		System.out.println(client);
-		vue.afficheUtilisateursCo(client);
-		vue.afficheUtilisateursDeco(client);
+		getVue().afficheUtilisateursCo(client);
+		getVue().afficheUtilisateursDeco(client);
 		
 	}
 	
+	/**
+	 * Lance la raquête d'actualisation de la liste des utilisateurs connectés et déconnectés dans la vue du chat graphique
+	 * pour chaque client connecté
+	 * @throws RemoteException
+	 */
 	public void actualiserListesUtilisateurs() throws RemoteException{
 		Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 		 Remote r;

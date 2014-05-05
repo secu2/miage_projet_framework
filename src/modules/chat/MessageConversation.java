@@ -14,6 +14,14 @@ public class MessageConversation extends Message implements Serializable{
 	private ArrayList<Groupe> groupesParticipants;
 	private int idConversation;
 	
+	/**
+	 * Constructeur de la classe MessageConversation : permet la création d'un message destiné à un ou plusieurs utilisateurs et/ou un ou plusieurs groupes
+	 * @param idConversation
+	 * @param message
+	 * @param expeditaire
+	 * @param participants
+	 * @param groupesParticipants
+	 */
 	public MessageConversation(int idConversation, String message, String expeditaire , ArrayList<Utilisateur> participants , ArrayList<Groupe> groupesParticipants) {
 		super(message, expeditaire);
 		this.participants = participants;

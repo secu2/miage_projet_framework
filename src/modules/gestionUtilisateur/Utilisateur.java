@@ -216,7 +216,7 @@ public class Utilisateur  implements Serializable{
 	}
 	
 	/**
-	 * Renvoi le groupe ayant le nom de groupe 'nom'
+	 * Renvoi le groupe à partir de son nom
 	 * @param nom : nom du groupe
 	 */
 	public Groupe getGroupe(String nom){
@@ -242,10 +242,15 @@ public class Utilisateur  implements Serializable{
 		}
 	}
 	
+	/**
+	 * Ajoute un groupe à la liste des groupes de l'utilisateur
+	 * @param groupe
+	 */
 	public void ajouterGroupe(Groupe groupe)
 	{
 		getGroupes().add(groupe);
 	}
+	
 	/**
 	 * Renvoie la liste des publications de l'utilisateur
 	 * @return publications
@@ -301,6 +306,12 @@ public class Utilisateur  implements Serializable{
 		
 		return egal;
 	}
+	
+	/**
+	 * Renvoie l'index du groupe dans la liste des groupes de l'utilisateur
+	 * @param idgroupe
+	 * @return index si trouvé , -1 sinon
+	 */
 	public int indexGroupe(int idgroupe) {
 		int num = -1;
 		int compteur = 0;

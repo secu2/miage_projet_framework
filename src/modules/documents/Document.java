@@ -18,10 +18,8 @@ public class Document implements Serializable {
 
 	private String nom;
 	private float taille;
-
 	private Statistique statistique; // Les statistiques du fichier
 	private String emplacement;
-
 	private File fichier;
 
 	/**

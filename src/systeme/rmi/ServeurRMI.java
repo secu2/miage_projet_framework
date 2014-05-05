@@ -105,13 +105,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		supprimerUnClient(c);
 	}
 
-	/**
-	 * Envoi un message aux autres utilisateurs
-	 * @param message
-	 */
-	public void envoiMessage(Message message) throws RemoteException {
-		distribuerMessage(message);
-	}
 
 	/**
 	 * Ajoute une publication à la liste des publications du serveur
@@ -197,7 +190,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	/**
 	 * Renvoie la liste des messages privés entre l'expeditaire et le
 	 * destinataire
-	 * 
 	 * @param expeditaire
 	 * @param destinataire
 	 * @return la liste des messages privés entre l'expeditaire et le
@@ -211,7 +203,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Renvoie le treemap des messages privés de l'utilisateur
-	 * 
 	 * @param login
 	 * @return la treemap des messages privés de l'utilisateur si elle existe,
 	 *         null sinon
@@ -281,7 +272,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * 
+	 * Ajoute un message à une conversation donnée pour un utilisateur donné
 	 * @param message
 	 * @param idConversation
 	 * @param login
@@ -295,8 +286,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Distribue le message d'une conversation
-	 * 
+	 * Distribue le message d'une conversation à tous les participants
 	 * @param message
 	 */
 	public void distribuerMessageConversation(MessageConversation message)
@@ -452,7 +442,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Renvoie la liste des clients connectés
-	 * 
 	 * @return utilisateursConnectes
 	 */
 	public ArrayList<Client> getUtilisateursConnectes()
@@ -461,8 +450,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Permet de tester si l'utilisateur de login 'login' existe
-	 * 
+	 * Permet de tester si l'utilisateur existe (est inscrit)
 	 * @param login
 	 *            : login de l'utilisateur
 	 * @return true si l'utilisateur existe , false sinon
@@ -479,9 +467,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Ajoute un client à la liste des clients du serveur
-	 * 
-	 * @param c
-	 *            : client
+	 * @param c : client
 	 */
 	public void ajouterClient(Client c) throws RemoteException {
 		getUtilisateursConnectes().add(c);
@@ -498,10 +484,8 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Renvoie l'utilisateur de login 'login'
-	 * 
-	 * @param login
-	 *            : login de l'utilisateur
+	 * Renvoie l'utilisateur inscrit à partir de son login
+	 * @param login : login de l'utilisateur
 	 * @return utilisateur si existant , null sinon
 	 */
 	public Utilisateur getUtilisateurInscrit(String login)
@@ -601,10 +585,8 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Realise une connexion entre un client et un serveur
-	 * 
-	 * @param utilisateur
-	 *            : l'utilisateur � connecter
-	 * @return true (Si connection �tablit)
+	 * @param utilisateur : l'utilisateur à connecter
+	 * @return true (Si connexion établie)
 	 */
 	public boolean connexion(String login, String motDepasse, Client c)
 			throws RemoteException {
@@ -632,9 +614,10 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * 
+	 * Récupère un client connecté à partir de son login
 	 * @param login
-	 * @return
+	 * @return le client si il est connecté , null sinon
+	 * @require : login existant
 	 */
 	public Client getClientConnecte(String login) throws RemoteException {
 		Client cl = null;
@@ -648,7 +631,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Affecte le serveur rmi au serveur
+	 * Affecte le serveur à la variable globale serveur
 	 * 
 	 * @param serv
 	 */
@@ -657,7 +640,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	}
 
 	/**
-	 * Renvoie le serveur RMI
+	 * Renvoie le serveur 
 	 * 
 	 * @return serveur
 	 */
@@ -667,7 +650,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	/**
 	 * Supprime le clientRMI de la liste des clients connectés
-	 * 
 	 * @param client
 	 */
 	public void supprimerUnClient(Client client) throws RemoteException {
@@ -780,7 +762,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 							.getLogin());
 
 					// On l'affiche du côté du destinataire
-					((InterfaceClientRmi) rem).recevoirMessagePrive(message);
+					((InterfaceClientRmi) rem).recevoirMessage(message);
 					// on l'affiche également du côté de l'expediteur
 
 					// on récupère le client du expediteur sur le serveur
@@ -790,7 +772,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 					// message
 					Remote remo = registry.lookup(expediteur.getUtilisateur()
 							.getLogin());
-					((InterfaceClientRmi) remo).recevoirMessagePrive(message);
+					((InterfaceClientRmi) remo).recevoirMessage(message);
 
 				} catch (AccessException e) {
 					// TODO Auto-generated catch block
@@ -931,6 +913,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 		return publicationsVisibles;
 	}
+	
 	/**
 	 * Renvoie la liste des publications d'un utilisateurs
 	 * @param utilisateur : Objet utilisateur 
@@ -1216,6 +1199,10 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	}
 	
+	/**
+	 * Lance la raquête d'actualisation de la liste des utilisateurs connectés et déconnectés dans la vue du chat graphique
+	 * pour chaque client connecté
+	 */
 	public void actualiserListesUtilisateurs() throws RemoteException{
 		for(Client client : getClientsconnectes()){
 			Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
