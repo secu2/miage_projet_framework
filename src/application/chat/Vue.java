@@ -1,32 +1,30 @@
 package application.chat;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JFileChooser;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
+
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextArea;
 import javax.swing.JLabel;
 
 import java.awt.Font;
-import java.util.ArrayList;
+import java.rmi.RemoteException;
 
 import javax.swing.border.CompoundBorder;
 
-import systeme.rmi.ClientRMI;
+import systeme.rmi.*;
 import modules.gestionUtilisateur.Utilisateur;
-import modules.*;
-import application.*;
+
+import javax.swing.JList;
 
 public class Vue extends JFrame {
 
@@ -34,17 +32,16 @@ public class Vue extends JFrame {
 	private JTextField textField;
 	private List messageList;
 	private JTextField txtIn;
-	private JPanel panel_co;
-	private JPanel panel_deco;
+	private List listCo;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(final ClientRMI client) {
+	public static void main(final ClientRMI client, final ServeurRMI serveur) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Vue frame = new Vue(client);
+					Vue frame = new Vue(client, serveur);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,9 +53,14 @@ public class Vue extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Vue(final ClientRMI client) {
+	public Vue(final ClientRMI client, ServeurRMI serveur) {
 		// Definition des éléments du chat
-
+		//Crée une conversation
+		
+		
+		
+		
+		
 		// Général
 		setTitle("IBN Chat room");
 
@@ -74,23 +76,9 @@ public class Vue extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		// Zone des utilisateurs connéctés
-		panel_co = new JPanel();
-		panel_co.setBounds(370, 80, 184, 153);
-		contentPane.add(panel_co);
-
 		JLabel lblPersonnesConnectes = new JLabel("Personnes connect\u00E9es");
 		lblPersonnesConnectes.setBounds(405, 57, 111, 14);
 		contentPane.add(lblPersonnesConnectes);
-
-		// Zone des utilisateurs déconnectées
-		JLabel lblNonConncts = new JLabel("Non connect\u00E9s");
-		lblNonConncts.setBounds(429, 244, 76, 14);
-		contentPane.add(lblNonConncts);
-
-		panel_deco = new JPanel();
-		panel_deco.setBounds(370, 269, 184, 127);
-		contentPane.add(panel_deco);
 
 		// Boutons d'envoi de txt et de fichiers
 		JButton btnEnvoitxt = new JButton("Envoyer");
@@ -132,23 +120,16 @@ public class Vue extends JFrame {
 			}
 		});
 
-		// Bouton d'ajout d'un utilisateur dans la conversation
-		JButton btnAdd = new JButton("+");
-		btnAdd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnAdd.setBounds(250, 53, 89, 23);
-		contentPane.add(btnAdd);
-
 		// Zone de chat
 		messageList = new List();
 		messageList.setBounds(10, 80, 345, 245);
 		contentPane.add(messageList);
-
-		// Rmpli les zones des co et deco
-		afficheUtilisateursCo(client);
-		afficheUtilisateursDeco(client);
+		
+		//Liste utlisateurs connectés
+		listCo = new List();
+		listCo.setBounds(370, 82, 184, 314);
+		contentPane.add(listCo);
+		
 
 		// <<<<<<< HEAD
 
@@ -181,33 +162,20 @@ public class Vue extends JFrame {
 	}
 
 	/**
-	 * cré un bouton pour chaque utilisateur connecté
+	 * crée un bouton pour chaque utilisateur connecté
 	 */
-	public void afficheUtilisateursCo(final ClientRMI client) {
-		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
-			JButton btnAdd = new JButton(client.getUtilisateur().getLogin().toString());
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
+	public void afficheUtilisateursCo(final ServeurRMI serveur) {
+		try {
+			for (int i = 0; i < serveur.getUtilisateursInscrits().size() ; i++) {
+				for( int j =0; j < serveur.getUtilisateursConnectes().size(); j++){
+					if(serveur.getUtilisateursInscrits().get(i).getLogin().equals(serveur.getUtilisateursConnectes().get(j))){
+						listCo.add(serveur.getUtilisateursInscrits().get(i).getLogin());
+					}
 				}
-			});
-			btnAdd.setBounds(271, 57, 89, 23);
-			panel_co.add(btnAdd);
-
-		}
-	}
-	/**
-	 * cré un bouton pour chaque utilisateur deconnecté
-	 */
-	public void afficheUtilisateursDeco(final ClientRMI client) {
-		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
-			JButton btnAdd = new JButton(client.getUtilisateur().getLogin().toString());
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-				}
-			});
-			btnAdd.setBounds(271, 57, 89, 23);
-			panel_deco.add(btnAdd);
-
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
