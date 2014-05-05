@@ -738,9 +738,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		try {
 			registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 			for (Client c : getUtilisateursConnectes()) {
-				// String url = "rmi://" +
-				// InetAddress.getLocalHost().getHostAddress() + "/" +
-				// c.getUtilisateur().getLogin();
 				try {
 					Remote rem = registry.lookup(c.getUtilisateur().getLogin());
 					((InterfaceClientRmi) rem).recevoirMessage(message);
@@ -1154,5 +1151,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	}
 	
+	 
 
 }

@@ -67,16 +67,16 @@ public class Vue extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Vue(final Client c) {
+	public Vue(final Client client) {
 		// Definition des éléments du chat
 		//Nom de client
-		login = c.getUtilisateur().getLogin();
+		login = client.getUtilisateur().getLogin();
 		// Crée une conversation
 		id_conv = 1;
 		//ajout du client à la conversation
 		//participants.add(client.getUtilisateur());
 		//conversation = new Conversation(id_conv, participants, groupesParticipants);
-		participants.add(c.getUtilisateur());
+		participants.add(client.getUtilisateur());
 		conversation = new Conversation(id_conv, participants, groupesParticipants);
 
 		//Général
@@ -105,8 +105,8 @@ public class Vue extends JFrame {
 				Message mess = new Message(txtIn.getText(), login);
 				client.envoyerMessage(mess);
 				messageList.add(login + " : " + mess.getMessage());
-				c.envoyerMessage(mess);
-				messageList.add(login + " : " + c.recevoirMessage().get;);
+				client.envoyerMessage(mess);
+				//messageList.add(login + " : " + client.recevoirMessage().get;);
 				
 			}
 		});
@@ -165,7 +165,7 @@ public class Vue extends JFrame {
 		contentPane.add(listDeco);		
 		
 		afficheUtilisateursDeco(client);
-		afficheUtilisateursCo(c);
+		afficheUtilisateursCo(client);
 
 		// <<<<<<< HEAD
 
@@ -200,7 +200,7 @@ public class Vue extends JFrame {
 	/**
 	 * crée une liste d'utilisateurs connectés
 	 */
-	public void afficheUtilisateursCo(final Client c) {
+	public void afficheUtilisateursCo(final Client client) {
 
 		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
 			listCo.add(client.getUtilisateurs().get(i).getLogin());
@@ -210,13 +210,12 @@ public class Vue extends JFrame {
 	/**
 	 * crée une liste d'utilisateurs deconnectés
 	 */
-	public void afficheUtilisateursDeco(final ClientRMI client) {
+	public void afficheUtilisateursDeco(final Client client) {
 
 		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
 			listDeco.add(client.getUtilisateursDeconnectes().get(i).getLogin());
-		for (int i = 0; i < c.getUtilisateurs().size(); i++) {
-			listCo.add(c.getUtilisateurs().get(i).getLogin());
 		}
+	
 	}
 	
 	

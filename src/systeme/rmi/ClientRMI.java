@@ -97,6 +97,11 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	public void recevoirMessage(Message message) throws RemoteException{
 		System.out.println(message.getExpeditaire() + " : " + message.getMessage());
 	}
+	
+	public void recevoirMessageGraphique(Message message) throws RemoteException{
+		
+	}
+
 
 
 	
