@@ -120,7 +120,7 @@ public class InterfaceDrive {
 
 		JLabel labelPartagesAvecMoi = new JLabel("Fichiers partagés avec moi");
 		north.add(labelPartagesAvecMoi, BorderLayout.EAST);
-		
+
 		JPanel panel = new JPanel();
 		north.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
@@ -351,26 +351,26 @@ public class InterfaceDrive {
 				for(Publication curPubl : client.getPublicationsVisibles()){
 					if(curPubl.getDocument().getFichier().getName().equals(filesDistant.getModel().getValueAt(filesDistant.getSelectedRow(), 0))){
 						try {
-								JFileChooser fileChooser = new JFileChooser();
-								fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-								fileChooser.setDialogTitle("Specifiez un chemin d'enregistrement");
-								int userSelection = fileChooser.showSaveDialog(fenetre);
-								if (userSelection == JFileChooser.APPROVE_OPTION) {
+							JFileChooser fileChooser = new JFileChooser();
+							fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+							fileChooser.setDialogTitle("Specifiez un chemin d'enregistrement");
+							int userSelection = fileChooser.showSaveDialog(fenetre);
+							if (userSelection == JFileChooser.APPROVE_OPTION) {
 
-									File fileToSave = fileChooser.getSelectedFile();
-									String var = fileToSave.getAbsolutePath() + "/" +curPubl.getDocument().getNom();
+								File fileToSave = fileChooser.getSelectedFile();
+								String var = fileToSave.getAbsolutePath() + "/" +curPubl.getDocument().getNom();
 
 
-									client.telecharger(new File(curPubl.getDocument().getEmplacement()), new File(var));
+								client.telecharger(new File(curPubl.getDocument().getEmplacement()), new File(var));
 
-								}
-							} catch (IOException e1) {
-								e1.printStackTrace();
-								JOptionPane.showMessageDialog(fenetre,
-										"Erreur: Impossible d'enregistrer le fichier",
-										"Inane error",
-										JOptionPane.ERROR_MESSAGE);
 							}
+						} catch (IOException e1) {
+							e1.printStackTrace();
+							JOptionPane.showMessageDialog(fenetre,
+									"Erreur: Impossible d'enregistrer le fichier",
+									"Inane error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				}
 			}
@@ -418,12 +418,25 @@ public class InterfaceDrive {
 					ArrayList<Utilisateur> user = new ArrayList<Utilisateur>();
 					user.add(client.getUtilisateur());
 					try {
-						client.charger(fichier, user, null, doc, null);
-						ArrayList<Publication> publicationsClient = client.getPublications();
-						DefaultTableModel model = (DefaultTableModel) filesLocal.getModel();
-						model.setRowCount(0);
-						for(Publication curPub: publicationsClient){
-							model.addRow(new Object[] {curPub.getDocument().getNom()});
+						boolean exists = false;
+						for(Publication curPublication : client.getPublications()){
+							if(curPublication.getDocument().getNom().equals(doc.getNom())){
+								exists = true;
+							}
+						}
+						if(exists){
+							JOptionPane.showMessageDialog(fenetre,
+									"Erreur lors de l'enregistrement : Ce fichier éxiste déja",
+									"Inane error",
+									JOptionPane.ERROR_MESSAGE);
+						}else{
+							client.charger(fichier, user, null, doc, null);
+							ArrayList<Publication> publicationsClient = client.getPublications();
+							DefaultTableModel model = (DefaultTableModel) filesLocal.getModel();
+							model.setRowCount(0);
+							for(Publication curPub: publicationsClient){
+								model.addRow(new Object[] {curPub.getDocument().getNom()});
+							}
 						}
 					} catch (IOException e) {
 						JOptionPane.showMessageDialog(fenetre,
@@ -450,11 +463,11 @@ public class InterfaceDrive {
 		txtSelectionnerFichier.setText("Selectionner fichier");
 		splitPane.setLeftComponent(txtSelectionnerFichier);
 		txtSelectionnerFichier.setColumns(10);
-		
+
 		JPanel panel_1 = new JPanel();
 		south.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BorderLayout(0, 0));
-		
+
 		JButton btnRecherger = new JButton("Recharger");
 		btnRecherger.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
