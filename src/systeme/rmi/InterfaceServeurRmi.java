@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -165,6 +167,14 @@ public interface InterfaceServeurRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public Groupe getGroupe(int idGroupe) throws RemoteException;
+	public boolean inscription(String login, String motDePasse)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException,
+			RemoteException;
+	public boolean inscriptionAvecRepertoireUtilisateur(String login,
+			String motDePasse) throws RemoteException;
+	public boolean inscriptionSecurisee(String login, String motDePasse)
+			throws RemoteException;
+	
 	
 
 }	

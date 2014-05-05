@@ -26,9 +26,10 @@ public class lanceServeur {
 		Serveur serveur;
 		try {
 			serveur = new Serveur();
-			serveur.getServeur().inscription("momo", "jojo");
-			serveur.getServeur().inscription("jojo", "jojo");
-			serveur.getServeur().inscription("popo", "popo");
+			serveur.inscription("momo", "jojo");
+			serveur.inscription("jojo", "jojo");
+			serveur.inscription("popo", "popo");
+			serveur.inscriptionAvecRepertoireUtilisateur("yoyo", "yoyo");
 			
 		
 		} catch (RemoteException e) {

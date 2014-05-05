@@ -346,6 +346,24 @@ public ArrayList<Groupe> getGroupes(Utilisateur utilisateur) throws RemoteExcept
 public Groupe getGroupe(int idGroupe) throws RemoteException{
 	return getServeur().getGroupe(idGroupe);
 }
+
+public boolean inscription(String login, String motDePasse)
+		throws NoSuchAlgorithmException, UnsupportedEncodingException,
+		RemoteException{
+	return getServeur().inscription(login, motDePasse);
+}
+
+public boolean inscriptionAvecRepertoireUtilisateur(String login,
+		String motDePasse) throws RemoteException{
+	return getServeur().inscriptionAvecRepertoireUtilisateur(login, motDePasse);
+}
+
+public boolean inscriptionSecurisee(String login, String motDePasse)
+		throws RemoteException{
+	return getServeur().inscriptionSecurisee(login, motDePasse);
+
+}
+
 	
 	
 }

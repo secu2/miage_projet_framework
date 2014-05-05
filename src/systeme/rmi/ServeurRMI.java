@@ -596,8 +596,9 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		boolean existant = false;
 		try {
 			existant = inscription(login, motDePasse);
-			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login),
-					"/git/miage_projet_framework/docServeur/");
+			String chemin = System.getProperty("user.dir") + "/docServeur/";
+			System.out.println(chemin);
+			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login),chemin);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
