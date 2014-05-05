@@ -2,12 +2,18 @@ package application.chat;
 
 import java.awt.EventQueue;
 import java.awt.List;
+import java.awt.Point;
+import java.awt.TextArea;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JFileChooser;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -15,15 +21,20 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.border.CompoundBorder;
+import javax.swing.table.DefaultTableModel;
 
 import systeme.Client;
 import systeme.rmi.*;
 import modules.chat.Conversation;
 import modules.chat.Message;
+import modules.documents.Document;
+import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 
@@ -50,8 +61,8 @@ public class Vue extends JFrame {
 	private JPanel contentPane;
 	private List messageList;
 	private JTextField txtIn;
-	private List listDeco;
-	private List listCo;
+	private JTable listDeco;
+	private JTable listCo;
 
 	/**
 	 * Launch the application.
@@ -153,9 +164,7 @@ public class Vue extends JFrame {
 		lblPersonnesConnectes.setBounds(405, 57, 111, 14);
 		contentPane.add(lblPersonnesConnectes);
 		
-		listDeco = new List();
-		listDeco.setBounds(372, 252, 178, 144);
-		contentPane.add(listDeco);
+		
 		
 		
 		JLabel lblPersonnesDeconnectes = new JLabel("Personnes deconnectées");
@@ -163,25 +172,12 @@ public class Vue extends JFrame {
 		lblPersonnesDeconnectes.setBounds(372, 232, 179, 14);
 		contentPane.add(lblPersonnesDeconnectes);
 		
-		listCo = new List();
-		listCo.setBounds(370, 82, 184, 144);
-		contentPane.add(listCo);		
-		
+
 		afficheUtilisateursDeco(c);
 		afficheUtilisateursCo(c);
 		
 		
-		JPopupMenu popupMenu = new JPopupMenu();
 		
-		addPopup(listCo, popupMenu);
-		
-		JMenuItem mntmMessagePriv = new JMenuItem("Message privé");
-		mntmMessagePriv.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("heelo");
-			}
-		});
-		popupMenu.add(mntmMessagePriv);
 		
 		
 
@@ -219,9 +215,62 @@ public class Vue extends JFrame {
 	 * crée une liste d'utilisateurs connectés
 	 */
 	public void afficheUtilisateursCo(final Client client) {
+		
+		String[] tabStrings = new String[client.getUtilisateursConnectes().size()];
 		for (int i = 0; i < client.getUtilisateursConnectes().size() ; i++) {
-			listCo.add(client.getUtilisateursConnectes().get(i).getUtilisateur().getLogin());
+			tabStrings[i] = client.getUtilisateursConnectes().get(i).getUtilisateur().getLogin();
 		}
+		
+		/** listCo = new JList(tabStrings);
+	
+		
+		**/
+
+
+		listCo = new JTable();
+		listCo.setModel(new DefaultTableModel(new Object[][] {}, new String[] {"Pseudo"} ) 
+		{
+			boolean[] columnEditables = new boolean[] {
+					false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		DefaultTableModel model2 = (DefaultTableModel) listCo.getModel();
+		for(String curPub: tabStrings){
+				model2.addRow(new Object[] {curPub});
+		}
+		listCo.setBounds(370, 82, 184, 144);
+	
+		listCo.getTableHeader().setReorderingAllowed(false);
+		listCo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		JPopupMenu menuContextuel = new JPopupMenu();
+		addPopup(listCo, menuContextuel);
+		JMenuItem mntmMessagePrive = new JMenuItem("Envoyer un message privé");
+		mntmMessagePrive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				VueMessagePrive messagePrive = new VueMessagePrive(client,(String)listCo.getValueAt(listCo.getSelectedRow(), 0));
+				//System.out.println(listCo.getValueAt(listCo.getSelectedRow(), 0));
+			}
+		});
+		menuContextuel.add(mntmMessagePrive);
+		
+	
+		listCo.addMouseListener( new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e){
+				if(SwingUtilities.isRightMouseButton(e)){
+					Point p = e.getPoint();
+					int rowNumber = listCo.rowAtPoint( p );
+					ListSelectionModel model = listCo.getSelectionModel();
+					model.setSelectionInterval(rowNumber, rowNumber);
+				}
+			}
+		});
+
+		contentPane.add(listCo);
 	}
 	
 	/**
@@ -229,14 +278,61 @@ public class Vue extends JFrame {
 	 */
 	public void afficheUtilisateursDeco(final Client client) {
 
-		for (int i = 0; i < client.getUtilisateursDeconnectes().size(); i++) {
-			listDeco.add(client.getUtilisateursDeconnectes().get(i).getLogin());
+		String[] tabStrings = new String[client.getUtilisateursDeconnectes().size()];
+		for (int i = 0; i < client.getUtilisateursDeconnectes().size() ; i++) {
+			tabStrings[i] = client.getUtilisateursDeconnectes().get(i).getLogin();
 		}
+		
+		listDeco = new JTable();
+		listDeco.setModel(new DefaultTableModel(new Object[][] {}, new String[] {"Pseudo"} ) 
+		{
+			boolean[] columnEditables = new boolean[] {
+					false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		DefaultTableModel model2 = (DefaultTableModel) listDeco.getModel();
+		for(String curPub: tabStrings){
+				model2.addRow(new Object[] {curPub});
+		}
+		listDeco.setBounds(372, 252, 178, 144);
+	
+		listDeco.getTableHeader().setReorderingAllowed(false);
+		listDeco.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//listDeco.getColumnModel().getColumn(0).setPreferredWidth(240);
+		
+		JPopupMenu menuContextuel = new JPopupMenu();
+		addPopup(listDeco, menuContextuel);
+		JMenuItem mntmMessagePrive = new JMenuItem("Envoyer un message privé");
+		mntmMessagePrive.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(listDeco.getValueAt(listDeco.getSelectedRow(), 0));
+			}
+		});
+		menuContextuel.add(mntmMessagePrive);
+		
+	
+		listDeco.addMouseListener( new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e){
+				if(SwingUtilities.isRightMouseButton(e)){
+					Point p = e.getPoint();
+					int rowNumber = listDeco.rowAtPoint( p );
+					ListSelectionModel model = listDeco.getSelectionModel();
+					model.setSelectionInterval(rowNumber, rowNumber);
+				}
+			}
+		});
+		
+		contentPane.add(listDeco);
 	}
 	
 	public List getListeMessage(){
 		return this.messageList;
 	}
+	
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

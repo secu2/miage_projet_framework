@@ -17,7 +17,6 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
-import systeme.Client1;
 import systeme.Serveur;
 import systeme.rmi.ServeurRMI;
 
