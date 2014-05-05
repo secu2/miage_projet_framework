@@ -108,7 +108,7 @@ public class MainConnexion {
 		rdbtnChat.setBounds(107, 110, 109, 23);
 		frmConnexionAuServeur.getContentPane().add(rdbtnChat);
 
-		JFormattedTextField ipTextField = new JFormattedTextField(new IPAddressFormatter());
+		final JFormattedTextField ipTextField = new JFormattedTextField(new IPAddressFormatter());
 		ipTextField.setBounds(129, 36, 112, 20);
 		frmConnexionAuServeur.getContentPane().add(ipTextField);
 
@@ -123,8 +123,14 @@ public class MainConnexion {
 		JButton btnConnexion = new JButton("Connexion");
 		btnConnexion.addMouseListener(new MouseAdapter() {
 			@Override public void mouseClicked(MouseEvent arg0) {
+				Client c;
 				try {
-					Client c = new Client(usernameTextField.getText(), passwordTextField.getText());
+					if(ipTextField.equals(null)){
+						 c = new Client(usernameTextField.getText(), passwordTextField.getText());
+					}
+					else{
+						 c = new Client(usernameTextField.getText(), passwordTextField.getText(),ipTextField.getText());
+					}
 					System.out.println(c);
 					if (rdbtnDrive.isSelected()) {
 						new InterfaceDrive(c).fenetre.setVisible(true);
