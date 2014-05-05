@@ -4,17 +4,27 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.management.modelmbean.RequiredModelMBean;
+
+import jus.util.assertion.Ensure;
 import jus.util.assertion.Require;
-import systeme.rmi.ClientRMI;
 import modules.chat.Conversation;
 import modules.chat.Message;
 import modules.chat.MessageConversation;
@@ -23,28 +33,175 @@ import modules.documents.Document;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
+import systeme.rmi.ClientRMI;
+import systeme.rmi.InterfaceClientRmi;
+import systeme.rmi.InterfaceServeurRmi;
 
-public class Client {
+/**
+ * @author chaiebm
+ * @param <K>
+ * 
+ */
 
-	private ClientRMI client;
-	
+
+public class Client  implements Serializable{
+	static int REGISTRY_PORT = 1099;
+
+	private Utilisateur utilisateur;
+	private InterfaceServeurRmi serv;
+	private InterfaceClientRmi cl;
+
 	/**
-	 * Créer un client
-	 * @param u
+	 * Créer un objet client RMI qui sera connecté à un serveur local
+	 * @param login
 	 * @param motDePasse
+	 * @require : login présent dans la liste des inscrits et mot de passe correct
+	 * @ensure : objet clientRMI crée
 	 */
-	public Client(Utilisateur u,String motDePasse){
-		client = new ClientRMI(u.getLogin(),motDePasse);
+	public Client(String login, String motDePasse) {
+
+		try {
+
+
+			// obtention de l'objet distant à partir de son nom (lookup)
+			 Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			 Remote r = registry.lookup("fram");
+			if (r instanceof InterfaceServeurRmi) {
+				this.serv = (InterfaceServeurRmi)r;
+				if (getServeurRmiImpl().connexion(login, motDePasse,this)) {		
+					
+					this.utilisateur = getServeurRmiImpl().getUtilisateurInscrit(login);
+					String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/" + this.utilisateur.getLogin();
+					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
+					cl = new ClientRMI();
+					try {
+						Naming.rebind(url, cl);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+
+					
+					// si l'utilisateur n 'est pas présent dans la liste des connectés
+					if(getServeurRmiImpl().utilisateurConnecte(this) == null){
+						((InterfaceServeurRmi) r).ajouterClient(this);
+					}
+					else{
+						System.out.println("déjà connecté");
+						System.out.println(this.getUtilisateur().getLogin());
+					}
+					System.out.println(utilisateur.getLogin()+ " se connecte");
+				} else {
+					//throw new ErreurConnexion("Login mot de passe invalide");
+					throw new Ensure("Login mot de passe invalide");
+					
+				}
+			}
+			
+			
+
+
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+
 	
 	/**
-	 * Renvoie le client RMI
-	 * @return client
+	 * Créer un objet client RMI qui sera connecté au serveur RMI distant (à l'adresse donnée)
+	 * @param login
+	 * @param motDePasse
+	 * @param adresse
+	 * @require : adresse correcte, login présent dans la liste des inscrits sur le serveur et mot de passe correct 
+	 * @ensure : objet clientRMI crée
 	 */
-	public ClientRMI getClientRMI(){
-		return client;
+	public Client(String login, String motDePasse,String adresse) {
+
+		try {
+
+
+			// obtention de l'objet distant à partir de son nom (lookup)
+			 Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
+			 Remote r = registry.lookup("fram");
+			if (r instanceof InterfaceServeurRmi) {
+				this.serv = (InterfaceServeurRmi)r;
+				if (getServeurRmiImpl().connexion(login, motDePasse,this)) {		
+					
+					this.utilisateur = getServeurRmiImpl().getUtilisateurInscrit(login);
+					String url = "rmi://" + adresse + "/" + this.utilisateur.getLogin();
+					System.out.println("Enregistrement de l'objet client avec l'url : " + url);
+					cl = new ClientRMI();
+					try {
+						Naming.rebind(url, cl);
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+
+					
+					// si l'utilisateur n 'est pas présent dans la liste des connectés
+					if(getServeurRmiImpl().utilisateurConnecte(this) == null){
+						((InterfaceServeurRmi) r).ajouterClient(this);
+					}
+					else{
+						System.out.println("déjà connecté");
+						System.out.println(this.getUtilisateur().getLogin());
+					}
+					System.out.println(utilisateur.getLogin()+ " se connecte");
+				} else {
+					//throw new ErreurConnexion("Login mot de passe invalide");
+					throw new Ensure("Login mot de passe invalide");
+					
+				}
+			}
+			
+			
+
+
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 	
+	final public static int BUF_SIZE = 1024 * 64;
+
+	/**
+	 * Methode de copie de flux par byte
+	 * 
+	 * @param inStream
+	 *            : le flux d'entr�e
+	 * @param outStream
+	 *            : le flux de sortie
+	 * @throws IOException
+	 */
+
+	public static void copie(InputStream inStream, OutputStream outStream)
+			throws IOException {
+
+		byte[] b = new byte[BUF_SIZE];
+		int len;
+		// Parcour du flux d'entree et copie dans le flux sortie
+		while ((len = inStream.read(b)) >= 0) {
+			// outStream.write(b, 0, len);
+			outStream.write(b);
+		}
+		inStream.close();
+		outStream.close();
+	}
+
 	/**
 	 * Methode qui permet de telecharger un fichier depuis le serveur
 	 * 
@@ -59,8 +216,8 @@ public class Client {
 
 	public void telecharger(File source,
 			File destination) throws IOException {
+		copie(new FileInputStream(source), new FileOutputStream(destination));
 		
-		getClientRMI().telecharger(source, destination);
 	}
 
 	/**
@@ -76,15 +233,73 @@ public class Client {
 
 	public void charger(File source,ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes, Document document, Date dateFinPublication)
 			throws IOException {
-		getClientRMI().charger(source, utilisateurs, groupes, document, dateFinPublication);
+		//"/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+
+		//String dest ="/git/miage_projet_framework/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
+		String dest = System.getProperty("user.dir")+"/docServeur/"+this.getUtilisateur().getLogin()+"/"+source.getName();
+		//System.out.println(dest);
+		File destination = new File(dest);
+		document.setEmplacement(dest);
+		
+		//if (r instanceof InterfaceServeurRmi) {
+			
+			copie(new FileInputStream(source),  new FileOutputStream(destination));
+			//this.getUtilisateur().publierUnDocument(utilisateurs, groupes, document, dateFinPublication);
+			getServeurRmiImpl().ajouterPublication(new Publication(new Date(), dateFinPublication, utilisateurs, groupes, this.getUtilisateur(), document));
+		//}
 	}
 
 
-
-	
-	public ArrayList<ClientRMI> getUtilisateurs()
+/**
+ * tous les utilisateur inscrit sur le serveur
+ * @return ArrayList<Utilisateur> : retourne liste de tous les utilisateur inscrit sur le serveur
+ */
+	public ArrayList<Utilisateur> getUtilisateurs()
 	{
-		return getClientRMI().getUtilisateurs();
+		ArrayList<Utilisateur> clients = null;
+		
+		try {
+			clients = getServeurRmiImpl().getUtilisateursInscrits();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return clients;
+	}
+	
+	/**
+	 *  liste des clients connectées
+	 * @return ArrayList<ClientRMI> :  liste des clients connectées
+	 */
+	
+	public ArrayList<Client> getUtilisateursConnectes()
+	{
+		ArrayList<Client> clients = null;
+		
+		
+			try {
+				clients = getServeurRmiImpl().getClientsconnectes();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		return clients;
+	}
+	
+	public ArrayList<Utilisateur> getUtilisateursDeconnectes()
+	{
+		ArrayList<Utilisateur> utilisateurDeconnectees = new ArrayList<Utilisateur>();
+		
+		for(Utilisateur user: getUtilisateurs()){
+			for(Client userIn : getUtilisateursConnectes()){
+				if(!(user.getLogin().equals(userIn.getUtilisateur().getLogin())))
+				{
+					utilisateurDeconnectees.add(user);
+				}
+			}
+		}
+		
+		return utilisateurDeconnectees;
 	}
 	
 	/**
@@ -92,7 +307,7 @@ public class Client {
 	 */
 	
 	public Utilisateur getUtilisateur(){
-		return getClientRMI().getUtilisateur();
+		return this.utilisateur;
 	}
 	
 	/**
@@ -101,7 +316,22 @@ public class Client {
 	
 	public void deconnexion()
 	{
-		getClientRMI().deconnexion();
+		
+			try {
+				// Suppression de la liste des connectés sur le serveur
+				getServeurRmiImpl().deconnexion(this);		
+				try {
+					// Suppression de l'objet client distant sur le registry
+					LocateRegistry.getRegistry(REGISTRY_PORT).unbind(getUtilisateur().getLogin());
+				} catch (NotBoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 	}
 	
 	
@@ -112,7 +342,17 @@ public class Client {
 	 */
 	public ArrayList<Publication> getPublicationsVisibles()
 	{
-		return getClientRMI().getPublicationsVisibles();
+		ArrayList<Publication> publicationsVisibles = null;
+		
+			try {
+				publicationsVisibles = getServeurRmiImpl().getPublicationsVisibles(this.getUtilisateur());
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		
+		
+		return publicationsVisibles;
 	}
 	/**
 	 * Renvoie la liste des publications d'un utilisateurs
@@ -120,12 +360,24 @@ public class Client {
 	 */
 	public ArrayList<Publication> getPublications()
 	{
-		return getClientRMI().getPublications();
+		ArrayList<Publication> publications = null;
+		try {
+			publications = getServeurRmiImpl().getPublications(this.getUtilisateur());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return publications;
 	}
 	
 	public void supprimerUnePublication(Publication publication)
 	{
-		getClientRMI().supprimerUnePublication(publication);
+		try {
+			getServeurRmiImpl().supprimerUnePublication(this.getUtilisateur(), publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Rend visible une publication a un utilisateur
@@ -135,7 +387,17 @@ public class Client {
 	 */
 	public void autoriserPublicationUtilisateur(Publication publication, Utilisateur utilisateur)
 	{
-		getClientRMI().autoriserPublicationUtilisateur(publication, utilisateur);
+		
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().autoriserUnePublicationUtilisateur(utilisateur, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Retire la visibilite d'une personnes
@@ -145,7 +407,16 @@ public class Client {
 	 */
 	public void retirerUnePublicationutilisateur(Publication publication, Utilisateur utilisateur)
 	{
-		getClientRMI().retirerUnePublicationutilisateur(publication, utilisateur);
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().retirerUnePublicationutilisateur(utilisateur, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * Rend visible une publication a un groupe
@@ -154,9 +425,17 @@ public class Client {
 	 */
 	public void autoriserUnePublicationGroupe(Publication publication, Groupe groupe)
 	{
-		getClientRMI().autoriserUnePublicationGroupe(publication, groupe);
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().autoriserUnePublicationGroupe(groupe, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
 	/**
 	 * Retire la visibilite d'un groupe
 	 * @param groupe : le groupe à retirer
@@ -164,7 +443,16 @@ public class Client {
 	 */
 	public void retirerUnePublicationGroupe(Publication publication, Groupe groupe)
 	{
-		getClientRMI().retirerUnePublicationGroupe(publication, groupe);
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
+		try {
+			getServeurRmiImpl().retirerUnePublicationGroupe(groupe, publication);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -173,7 +461,12 @@ public class Client {
 	 */
 	public void creerUnGroupe(String nomGroupe)
 	{
-		getClientRMI().creerUnGroupe(nomGroupe);
+		try {
+			getServeurRmiImpl().creerUnGroupe(nomGroupe, this.getUtilisateur().getLogin());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -184,7 +477,16 @@ public class Client {
 	 */
 	public void ajouterUnUtlisateurDansGroupe(int idGroupe, Utilisateur utilisateur)
 	{
-		getClientRMI().ajouterUnUtlisateurDansGroupe(idGroupe, utilisateur);
+		if (!(this.estProprietaire(idGroupe)))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de ce groupe.");
+		}
+		try {
+			getServeurRmiImpl().ajouterUnUtlisateurDansGroupe(idGroupe, utilisateur);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -195,7 +497,16 @@ public class Client {
 	 */
 	public void supprimerUnUtilsateurDuGroupe(int idGroupe, Utilisateur utilisateur)
 	{
-		getClientRMI().supprimerUnUtilsateurDuGroupe(idGroupe, utilisateur);
+		if (!(this.estProprietaire(idGroupe)))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de ce groupe.");
+		}
+		try {
+			getServeurRmiImpl().supprimerUnUtilsateurDuGroupe(idGroupe, utilisateur);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -205,7 +516,16 @@ public class Client {
 	 */
 	public void supprimerGroupe(int idGroupe)
 	{
-		getClientRMI().supprimerGroupe(idGroupe);
+		if (!(this.estProprietaire(idGroupe)))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de ce groupe.");
+		}
+		try {
+			getServeurRmiImpl().supprimerGroupe(idGroupe);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -214,7 +534,14 @@ public class Client {
 	 */
 	public ArrayList<Groupe> getGroupesProp() 
 	{
-		return getClientRMI().getGroupesProp();
+		ArrayList<Groupe> groupes = null;
+		try {
+			groupes = getServeurRmiImpl().getGroupesProp(this.getUtilisateur());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return groupes;
 	}
 	
 	/**
@@ -223,12 +550,28 @@ public class Client {
 	 */
 	public ArrayList<Groupe> getGroupes()
 	{
-		return getClientRMI().getGroupes();
+		ArrayList<Groupe> groupes = null;
+		try {
+			groupes = getServeurRmiImpl().getGroupes(this.getUtilisateur());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return groupes;
 	}
 	
 	public boolean estProprietaire(int idGroupe)
 	{
-		return getClientRMI().estProprietaire(idGroupe);
+		Groupe groupe = null;
+		
+		try {
+			groupe = getServeurRmiImpl().getGroupe(idGroupe);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return groupe.getProprietaire().getLogin().equals(this.getUtilisateur().getLogin());
 	}
 	
 	/**
@@ -238,7 +581,7 @@ public class Client {
 	 */
 	public boolean estProprietaire(Publication publication)
 	{
-		return getClientRMI().estProprietaire(publication);
+		return this.getUtilisateur().getLogin().equals(publication.getProprietaire().getLogin());
 	}
 	
 	/**
@@ -247,7 +590,12 @@ public class Client {
 	 */
 	public void envoyerMessagePrive(MessagePrive message){
 
-		getClientRMI().envoyerMessagePrive(message);
+			try {
+				getClientRmiImpl().envoyerMessagePrive(message);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	
 	/**
@@ -255,7 +603,13 @@ public class Client {
 	 * @param message
 	 */
 	public void envoyerMessageConversation(MessageConversation message){
-		getClientRMI().envoyerMessageConversation(message);
+		try {
+			getClientRmiImpl().envoyerMessageConversation(message);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 	/**
@@ -264,7 +618,12 @@ public class Client {
 	 */
 	public void envoyerMessage(Message message){
 
-		getClientRMI().envoyerMessage(message);
+			try {
+				getClientRmiImpl().envoyerMessage(message);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -274,21 +633,60 @@ public class Client {
 	 */
 	
 	public void recevoirMessage(Message message){
-		getClientRMI().recevoirMessage(message);
+		try {
+			getClientRmiImpl().recevoirMessage(message);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Reçois les messages privés reçus durant l'absence
 	 */
 	public void recevoirMessagePriveAbsence(){
-		getClientRMI().recevoirMessagePriveAbsence();
+		// on test si l'utilisateur a reçu des messages connectés pendant son absence, si c'est le cas
+		// on les affiche
+		try {
+			TreeMap<String, ArrayList<MessagePrive>> mapUtilisateur = getServeurRmiImpl().getMapMessagesPrivesUtilisateur(getUtilisateur().getLogin());
+			
+			Set cles = mapUtilisateur.keySet();
+			Iterator it = cles.iterator();
+			
+			while(it.hasNext()){
+				ArrayList<MessagePrive> messages = mapUtilisateur.get(it.next());
+				for(Message m : messages){
+					recevoirMessage(m);
+				}
+			}
+			// je supprime la clé pour cet utilisateur
+			getServeurRmiImpl().getMessagesPrivesUtilisateurs().remove(this.getUtilisateur().getLogin());
+			
+
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Reçois les messages des conversations reçus durant son absence
 	 */
 	public void recevoirMessageConversationAbsence(){
-		getClientRMI().recevoirMessageConversationAbsence();
+		try {
+			// on affiche les messages reçus
+			ArrayList<Conversation> conversations= getServeurRmiImpl().getConversationsUtilisateurAbsent(this.getUtilisateur().getLogin());
+			for(Conversation c : conversations){
+				for(Message m : c.getListeMessages()){
+					recevoirMessage(m);
+				}
+			}
+			// on les supprime ensuite....
+			getServeurRmiImpl().getConversationsUtilisateurAbsent(this.getUtilisateur().getLogin()).clear();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -298,10 +696,35 @@ public class Client {
 	 * @return l'id de la conversation si crée, -1 sinon
 	 */
 	public int creerUneConversation(ArrayList<Utilisateur> utilisateurs, ArrayList<Groupe> groupes){
-		return getClientRMI().creerUneConversation(utilisateurs, groupes);
+		int id = -1;
+		try {
+			id = getServeurRmiImpl().creerUneConversation(utilisateurs, groupes);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return id;
+		
 	}
 
 	
+	
+	/**
+	 * Renvoie l'objet distant du client
+	 * @return cl
+	 */
+	public InterfaceClientRmi getClientRmiImpl(){
+		return cl;
+	}
+	
+	/**
+	 * Renvoie l'objet distant du serveur 
+	 * @return serv
+	 */
+	public InterfaceServeurRmi getServeurRmiImpl(){
+		return serv;
+	}
 	
 	
 	

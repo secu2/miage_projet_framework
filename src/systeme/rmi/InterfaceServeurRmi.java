@@ -4,12 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
 import systeme.Client;
+import systeme.Client1;
 import modules.chat.Conversation;
 import modules.chat.Message;
 import modules.chat.MessageConversation;
@@ -24,15 +27,15 @@ import modules.gestionUtilisateur.Utilisateur;
 public interface InterfaceServeurRmi extends Remote {
 	 
 	public String getTest() throws RemoteException;
-	public ArrayList<ClientRMI> getClientsconnectes() throws RemoteException;
-	public void ajouterClient(ClientRMI c) throws RemoteException;
-	public boolean connexion(String login, String motDepasse, ClientRMI c) throws RemoteException;
+	public ArrayList<Client> getClientsconnectes() throws RemoteException;
+	public void ajouterClient(Client c) throws RemoteException;
+	public boolean connexion(String login, String motDepasse, Client c) throws RemoteException;
 	/**
 	 * Deconnecte un client du serveur
 	 * @param c : le client a deconnecter
 	 * @throws RemoteException
 	 */
-	public void deconnexion(ClientRMI c) throws RemoteException;
+	public void deconnexion(Client c) throws RemoteException;
 	public void envoiMessage(Message message)  throws RemoteException;
 	public void ajouterPublication(Publication publication)throws RemoteException;
 	public void ajouterMessagePrive(String login, MessagePrive message) throws RemoteException;
@@ -66,7 +69,7 @@ public interface InterfaceServeurRmi extends Remote {
 	public void distribuerMessage(Message message) throws RemoteException;
 	public ArrayList<Publication> getPublicationsVisibles(Utilisateur utilisateur) throws RemoteException;
 	public Utilisateur getUtilisateurInscrit(String login) throws RemoteException;
-	public Object utilisateurConnecte(ClientRMI clientRMI) throws RemoteException;
+	public Object utilisateurConnecte(Client clientRMI) throws RemoteException;
 	public ArrayList<Utilisateur> getUtilisateursInscrits() throws RemoteException;
 	/**
 	 * Renvoie la liste des publications d'un utilisateurs
@@ -164,6 +167,14 @@ public interface InterfaceServeurRmi extends Remote {
 	 * @throws RemoteException
 	 */
 	public Groupe getGroupe(int idGroupe) throws RemoteException;
+	public boolean inscription(String login, String motDePasse)
+			throws NoSuchAlgorithmException, UnsupportedEncodingException,
+			RemoteException;
+	public boolean inscriptionAvecRepertoireUtilisateur(String login,
+			String motDePasse) throws RemoteException;
+	public boolean inscriptionSecurisee(String login, String motDePasse)
+			throws RemoteException;
+	
 	
 
 }	

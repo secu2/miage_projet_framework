@@ -25,7 +25,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.text.DefaultFormatter;
 import javax.swing.text.MaskFormatter;
 
-import systeme.rmi.ClientRMI;
+import systeme.Client;
 import application.chat.Vue;
 import application.drive.InterfaceDrive;
 
@@ -124,7 +124,7 @@ public class MainConnexion {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try {
-					ClientRMI c = new ClientRMI(usernameTextField.getText(), passwordTextField.getText());
+					Client c = new Client(usernameTextField.getText(), passwordTextField.getText());
 					if(rdbtnDrive.isSelected()){
 						new InterfaceDrive(c).fenetre.setVisible(true);
 					}else{

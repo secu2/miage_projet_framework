@@ -17,7 +17,7 @@ import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.Client;
-import systeme.rmi.ClientRMI;
+import systeme.Client1;
 import systeme.rmi.ServeurRMI;
 
 public class lanceClient1 {
@@ -27,7 +27,7 @@ public class lanceClient1 {
 
 		
 		
-		ClientRMI c = new ClientRMI("momo", "jojo");
+		Client c = new Client("momo", "jojo");
 		//ClientRMI c1 = new ClientRMI("momoo", "jojo");
 		try {
 			c.getUtilisateur().creerUnGroupe("amis");

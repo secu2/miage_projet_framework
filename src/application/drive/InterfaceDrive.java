@@ -61,7 +61,7 @@ import modules.documents.Document;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
-import systeme.rmi.ClientRMI;
+import systeme.Client;
 
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
@@ -83,7 +83,7 @@ public class InterfaceDrive {
 	 * Create the application.
 	 * @throws RemoteException 
 	 */
-	public InterfaceDrive(ClientRMI client) throws RemoteException {
+	public InterfaceDrive(Client client) throws RemoteException {
 		initialize(client);
 	}
 	
@@ -93,7 +93,7 @@ public class InterfaceDrive {
 	 * Initialize the contents of the frame.
 	 * @throws RemoteException 
 	 */
-	private void initialize(final ClientRMI client) throws RemoteException {
+	private void initialize(final Client client) throws RemoteException {
 		fenetre = new JFrame();
 		fenetre.setTitle("Fichiers");
 		fenetre.setBounds(100, 100, 592, 412);
@@ -233,7 +233,7 @@ public class InterfaceDrive {
 		
 		
 		JMenu mnPartagerAvec = new JMenu("Partage utilisateur");
-		for(ClientRMI user: client.getUtilisateurs()){
+		for(Client user: client.getUtilisateursConnectes()){
 			if(user.getUtilisateur().equals(client.getUtilisateur())){
 				mnPartagerAvec.add(new JCheckBoxMenuItem(user.getUtilisateur().getLogin()));
 			}
