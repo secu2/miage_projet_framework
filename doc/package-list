@@ -1,6 +1,12 @@
+application.chat
+application.connexion
+application.drive
+modules.chat
 modules.documents
 modules.documents.social
 modules.gestionUtilisateur
 systeme
+systeme.exception
 systeme.rmi
+systeme.test
 systeme.tools
