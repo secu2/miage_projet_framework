@@ -8,6 +8,10 @@ import modules.gestionUtilisateur.Utilisateur;
 
 public class Conversation implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int idConversation;
 	private ArrayList<Message> listeMessages;
 	private ArrayList<Utilisateur> participants;

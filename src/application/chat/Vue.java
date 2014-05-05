@@ -9,8 +9,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -18,16 +16,30 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import javax.swing.border.CompoundBorder;
 
 import systeme.rmi.*;
+import modules.chat.Conversation;
+import modules.chat.Message;
+import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 
 import javax.swing.JList;
 
 public class Vue extends JFrame {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Conversation conversation;
+	private int id_conv;
+	private String login;
+	private ArrayList<Utilisateur> participants;
+	private ArrayList<Groupe> groupesParticipants;
+	
+	
 	private JPanel contentPane;
 	private JTextField textField;
 	private List messageList;
@@ -37,11 +49,11 @@ public class Vue extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(final ClientRMI client, final ServeurRMI serveur) {
+	public static void main(final ClientRMI client) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Vue frame = new Vue(client, serveur);
+					Vue frame = new Vue(client);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,18 +65,20 @@ public class Vue extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Vue(final ClientRMI client, ServeurRMI serveur) {
+	public Vue(final ClientRMI client) {
 		// Definition des éléments du chat
-		//Crée une conversation
-		
-		
-		
-		
-		
+		//Nom de client
+		login = client.getUtilisateur().getLogin();
+		// Crée une conversation
+		id_conv = 1;
+		//ajout du client à la conversation
+		participants.add(client.getUtilisateur());
+		conversation = new Conversation(id_conv, participants, groupesParticipants);
+
 		// Général
 		setTitle("IBN Chat room");
 
-		JLabel lblUsersName = new JLabel(client.getUtilisateur().getLogin().toString());
+		JLabel lblUsersName = new JLabel(login);
 		lblUsersName.setFont(new Font("Consolas", Font.BOLD, 16));
 		lblUsersName.setBounds(176, 11, 184, 35);
 		contentPane.add(lblUsersName);
@@ -88,7 +102,10 @@ public class Vue extends JFrame {
 		// Met le message dans la liste
 		btnEnvoitxt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				messageList.add(client.getUtilisateur().getLogin().toString() + " : " + txtIn.getText());
+				Message mess = new Message(txtIn.getText(), login );
+				client.envoyerMessage(mess);
+				messageList.add(login + " : " + client.recevoirMessage().get;);
+				
 			}
 		});
 
@@ -115,7 +132,7 @@ public class Vue extends JFrame {
 				System.out.println("Fichier choisi : " + dialogue.getSelectedFile());
 
 				// affiche le nom du fichier
-				messageList.add(client.getUtilisateur().getLogin().toString() + " : " + dialogue.getSelectedFile().getName());
+				messageList.add(login + " : " + dialogue.getSelectedFile().getName());
 
 			}
 		});
@@ -124,12 +141,12 @@ public class Vue extends JFrame {
 		messageList = new List();
 		messageList.setBounds(10, 80, 345, 245);
 		contentPane.add(messageList);
-		
-		//Liste utlisateurs connectés
+
+		// Liste utlisateurs connectés
 		listCo = new List();
 		listCo.setBounds(370, 82, 184, 314);
 		contentPane.add(listCo);
-		
+		afficheUtilisateursCo(client);
 
 		// <<<<<<< HEAD
 
@@ -162,20 +179,15 @@ public class Vue extends JFrame {
 	}
 
 	/**
-	 * crée un bouton pour chaque utilisateur connecté
+	 * crée une liste pour chaque utilisateur connecté
 	 */
-	public void afficheUtilisateursCo(final ServeurRMI serveur) {
-		try {
-			for (int i = 0; i < serveur.getUtilisateursInscrits().size() ; i++) {
-				for( int j =0; j < serveur.getUtilisateursConnectes().size(); j++){
-					if(serveur.getUtilisateursInscrits().get(i).getLogin().equals(serveur.getUtilisateursConnectes().get(j))){
-						listCo.add(serveur.getUtilisateursInscrits().get(i).getLogin());
-					}
-				}
-			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void afficheUtilisateursCo(final ClientRMI client) {
+
+		for (int i = 0; i < client.getUtilisateurs().size(); i++) {
+			listCo.add(client.getUtilisateurs().get(i).getUtilisateur().getLogin());
 		}
 	}
+	
+	
+
 }

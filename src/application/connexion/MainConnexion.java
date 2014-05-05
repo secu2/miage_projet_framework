@@ -128,7 +128,7 @@ public class MainConnexion {
 					if(rdbtnDrive.isSelected()){
 						new InterfaceDrive(c).fenetre.setVisible(true);
 					}else{
-						new Vue().setVisible(true);
+						new Vue(c).setVisible(true);
 					}
 
 					window.frmConnexionAuServeur.setVisible(false);
