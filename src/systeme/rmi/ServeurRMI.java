@@ -38,8 +38,6 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 	private static final long serialVersionUID = 2674880711467464646L;
 
-	private OutputStream out;
-	private InputStream in;
 	private Serveur serveur;
 
 	private ArrayList<Utilisateur> utilisateursInscrits;
@@ -65,16 +63,10 @@ public class ServeurRMI extends UnicastRemoteObject implements
 	 */
 	private TreeMap<Integer, Conversation> conversations;
 
-	public ServeurRMI(OutputStream out, InputStream in) throws RemoteException {
-		super();
-		this.out = out;
-		this.in = in;
-	}
 
 	public ServeurRMI(Serveur serveur) throws RemoteException {
 		super();
-		this.out = null;
-		this.in = null;
+
 		this.messagesPrivesUtilisateurs = new TreeMap<String, TreeMap<String, ArrayList<MessagePrive>>>();
 		this.conversationsUtilisateursAbsent = new TreeMap<String, ArrayList<Conversation>>();
 		this.conversations = new TreeMap<Integer, Conversation>();
@@ -85,37 +77,12 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		this.serveur = serveur;
 	}
 
-	public ServeurRMI(OutputStream out) throws RemoteException {
-		super();
-		this.out = out;
-	}
-
-	public ServeurRMI(InputStream in) throws RemoteException {
-		super();
-		this.in = in;
-	}
-
 	public String getTest() throws RemoteException {
 		System.out.println("Invocation de la méthode getInformation()");
 		return "JoJo t'es moche ";
 	}
 
-	public OutputStream getOut() {
-		return this.out;
-	}
 
-	public void setOut(OutputStream out) {
-		this.out = out;
-	}
-
-	public InputStream getIn() {
-		return this.in;
-
-	}
-
-	public void setIn(InputStream in) {
-		this.in = in;
-	}
 
 	/**
 	 * Renvoie la liste des clients connectés sur le serveur

@@ -39,13 +39,21 @@ public class MainRmi {
 				ClientRMI c = new ClientRMI("momo", "jojo");
 				ClientRMI c1 = new ClientRMI("jojo","momo");
 				
+				
+				try {
+					c.telecharger(new File("/home/b/brocarcl/git/miage_projet_framework/docServeur/image.jpg"), new File("/home/b/brocarcl/Bureau/download.jpg"));
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
 			////////////Chargement d'un document /////////////////
-				Document document = new Document("/home/never/test.png");
+				//Document document = new Document("/home/never/test.png");
 				
 				ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
 				ArrayList<Groupe> groupes =  new ArrayList<Groupe>(); 
 				//utilisateurs.add(c1.getUtilisateur());
 				//c.creerUnGroupe("Ibn");
+		
 				//c.ajouterUnUtlisateurDansGroupe(0, c1.getUtilisateur());
 				DateFormat df = new SimpleDateFormat("dd-MM-yyyy"); 
 				Date date=null;
@@ -59,13 +67,13 @@ public class MainRmi {
 		
 				
 			////Le client charge le document en fonction de la visibilité et de la date de fin de publication
-				try {
+				  /*try {
 					c.charger(document.getFichier(),utilisateurs, null, document, null);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 	
-				} 
+				} */
 			///Affiche les plublications visibles
 				//c.supprimerUnePublication(c.getPublications().get(0)); 
 				ArrayList<Publication> publications = c.getPublications();
