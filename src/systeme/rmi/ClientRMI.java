@@ -272,9 +272,29 @@ public class ClientRMI  implements Serializable{
 
 		return result;
 	}*/
-
+/**
+ * tous les utilisateur inscrit sur le serveur
+ * @return ArrayList<Utilisateur> : retourne liste de tous les utilisateur inscrit sur le serveur
+ */
+	public ArrayList<Utilisateur> getUtilisateurs()
+	{
+		ArrayList<Utilisateur> clients = null;
+		
+		try {
+			clients = getServeurRmiImpl().getUtilisateursInscrits();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return clients;
+	}
 	
-	public ArrayList<ClientRMI> getUtilisateurs()
+	/**
+	 *  liste des clients connectées
+	 * @return ArrayList<ClientRMI> :  liste des clients connectées
+	 */
+	
+	public ArrayList<ClientRMI> getUtilisateursConnectes()
 	{
 		ArrayList<ClientRMI> clients = null;
 		
@@ -287,6 +307,22 @@ public class ClientRMI  implements Serializable{
 			}
 		
 		return clients;
+	}
+	
+	public ArrayList<Utilisateur> getUtilisateursDeconnectes()
+	{
+		ArrayList<Utilisateur> utilisateurDeconnectees = new ArrayList<Utilisateur>();
+		
+		for(Utilisateur user: getUtilisateurs()){
+			for(ClientRMI userIn : getUtilisateursConnectes()){
+				if(!(user.getLogin().equals(userIn.getUtilisateur().getLogin())))
+				{
+					utilisateurDeconnectees.add(user);
+				}
+			}
+		}
+		
+		return utilisateurDeconnectees;
 	}
 	
 	/**

@@ -29,6 +29,7 @@ public class lanceServeur {
 			serveur.getServeur().inscription("momo", "jojo");
 			serveur.getServeur().inscription("jojo", "jojo");
 			serveur.getServeur().inscription("popo", "popo");
+			
 		
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block

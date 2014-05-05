@@ -59,12 +59,16 @@ import javax.swing.ImageIcon;
 
 import modules.documents.Document;
 import modules.documents.social.Publication;
+import modules.gestionUtilisateur.Groupe;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.rmi.ClientRMI;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.JCheckBoxMenuItem;
 
 
 public class InterfaceDrive {
@@ -183,9 +187,11 @@ public class InterfaceDrive {
 								if (userSelection == JFileChooser.APPROVE_OPTION) {
 									 
 								    File fileToSave = fileChooser.getSelectedFile();
-								    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
 								    String var = fileToSave.getAbsolutePath() + "/" +curPubl.getDocument().getNom();
-								    client.telecharger(curPubl.getDocument().getFichier(), new File(var));
+								    
+								    
+								   client.telecharger(new File(curPubl.getDocument().getEmplacement()), new File(var));
+								  
 								}
 							} catch (IOException e1) {
 								e1.printStackTrace();
@@ -194,8 +200,6 @@ public class InterfaceDrive {
 									    "Inane error",
 									    JOptionPane.ERROR_MESSAGE);
 							}
-							DefaultTableModel model1 = (DefaultTableModel) filesLocal.getModel();
-							model1.removeRow(filesLocal.getSelectedRow());
 						}else{
 							JOptionPane.showMessageDialog(fenetre,
 								    "Erreur: Impossible d'enregistrer le fichier",
@@ -208,9 +212,6 @@ public class InterfaceDrive {
 			}
 		});
 		menuContextuelLocal.add(mntmEnregistrer);
-
-		JMenuItem mntmPartager = new JMenuItem("Partager");
-		menuContextuelLocal.add(mntmPartager);
 
 		JMenuItem mntmSupprimer = new JMenuItem("Supprimer");
 		
@@ -231,11 +232,22 @@ public class InterfaceDrive {
 		menuContextuelLocal.add(mntmSupprimer);
 		
 		
-		JMenu menu = new JMenu("Propriétés");
-		menuContextuelLocal.add(menu);
+		JMenu mnPartagerAvec = new JMenu("Partage utilisateur");
+		for(ClientRMI user: client.getUtilisateurs()){
+			if(user.getUtilisateur().equals(client.getUtilisateur())){
+				mnPartagerAvec.add(new JCheckBoxMenuItem(user.getUtilisateur().getLogin()));
+			}
+		}
+		JMenu mnPartageGroupe = new JMenu("Partage groupe");
+		for(Groupe grp: client.getGroupes()){
+			mnPartagerAvec.add(new JCheckBoxMenuItem(grp.getNomGroupe()));
+		}
 		
-		JMenuItem menuItem = new JMenuItem("Infos");
-		menu.add(menuItem);
+		menuContextuelLocal.add(mnPartageGroupe);
+		menuContextuelLocal.add(mnPartagerAvec);
+
+
+		
 
 
 		JScrollPane fichiersDistantsPane = new JScrollPane();
@@ -245,12 +257,7 @@ public class InterfaceDrive {
 		filesDistant = new JTable();
 		filesDistant.setModel(new DefaultTableModel(
 				new Object[][] {
-						{"test1.txt", "2Ko"},
-						{"test.mp3", "12Mo"},
-						{"lolwut.pdf", "1Mo"},
-						{"niceOne.wtf", "1,32Mo"},
-						{"wololo.jpg", "513Ko"},
-						{"chatonTropMignon.gif", "43Mo"},
+						{},
 				},
 				new String[] {
 						"Fichier", "Taille"
@@ -263,6 +270,13 @@ public class InterfaceDrive {
 				return columnEditables[column];
 			}
 		});
+		DefaultTableModel model2 = (DefaultTableModel) filesDistant.getModel();
+		ArrayList<Publication> partageAvecMoi = client.getPublicationsVisibles();
+		for(Publication curPub: partageAvecMoi){
+			if(!curPub.getProprietaire().equals(client.getUtilisateur())){			
+				model2.addRow(new Object[] {curPub.getDocument().getNom(), curPub.getDocument().getTaille()});
+			}
+		}
 		filesDistant.getColumnModel().getColumn(0).setPreferredWidth(240);
 		filesDistant.getColumnModel().getColumn(1).setPreferredWidth(50);
 		filesDistant.getColumnModel().getColumn(1).setMinWidth(30);
@@ -288,17 +302,8 @@ public class InterfaceDrive {
 		JMenuItem mntmEnregistrerR = new JMenuItem("Enregistrer");
 		menuContextuelDistant.add(mntmEnregistrerR);
 
-		JMenuItem mntmPartagerR = new JMenuItem("Partager");
-		menuContextuelDistant.add(mntmPartagerR);
-
 		JMenuItem mntmSupprimerR = new JMenuItem("Supprimer");
 		menuContextuelDistant.add(mntmSupprimerR);
-		
-		JMenu mnProprits = new JMenu("Propriétés");
-		menuContextuelDistant.add(mnProprits);
-		
-		JMenuItem mntmInfosnTest = new JMenuItem("Infos");
-		mnProprits.add(mntmInfosnTest);
 
 		JPanel south = new JPanel();
 		fenetre.getContentPane().add(south, BorderLayout.SOUTH);
