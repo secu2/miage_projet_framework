@@ -181,9 +181,11 @@ public class InterfaceDrive {
 								fileChooser.setDialogTitle("Specifiez un chemin d'enregistrement");
 								int userSelection = fileChooser.showSaveDialog(fenetre);
 								if (userSelection == JFileChooser.APPROVE_OPTION) {
+									 
 								    File fileToSave = fileChooser.getSelectedFile();
 								    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
-								    client.telecharger(curPubl.getDocument().getFichier(), destination);
+								    String var = fileToSave.getAbsolutePath() + "/" +curPubl.getDocument().getNom();
+								    client.telecharger(curPubl.getDocument().getFichier(), new File(var));
 								}
 							} catch (IOException e1) {
 								e1.printStackTrace();

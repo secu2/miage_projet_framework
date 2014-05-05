@@ -215,7 +215,9 @@ public class ClientRMI  implements Serializable{
 
 	public void telecharger(File source,
 			File destination) throws IOException {
+		System.out.println("Aaaa"+destination.getAbsolutePath());
 		copie(new FileInputStream(source), new FileOutputStream(destination));
+		
 	}
 
 	/**
