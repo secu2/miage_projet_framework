@@ -182,11 +182,8 @@ public class Client  implements Serializable{
 
 	/**
 	 * Methode de copie de flux par byte
-	 * 
-	 * @param inStream
-	 *            : le flux d'entr�e
-	 * @param outStream
-	 *            : le flux de sortie
+	 * @param inStream  : le flux d'entr�e
+	 * @param outStream : le flux de sortie
 	 * @throws IOException
 	 */
 
@@ -205,14 +202,10 @@ public class Client  implements Serializable{
 	}
 
 	/**
-	 * Methode qui permet de telecharger un fichier depuis le serveur
-	 * 
-	 * @param server
-	 *            : le serveurRMI
-	 * @param source
-	 *            : le fichier a telecharger
-	 * @param destination
-	 *            : le fichier de sortie
+	 * Methode qui permet de telecharger un fichier depuis le serveur 
+	 * @param server : le serveurRMI
+	 * @param source : le fichier a telecharger
+	 * @param destination : le fichier de sortie
 	 * @throws IOException
 	 */
 
@@ -224,12 +217,8 @@ public class Client  implements Serializable{
 
 	/**
 	 * Methode qui permet de charger un fichier sur le serveur
-	 * 
-	 * @param server
-	 *            : le serveurRMI
-	 * @param source
-	 *            : le fichier a charger 2 * @param destination : le fichier de
-	 *            sortie
+	 * @param server : le serveurRMI
+	 * @param source : le fichier a charger 2 * @param destination : le fichier de sortie
 	 * @throws IOException
 	 */
 
@@ -287,7 +276,10 @@ public class Client  implements Serializable{
 		
 		return clients;
 	}
-	
+	/***
+	 * retrourne list des utilisateurs deconnectées
+	 * @return ArrayList<Utilisateur> utilisateurs deconnectées
+	 */
 	public ArrayList<Utilisateur> getUtilisateursDeconnectes()
 	{
 		ArrayList<Utilisateur> utilisateurDeconnectees = new ArrayList<Utilisateur>();
@@ -371,9 +363,16 @@ public class Client  implements Serializable{
 		}
 		return publications;
 	}
-	
+	/**
+	 * supprime une publication
+	 * @param publication : La publication a supprimer
+	 */
 	public void supprimerUnePublication(Publication publication)
 	{
+		if(!estProprietaire(publication))
+		{
+			throw new Require("Action impossible car "+ this.getUtilisateur().getLogin() +" n'est pas propriétaire de cette publication.");
+		}
 		try {
 			getServeurRmiImpl().supprimerUnePublication(this.getUtilisateur(), publication);
 		} catch (RemoteException e) {

@@ -30,8 +30,10 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	 */
 	public ClientRMI() throws RemoteException{
 	}
-	
-	
+
+	/** permet d'envoyer un message
+	 * @param Message message : le message à envoyer
+	 */
 	public void envoyerMessage(Message message) throws RemoteException{
 		 Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 		 Remote r;
@@ -53,7 +55,10 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 		
 	}
 
-	
+	/**
+	 * permet d'envoyer un message privé
+	 * @param Message message : le message à envoyer 
+	 */
 	public void envoyerMessagePrive(MessagePrive message) throws RemoteException{
 		Registry registry = LocateRegistry.getRegistry(REGISTRY_PORT);
 		 Remote r;
@@ -94,7 +99,10 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 		}
 	}
 
-
+/**
+ * permet de recevoir un message
+ * @param Message message : le message à recevoir 
+ */
 	public void recevoirMessage(Message message) throws RemoteException{
 		vue.getListeMessage().add("[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] "  + message.getExpeditaire() + " : " + message.getMessage());
 	}
