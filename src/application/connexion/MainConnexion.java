@@ -135,9 +135,10 @@ public class MainConnexion {
 				}
 				catch(Exception e) {
 					JOptionPane.showMessageDialog(frmConnexionAuServeur,
-						    "Erreur: Impossible de se connecter, vérifiez vos informations de connexion",
+						    "Impossible de se connecter, vérifiez vos informations de connexion ("+e+")",
 						    "Inane error",
 						    JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
 				}
 				
 				

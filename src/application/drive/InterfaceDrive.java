@@ -34,9 +34,11 @@ import java.awt.CardLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JTable;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import javax.swing.JCheckBox;
 
 import java.awt.event.MouseAdapter;
@@ -59,6 +61,10 @@ import modules.documents.Document;
 import modules.documents.social.Publication;
 import modules.gestionUtilisateur.Utilisateur;
 import systeme.rmi.ClientRMI;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class InterfaceDrive {
@@ -76,6 +82,8 @@ public class InterfaceDrive {
 	public InterfaceDrive(ClientRMI client) throws RemoteException {
 		initialize(client);
 	}
+	
+	
 
 	/**
 	 * Initialize the contents of the frame.
@@ -87,6 +95,16 @@ public class InterfaceDrive {
 		fenetre.setBounds(100, 100, 592, 412);
 		fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		fenetre.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		Runtime.getRuntime().addShutdownHook(new Thread()
+		{
+		    @Override
+		    public void run()
+		    {
+		    	System.out.println("Déconnexion de "+client.getUtilisateur().getLogin());
+		        client.deconnexion();
+		    }
+		});
 
 		JPanel north = new JPanel();
 		fenetre.getContentPane().add(north, BorderLayout.NORTH);
@@ -108,12 +126,7 @@ public class InterfaceDrive {
 		filesLocal = new JTable();
 		Object[][] listeFilesLocal = null;
 		ArrayList<Publication> publicationsClient = client.getPublications();
-		System.out.println(client.getPublications());
-		for(int i = 0; i < publicationsClient.size(); i++){
-			listeFilesLocal[i][0] = publicationsClient.get(i).getDocument().getNom();
-			listeFilesLocal[i][1] = publicationsClient.get(i).getDocument().getTaille();
-		}
-		filesLocal.setModel(new DefaultTableModel(
+		DefaultTableModel model = new DefaultTableModel(
 				listeFilesLocal,
 				new String[] {
 						"Fichier", "Taille"
@@ -125,7 +138,11 @@ public class InterfaceDrive {
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
 			}
-		});
+		};
+		for(Publication curPub: publicationsClient){
+			model.addRow(new Object[] {curPub.getDocument().getNom(), curPub.getDocument().getTaille()});
+		}
+		filesLocal.setModel(model);
 		filesLocal.getColumnModel().getColumn(0).setPreferredWidth(240);
 		filesLocal.getColumnModel().getColumn(1).setPreferredWidth(50);
 		filesLocal.getColumnModel().getColumn(1).setMinWidth(30);
@@ -143,19 +160,74 @@ public class InterfaceDrive {
 				}
 			}
 		});
+		
+		
 		mesFichiersPane.setViewportView(filesLocal);
 
 		JPopupMenu menuContextuelLocal = new JPopupMenu();
 		addPopup(filesLocal, menuContextuelLocal);
+		
 
 		JMenuItem mntmEnregistrer = new JMenuItem("Enregistrer");
+		mntmEnregistrer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for(Publication curPubl : client.getPublications()){
+					if(curPubl.getDocument().getFichier().getName().equals(filesLocal.getModel().getValueAt(filesLocal.getSelectedRow(), 0))){
+						File destination = new File(txtSelectionnerFichier.getText());
+						if(destination.canWrite()){
+							try {
+								JFileChooser fileChooser = new JFileChooser();
+								fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+								fileChooser.setDialogTitle("Specifiez un chemin d'enregistrement");
+								int userSelection = fileChooser.showSaveDialog(fenetre);
+								if (userSelection == JFileChooser.APPROVE_OPTION) {
+								    File fileToSave = fileChooser.getSelectedFile();
+								    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+								    client.telecharger(curPubl.getDocument().getFichier(), destination);
+								}
+							} catch (IOException e1) {
+								e1.printStackTrace();
+								JOptionPane.showMessageDialog(fenetre,
+									    "Erreur: Impossible d'enregistrer le fichier",
+									    "Inane error",
+									    JOptionPane.ERROR_MESSAGE);
+							}
+							DefaultTableModel model1 = (DefaultTableModel) filesLocal.getModel();
+							model1.removeRow(filesLocal.getSelectedRow());
+						}else{
+							JOptionPane.showMessageDialog(fenetre,
+								    "Erreur: Impossible d'enregistrer le fichier",
+								    "Inane error",
+								    JOptionPane.ERROR_MESSAGE);
+						}
+						
+					}
+				}
+			}
+		});
 		menuContextuelLocal.add(mntmEnregistrer);
 
 		JMenuItem mntmPartager = new JMenuItem("Partager");
 		menuContextuelLocal.add(mntmPartager);
 
 		JMenuItem mntmSupprimer = new JMenuItem("Supprimer");
+		
+		
+		mntmSupprimer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for(Publication curPubl : client.getPublications()){
+					if(curPubl.getDocument().getFichier().getName().equals(filesLocal.getModel().getValueAt(filesLocal.getSelectedRow(), 0))){
+						client.supprimerUnePublication(curPubl);
+						DefaultTableModel model = (DefaultTableModel) filesLocal.getModel();
+						model.removeRow(filesLocal.getSelectedRow());
+					}
+				}
+			}
+		});
+		
+		
 		menuContextuelLocal.add(mntmSupprimer);
+		
 		
 		JMenu menu = new JMenu("Propriétés");
 		menuContextuelLocal.add(menu);
@@ -254,6 +326,12 @@ public class InterfaceDrive {
 					user.add(client.getUtilisateur());
 					try {
 						client.charger(fichier, user, null, doc, null);
+						ArrayList<Publication> publicationsClient = client.getPublications();
+						DefaultTableModel model = (DefaultTableModel) filesLocal.getModel();
+						model.setRowCount(0);
+						for(Publication curPub: publicationsClient){
+							model.addRow(new Object[] {curPub.getDocument().getNom(), curPub.getDocument().getTaille()});
+						}
 					} catch (IOException e) {
 						JOptionPane.showMessageDialog(fenetre,
 							    "Erreur lors de l'enregistrement : "+e,
