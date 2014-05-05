@@ -2,9 +2,12 @@ package systeme;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -54,7 +57,7 @@ public class Serveur implements Serializable {
 			System.out.println("Enregistrement de l'objet avec l'url : " + url);
 			Naming.rebind(url, informationImpl);
 			
-			
+			chargerDemarrage();
 		
 			 
 			System.out.println("Serveur lancé");
@@ -85,7 +88,7 @@ public class Serveur implements Serializable {
 			System.out.println("Enregistrement de l'objet avec l'url : " + url);
 			Naming.rebind(url, informationImpl);
 			
-			
+			chargerDemarrage();
 		
 			 
 			System.out.println("Serveur lancé");
@@ -102,6 +105,7 @@ public class Serveur implements Serializable {
  */
 	public void stop()
 	{
+		sauvegarder();
 		try {
 			Naming.unbind("rmi://" + InetAddress.getLocalHost().getHostAddress() + "/fram");
 			//UnicastRemoteObject.unexportObject((Remote) this, true);
@@ -420,6 +424,70 @@ public boolean inscriptionSecurisee(String login, String motDePasse)
 
 }
 
+/**
+ * Sauvegarde l'état courant du serveur
+ */
+public void sauvegarder(){
+	 FileOutputStream fichier;
+	try {
+	 fichier = new FileOutputStream(new File(System.getProperty("user.dir") + "/sauvegardeServeur/" + "sauvegarde.save" ));
+	    ObjectOutputStream oos = new ObjectOutputStream(fichier);
+	    oos.writeObject(serveur.getUtilisateursInscrits());
+	    oos.writeObject(serveur.getConversations());
+	    oos.writeObject(serveur.getConversationsUtilisateursAbsents());
+	    oos.writeObject(serveur.getMessagesPrivesUtilisateurs());
+	    oos.writeObject(serveur.getPublications());
+
+
+
+	    oos.close();
+	    System.out.println("Sauvegarde effectuée");
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+}
+
+/**
+ * Charge le serveur à partir de la sauvegarde
+ */
+public void chargerDemarrage(){
+	FileInputStream fichier;
+	try {
+		File f = new File(System.getProperty("user.dir") + "/sauvegardeServeur/" + "sauvegarde.save" );
+		if(f.exists()){
+		fichier = new FileInputStream(f);
+		ObjectInputStream ois;
+		ois = new ObjectInputStream(fichier);
+		ArrayList<Utilisateur> utilisateurs = (ArrayList<Utilisateur>) ois.readObject();
+		TreeMap<Integer, Conversation> conversations = (TreeMap<Integer, Conversation>) ois.readObject();
+		TreeMap<String, ArrayList<Conversation>> conversationsUtilisateursAbsents = (TreeMap<String, ArrayList<Conversation>>) ois.readObject();
+		TreeMap<String, TreeMap<String, ArrayList<MessagePrive>>> messagesPrives = (TreeMap<String, TreeMap<String, ArrayList<MessagePrive>>>) ois.readObject();
+		ArrayList<Publication> publications = (ArrayList<Publication>) ois.readObject();
+		
+		getServeur().setPublications(publications);
+		getServeur().setUtilisateursInscrits(utilisateurs);
+		getServeur().setConversationsUtilisateursAbsents(conversationsUtilisateursAbsents);
+		getServeur().setMessagesPrives(messagesPrives);
+		getServeur().setConversations(conversations);
+		System.out.println("Chargement terminé");
+		}
+	} catch (FileNotFoundException e2) {
+		// TODO Auto-generated catch block
+		e2.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	
+}
 	
 	
 }

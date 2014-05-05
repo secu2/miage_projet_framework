@@ -357,7 +357,11 @@ public interface InterfaceServeurRmi extends Remote {
 	public void creerUnRepertoire(String path) throws RemoteException;
 	
 
-	
+	/**
+	 * Affecte l'ensemble des utilisateurs inscrits au serveur
+	 * @throws RemoteException
+	 */
+	public void setUtilisateursInscrits(ArrayList<Utilisateur> utilisateursInscrits) throws RemoteException;
 	
 }	
 

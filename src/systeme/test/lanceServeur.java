@@ -40,6 +40,7 @@ public class lanceServeur {
 					serveur.getUtilisateurInscrit("jojo").ajouterGroupe(grp);
 				}
 			}			
+			serveur.sauvegarder();
 			
 		
 		} catch (RemoteException e) {

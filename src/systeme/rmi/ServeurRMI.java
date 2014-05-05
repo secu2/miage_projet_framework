@@ -519,6 +519,8 @@ public class ServeurRMI extends UnicastRemoteObject implements
 			Utilisateur u = new Utilisateur(login);
 			u.setMotDePasseSecurise(motDePasse);
 			ajouterUtilisateur(u);
+			
+			serveur.sauvegarder();
 		} else {
 			existant = true;
 		}
@@ -546,6 +548,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 		if (!utilisateurExistant(login)) {
 			Utilisateur u = new Utilisateur(login, motDePasse);
 			ajouterUtilisateur(u);
+			serveur.sauvegarder();
 		} else {
 			existant = true;
 		}
@@ -574,6 +577,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 			String chemin = System.getProperty("user.dir") + "/docServeur/";
 			System.out.println(chemin);
 			creerUnRepertoireUtilisateur(getUtilisateurInscrit(login),chemin);
+			serveur.sauvegarder();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -1220,6 +1224,38 @@ public class ServeurRMI extends UnicastRemoteObject implements
 
 			
 		}
+	}
+	
+	/**
+	 * Affecte l'ensemble des utilisateurs inscrits au serveur
+	 * @throws RemoteException
+	 */
+	public void setUtilisateursInscrits(ArrayList<Utilisateur> utilisateursInscrits) throws RemoteException{
+		this.utilisateursInscrits = utilisateursInscrits;
+	}
+	
+	/**
+	 * Affecte l'ensemble des messages privés reçus lors que les utilisateurs étaient déconnecté du serveur
+	 * @param messagesPrives
+	 */
+	public void setMessagesPrives(TreeMap<String, TreeMap<String, ArrayList<MessagePrive>>> messagesPrives) throws RemoteException{
+		this.messagesPrivesUtilisateurs = messagesPrives;
+	}
+	
+	/**
+	 * Affecte l'ensemble conversations au serveur
+	 * @param messagesPrives
+	 */
+	public void setConversations(TreeMap<Integer, Conversation> conversations) throws RemoteException{
+		this.conversations = conversations;
+	}
+	
+	/**
+	 * Affecte l'ensemble des conversations qui ont eu lieu lorsque les utilisateurs étaient déconnectés
+	 * @param conversations
+	 */
+	public void setConversationsUtilisateursAbsents(TreeMap<String, ArrayList<Conversation>> conversations) throws RemoteException{
+		this.conversationsUtilisateursAbsent = conversations;
 	}
 	 
 
