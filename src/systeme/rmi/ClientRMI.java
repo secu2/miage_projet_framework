@@ -99,6 +99,12 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 		vue.getListeMessage().add("[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] "  + message.getExpeditaire() + " : " + message.getMessage());
 	}
 	
+	public void recevoirMessagePrive(MessagePrive message)
+			throws RemoteException {
+		
+		vue.getListeMessage().add("[Message privé de " + message.getExpeditaire() + "[" + message.getDateEmission().getHours() + ":" +  message.getDateEmission().getMinutes() + "] " + message.getMessage());
+		
+	}
 
 	public Vue getVue()throws RemoteException{
 		return vue;
@@ -107,6 +113,9 @@ public class ClientRMI  extends UnicastRemoteObject implements InterfaceClientRm
 	public void setVue(Vue vue)throws RemoteException{
 		this.vue = vue;
 	}
+
+
+	
 
 
 

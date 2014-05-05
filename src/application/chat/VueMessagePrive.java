@@ -23,7 +23,8 @@ public class VueMessagePrive extends JFrame{
 	private final JLabel label = DefaultComponentFactory.getInstance().createTitle("New JGoodies title");
 	public VueMessagePrive(final Client c,final String destinataire) {
 		setTitle("Envoyer un message privé");
-		
+		this.setSize(500, 300);
+		this.setVisible(true);
 		JPanel panel = new JPanel();
 		panel.setToolTipText("");
 		getContentPane().add(panel, BorderLayout.CENTER);
@@ -39,9 +40,12 @@ public class VueMessagePrive extends JFrame{
 			public void actionPerformed(ActionEvent arg0) {
 				MessagePrive message = new MessagePrive(textArea.getText(), c.getUtilisateur().getLogin(), destinataire);
 				c.envoyerMessagePrive(message);
+				dispose();
 			}
 		});
-		btnEnvoyer.setBounds(173, 205, 117, 25);
+		btnEnvoyer.setBounds(167, 216, 117, 25);
 		panel.add(btnEnvoyer);
 	}
+	
+	
 }

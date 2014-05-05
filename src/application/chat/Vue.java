@@ -311,6 +311,7 @@ public class Vue extends JFrame {
 				System.out.println(listDeco.getValueAt(listDeco.getSelectedRow(), 0));
 			}
 		});
+		
 		menuContextuel.add(mntmMessagePrive);
 		
 	

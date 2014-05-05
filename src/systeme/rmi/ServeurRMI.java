@@ -789,7 +789,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 							.getLogin());
 
 					// On l'affiche du côté du destinataire
-					((InterfaceClientRmi) rem).recevoirMessage(message);
+					((InterfaceClientRmi) rem).recevoirMessagePrive(message);
 					// on l'affiche également du côté de l'expediteur
 
 					// on récupère le client du expediteur sur le serveur
@@ -799,7 +799,7 @@ public class ServeurRMI extends UnicastRemoteObject implements
 					// message
 					Remote remo = registry.lookup(expediteur.getUtilisateur()
 							.getLogin());
-					((InterfaceClientRmi) remo).recevoirMessage(message);
+					((InterfaceClientRmi) remo).recevoirMessagePrive(message);
 
 				} catch (AccessException e) {
 					// TODO Auto-generated catch block
