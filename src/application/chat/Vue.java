@@ -152,27 +152,7 @@ public class Vue extends JFrame {
 		contentPane.add(txtIn);
 		txtIn.setColumns(10);
 
-		JButton btnEnvoiFichier = new JButton("Envoyer un fichier");
-		btnEnvoiFichier.setBounds(114, 373, 119, 23);
-		contentPane.add(btnEnvoiFichier);
-
-		// Envoi le fichier et ajoute son nom dans la list
-		btnEnvoiFichier.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				// cr�ation de la bo�te de dialogue
-				JFileChooser dialogue = new JFileChooser();
-
-				// affichage
-				dialogue.showOpenDialog(null);
-
-				// récupération du fichier sélectionné
-				System.out.println("Fichier choisi : " + dialogue.getSelectedFile());
-
-				// affiche le nom du fichier
-				messageList.add(login + " : " + dialogue.getSelectedFile().getName());
-
-			}
-		});
+		
 
 		// Zone de chat
 		messageList = new List();
@@ -201,25 +181,7 @@ public class Vue extends JFrame {
 		
 		
 
-		// <<<<<<< HEAD
-
-		// // création de la boîte de dialogue
-		// =======
-		// // cr�ation de la bo�te de dialogue
-		// >>>>>>> branch 'master' of
-		// https://github.com/secu2/miage_projet_framework.git
-		// JFileChooser dialogue = new JFileChooser();
-		//
-		// // affichage
-		// dialogue.showOpenDialog(null);
-		//
-		// <<<<<<< HEAD
-		// // récupération du fichier sélectionné
-		// =======
-		// // r�cup�ration du fichier s�lectionn�
-		// >>>>>>> branch 'master' of
-		// https://github.com/secu2/miage_projet_framework.git
-		// System.out.println("Fichier choisi : " + dialogue.getSelectedFile());
+		
 		 afficheUtilisateursCo(c);
 		 afficheUtilisateursDeco(c);
 

@@ -25,10 +25,9 @@ public class lanceServeur {
 		Serveur serveur;
 		try {
 			serveur = new Serveur();
-			serveur.inscription("momo", "jojo");
-			serveur.inscription("jojo", "jojo");
-			serveur.inscription("popo", "popo");
-			serveur.inscriptionAvecRepertoireUtilisateur("yoyo", "yoyo");
+			serveur.inscriptionAvecRepertoireUtilisateur("momo", "jojo");
+			serveur.inscriptionAvecRepertoireUtilisateur("jojo", "jojo");
+			
 			
 			serveur.creerUnGroupe("groupe1", "jojo");
 			serveur.creerUnGroupe("groupe2", "momo");
